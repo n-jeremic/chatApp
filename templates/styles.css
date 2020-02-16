@@ -1,0 +1,53 @@
+#card-users {
+  height: 600px !important;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.chat-body {
+  height: 350px !important;
+  width: 337px !important;
+  margin-bottom: 20px;
+  padding: 3px !important;
+  background-color: #e0e0d2;
+}
+
+.main-content {
+  padding: 40px;
+}
+
+.chat {
+  height: 260px !important;
+  overflow-y: auto;
+  margin-bottom: 5px;
+  padding: 4px;
+}
+
+.type-message-form {
+  margin: 0px !important;
+}
+
+.text-message {
+  background-color: #d9ffb3;
+  border: 1px solid #999966;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+body {
+  background-color: #9ae59a;
+}
+
+.no-padding {
+  padding: 0px !important;
+}
+
+.profile-info {
+  line-height: 40px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.profile-content {
+  background-color: #f2f2f2;
+}

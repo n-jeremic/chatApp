@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script
+      src="https://kit.fontawesome.com/d4b741b49f.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="#">SoMuchFun</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="#"
+              >Home feed<span class="sr-only">(current)</span></a
+            >
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Chat now</a>
+          </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+          <input
+            class="form-control mr-sm-2"
+            type="search"
+            placeholder="Search"
+            aria-label="Search"
+          />
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+            Search
+          </button>
+        </form>
+        <div class="btn-group ml-5 mr-3">
+          <button
+            type="button"
+            class="btn btn-secondary dropdown-toggle"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            Dropdown
+          </button>
+          <div class="dropdown-menu dropdown-menu-right">
+            <button class="dropdown-item" type="button">Action</button>
+            <button class="dropdown-item" type="button">Another action</button>
+            <button class="dropdown-item" type="button">
+              Something else here
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="container mt-5">
+      <div class="col-lg-12">
+        <div class="card profile-content" style="width: 100%;">
+          <div class="card-body">
+            <h2 class="card-title">Nikola Jeremic</h2>
+            <div class="row">
+              <div class="col-lg-4">
+                <img
+                  src="http://placehold.it/500x500"
+                  class="img-fluid img-thumbnail"
+                />
+                <button
+                  type="button"
+                  class="btn btn-link mt-2 btn-sm"
+                  data-toggle="modal"
+                  data-target="#photo_modal"
+                >
+                  Change Photo
+                </button>
+              </div>
+              <div class="col-lg-1"></div>
+              <div class="col-lg-4 profile-info">
+                <p>First Name:</p>
+                <p>Last Name:</p>
+                <p>Email:</p>
+              </div>
+              <div class="col-lg-3">
+                <button
+                  class="btn btn-light float-right btn-block"
+                  style="margin-top: 270px;"
+                  data-toggle="modal"
+                  data-target="#password_modal"
+                >
+                  <i class="fas fa-key"></i> Update Password
+                </button>
+                <button
+                  class="btn btn-light float-right mt-3 btn-block"
+                  data-toggle="modal"
+                  data-target="#info_modal"
+                >
+                  <i class="fas fa-users-cog"></i> Update Profile
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+      integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="info_modal"
+      data-backdrop="static"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="info_modal"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              Update Info
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="form-group">
+                  <label for="firstName">First name:</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="firstName"
+                    aria-describedby="emailHelp"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="lastName">Last name:</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="lastName"
+                    aria-describedby="emailHelp"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="email">Your email address:</label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="email"
+                    aria-describedby="emailHelp"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary btn-block">
+              <i class="fas fa-download"></i> Save changes
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="password_modal"
+      data-backdrop="static"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="password_modal"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              Update Your Password
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="form-group">
+                  <label for="password">Current password:</label>
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="password"
+                    aria-describedby="emailHelp"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="newPassword">New password:</label>
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="newPassword"
+                    aria-describedby="emailHelp"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="newPasswordConfirm">Confirm New Password:</label>
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="newPasswordConfirm"
+                    aria-describedby="emailHelp"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary btn-block">
+              <i class="fas fa-user-edit"></i> Change Password
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="photo_modal"
+      data-backdrop="static"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="photo_modal"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              Change your profile photo
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-lg-12">
+                <img
+                  src="http://placehold.it/300x300"
+                  id="photo_modal"
+                  alt=""
+                  class="img-fluid rounded mx-auto d-block"
+                  width="300px"
+                />
+              </div>
+              <div class="col-lg-12">
+                <div class="form-group mt-3">
+                  <label for="update_photo">Choose new photo:</label>
+                  <input
+                    type="file"
+                    class="form-control-file"
+                    id="update_photo"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary">
+              <i class="fas fa-user-edit"></i> Update profile photo
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

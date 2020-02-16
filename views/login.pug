@@ -1,0 +1,27 @@
+extends base
+
+block content
+    .container(style='margin-top: 100px;')
+        .row
+            .col-lg-4
+            .col-lg-4
+                .card.text-center
+                    .card-header
+                        | Log in to use the app
+                    .card-body
+                        form
+                            label(for='email') Email address:
+                            input#email.form-control(type='email' placeholder='you@example.com' required='')
+                            br
+                            label(for='password') Your password:
+                            input#password.form-control(type='password' minlength='8' required='')
+                            br
+                            button.btn.btn-block.btn-lg.btn-secondary.mb-3.btn--login(type='submit')
+                                | Log in
+                        span
+                            | Don&apos;t have an account? 
+                            a(href='/signup') Register here
+                    .card-footer.text-muted
+                        | soMuchFun.com  
+block scriptFile
+    script(src="/js/login.js")

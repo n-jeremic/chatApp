@@ -1,0 +1,29 @@
+extends base
+
+mixin userList(user)
+    button.list-group-item.list-group-item-action(data-user_id=`${user.id}` data-user_photo=`${user.profilePhoto}` data-user_name=`${user.firstName} ${user.lastName}`)
+        img.img-fluid.rounded.mr-2(src=`/img/users/${user.profilePhoto}` width='50px;')
+        =` ${user.firstName} ${user.lastName}`
+        - if (user.isLoggedIn)
+            i.fas.fa-user-check.float-right.mt-3(style="color: green")
+        - if (user.isLoggedIn == false)
+            i.fas.fa-user-minus.float-right.mt-3
+
+block content
+    include _navbar
+    span(data-current-user=`${JSON.stringify(userMe)}` id="currentUser")
+    .container-fluid.main-content
+        .row
+            .col-lg-9
+                div.row#chats-interface
+            .col-lg-3
+                .card(style='width: 100%;')
+                    .card-header
+                        | All users
+                    #card-users.list-group
+                        each user in users
+                            +userList(user)
+            .col-lg-1            
+block scriptFile
+    script(src='/js/chat.js') 
+    script(src="/js/functions.js")      

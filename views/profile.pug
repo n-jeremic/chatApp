@@ -1,0 +1,106 @@
+extends base
+
+block content
+    include _navbar
+    .container.mt-5
+        .col-lg-12
+            .card.profile-content(style='width: 100%;')
+                .card-body
+                    .alert.alert-dark(role="alert")
+                        h2.card-title.text-center.align-middle(style="margin-bottom: 0px")= `${userMe.firstName}'s profile`
+                    .row
+                        .col-lg-4
+                            img.img-fluid.img-thumbnail(src=`/img/users/${userMe.profilePhoto}` alt=`${userMe.firstName}-photo`)
+                            button.btn.btn-link.mt-2.btn-sm(type='button' data-toggle='modal' data-target='#photo_modal')
+                                | Change Photo
+                        .col-lg-5.profile-info
+                            p First Name: 
+                                span(style="font-weight: 400")=`${userMe.firstName}`
+                            p Last Name: 
+                                span(style="font-weight: 400")=`${userMe.lastName}`
+                            p Email Address: 
+                                span(style="font-weight: 400")=`${userMe.email}`
+                        .col-lg-3
+                            button.btn.btn-light.float-right.btn-block(style='margin-top: 265px;' data-toggle='modal' data-target='#password_modal')
+                                i.fas.fa-key
+                                |  Change Password
+                            button.btn.btn-light.float-right.mt-3.btn-block(data-toggle='modal' data-target='#info_modal')
+                                i.fas.fa-users-cog
+                                |  Update Profile
+    //- info modal
+    #info_modal.modal.fade(data-backdrop='static' tabindex='-1' role='dialog' aria-labelledby='info_modal' aria-hidden='true')
+        .modal-dialog.modal-sm(role='document')
+            .modal-content
+                .modal-header
+                    h5.modal-title
+                        | Update Info
+                    button.close(type='button' data-dismiss='modal' aria-label='Close')
+                        span(aria-hidden='true') &times;
+                .modal-body
+                    .row
+                        .col-lg-12
+                            form.form-update-info
+                                .form-group
+                                    label(for='firstName') First name:
+                                    input#firstName.form-control(type='text' aria-describedby='emailHelp' placeholder=`${userMe.firstName}`)
+                                .form-group
+                                    label(for='lastName') Last name:
+                                    input#lastName.form-control(type='text' aria-describedby='emailHelp' placeholder=`${userMe.lastName}`)
+                                .form-group
+                                    label(for='email') Your email address:
+                                    input#email.form-control(type='email' aria-describedby='emailHelp' placeholder=`${userMe.email}`)
+                .modal-footer
+                    button.btn.btn-primary.btn-block(type='button' onclick="updateInfo()")
+                        i.fas.fa-download
+                        |  Save changes
+    //- password modal
+    #password_modal.modal.fade(data-backdrop='static' tabindex='-1' role='dialog' aria-labelledby='password_modal' aria-hidden='true')
+        .modal-dialog.modal-sm(role='document')
+            .modal-content
+                .modal-header
+                    h5.modal-title
+                        | Update Your Password
+                    button.close(type='button' data-dismiss='modal' aria-label='Close')
+                        span(aria-hidden='true') &times;
+                .modal-body
+                    .row
+                        .col-lg-12
+                            form.form-change-password
+                                .form-group
+                                    label(for='password') Current password:
+                                    input#password.form-control(type='password' aria-describedby='emailHelp')
+                                .form-group
+                                    label(for='newPassword') New password:
+                                    input#newPassword.form-control(type='password' aria-describedby='emailHelp')
+                                .form-group
+                                    label(for='newPasswordConfirm') Confirm New Password:
+                                    input#newPasswordConfirm.form-control(type='password' aria-describedby='emailHelp')
+                .modal-footer
+                    button.btn.btn-primary.btn-block#btn-changePassword(type='button' onclick="changePassword()")
+                        i.fas.fa-user-edit
+                        |  Change Password
+    //- photo modal
+    #photo_modal.modal.fade(data-backdrop='static' tabindex='-1' role='dialog' aria-labelledby='photo_modal' aria-hidden='true')
+        .modal-dialog(role='document')
+            .modal-content
+                .modal-header
+                    h5.modal-title
+                        | Change your profile photo
+                    button.close(type='button' data-dismiss='modal' aria-label='Close')
+                        span(aria-hidden='true') &times;
+                .modal-body
+                    .row
+                        .col-lg-12
+                            img#photo_input.img-fluid.rounded.mx-auto.d-block(src=`/img/users/${userMe.profilePhoto}` alt=`${userMe.profilePhoto}-photo` width='300px')
+                        .col-lg-12
+                            .form-group.mt-3
+                                label(for='update_photo') Choose new photo:
+                                input#update_photo.form-control-file(type='file' onchange="readImage(this)")
+                .modal-footer
+                    button.btn.btn-primary(type='button' onclick="updatePhoto()")
+                        i.fas.fa-user-edit
+                        |  Update profile photo
+
+block scriptFile
+    script(src="/js/profile.js")
+    script(src="/js/functions.js")

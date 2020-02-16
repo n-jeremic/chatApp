@@ -1,0 +1,88 @@
+const mongoose = require('mongoose');
+const validator = require('validator');
+const bcrypt = require('bcryptjs');
+
+const userSchema = new mongoose.Schema(
+  {
+    firstName: {
+      type: String,
+      required: [true, 'User must provide first name!']
+    },
+    lastName: {
+      type: String,
+      required: [true, 'User must provide last name!']
+    },
+    email: {
+      type: String,
+      unique: true,
+      required: [true, 'User must provide an email!'],
+      lowercase: true,
+      validate: [validator.isEmail, 'Please provide a valid email!']
+    },
+    profilePhoto: {
+      type: String,
+      default: 'default.jpg'
+    },
+    password: {
+      type: String,
+      required: [true, 'User must provide a password!'],
+      minlength: 8,
+      select: false
+    },
+    passwordConfirm: {
+      type: String,
+      required: [true, 'User must confirm a password!'],
+      validate: {
+        // This validator only runs on CREATE and SAVE
+        validator: function(el) {
+          return this.password === el;
+        },
+        message: 'Passwords do not match!'
+      }
+    },
+    changedPasswordAt: Date,
+    newMessages: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: 'Message'
+      }
+    ],
+    isLoggedIn: {
+      type: Boolean,
+      default: false
+    }
+  },
+  {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
+  }
+);
+
+// VIRTUAL PROPERTIES
+userSchema.virtual('chats', {
+  ref: 'Chat',
+  foreignField: 'users',
+  localField: '_id'
+});
+
+// PRE-SAVE DOCUMENT MIDDLEWARE
+userSchema.pre('save', async function(next) {
+  if (!this.isModified('password')) return next();
+
+  this.password = await bcrypt.hash(this.password, 12);
+
+  this.passwordConfirm = undefined;
+
+  next();
+});
+
+userSchema.pre('save', function(next) {
+  if (!this.isModified('password') || this.isNew) return next();
+
+  this.changedPasswordAt = Date.now() - 1000;
+  next();
+});
+
+const User = mongoose.model('User', userSchema);
+
+module.exports = User;
