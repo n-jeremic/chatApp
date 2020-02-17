@@ -1,0 +1,58 @@
+const mongoose = require('mongoose');
+
+const postSchema = new mongoose.Schema(
+  {
+    postType: {
+      type: String,
+      default: 'Photo'
+    },
+    user: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'User',
+      required: [true, 'A post must have user referrence!']
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now()
+    },
+    likes: [
+      {
+        userId: {
+          type: String,
+          required: [true, 'Like must have user ID!']
+        },
+        firstName: String,
+        lastName: String,
+        userPhoto: String
+      }
+    ],
+    comments: [
+      {
+        userId: {
+          type: String,
+          required: [true, 'Comment must have user ID!']
+        },
+        firstName: String,
+        lastName: String,
+        userPhoto: String,
+        comment: {
+          type: String,
+          required: [true, 'Comment must have some content!']
+        }
+      }
+    ],
+    content: {
+      type: String,
+      required: [true, 'A post must have some content!']
+    },
+    description: String
+  },
+  {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
+  }
+);
+
+const Post = mongoose.model('Post', postSchema);
+
+module.exports = Post;

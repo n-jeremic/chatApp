@@ -29,6 +29,12 @@ const userSchema = new mongoose.Schema(
       minlength: 8,
       select: false
     },
+    posts: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: 'Post'
+      }
+    ],
     passwordConfirm: {
       type: String,
       required: [true, 'User must confirm a password!'],

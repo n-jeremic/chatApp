@@ -4,6 +4,7 @@ const path = require('path');
 
 const userRouter = require('./routes/userRoutes');
 const messageRouter = require('./routes/messageRoutes');
+const postRouter = require('./routes/postRoutes');
 const viewRouter = require('./routes/viewRoutes');
 const errorController = require('./controllers/errorController');
 const AppError = require('./utils/appError');
@@ -21,6 +22,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // ROUTES
 app.use('/api/messages', messageRouter);
 app.use('/api/users', userRouter);
+app.use('/api/posts', postRouter);
 app.use('/', viewRouter);
 
 // ERROR HANDLING

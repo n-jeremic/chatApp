@@ -9,12 +9,6 @@ const chatSchema = new mongoose.Schema(
         required: [true, 'A chat must have minimum of 2 users!']
       }
     ]
-    // messages: [
-    //   {
-    //     type: mongoose.Schema.ObjectId,
-    //     ref: 'Message'
-    //   }
-    // ]
   },
   {
     toJSON: { virtuals: true },
