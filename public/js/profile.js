@@ -99,6 +99,9 @@ async function updatePhoto() {
   if (!file) {
     return Swal.fire('Warning', 'Please choose new photo!', 'error');
   }
+  document.getElementById('btn-photo').innerHTML =
+    '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Updating...';
+  document.getElementById('btn-photo').disabled = true;
 
   const form = new FormData();
   form.append('profilePhoto', document.getElementById('update_photo').files[0]);
@@ -112,6 +115,9 @@ async function updatePhoto() {
 
     if (res.data.status === 'success') {
       $('#update_photo').val('');
+      document.getElementById('btn-photo').innerHTML =
+        '<i class="fas fa-user-edit"></i> Update profile photo';
+      document.getElementById('btn-photo').disabled = false;
       Swal.fire('Info', 'Photo successfully updated!', 'success');
       window.setTimeout(() => {
         location.reload(true);
@@ -119,5 +125,8 @@ async function updatePhoto() {
     }
   } catch (err) {
     console.log(err.response.data.message);
+    document.getElementById('btn-photo').innerHTML =
+      '<i class="fas fa-user-edit"></i> Update profile photo';
+    document.getElementById('btn-photo').disabled = false;
   }
 }

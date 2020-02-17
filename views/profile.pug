@@ -97,7 +97,7 @@ block content
                                 label(for='update_photo') Choose new photo:
                                 input#update_photo.form-control-file(type='file' onchange="readImage(this)")
                 .modal-footer
-                    button.btn.btn-primary(type='button' onclick="updatePhoto()")
+                    button.btn.btn-primary(type='button' onclick="updatePhoto()" id="btn-photo")
                         i.fas.fa-user-edit
                         |  Update profile photo
 
