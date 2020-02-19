@@ -1,0 +1,107 @@
+//- info modal
+#info_modal.modal.fade(data-backdrop='static' tabindex='-1' role='dialog' aria-labelledby='info_modal' aria-hidden='true')
+    .modal-dialog.modal-sm(role='document')
+        .modal-content
+            .modal-header
+                h5.modal-title
+                    | Update Info
+                button.close(type='button' data-dismiss='modal' aria-label='Close')
+                    span(aria-hidden='true') &times;
+            .modal-body
+                .row
+                    .col-lg-12
+                        form.form-update-info
+                            .form-group
+                                label(for='firstName') First name:
+                                input#firstName.form-control(type='text' aria-describedby='emailHelp' placeholder=`${user.firstName}`)
+                            .form-group
+                                label(for='lastName') Last name:
+                                input#lastName.form-control(type='text' aria-describedby='emailHelp' placeholder=`${user.lastName}`)
+                            .form-group
+                                label(for='email') Your email address:
+                                input#email.form-control(type='email' aria-describedby='emailHelp' placeholder=`${user.email}`)
+                            .form-group
+                                label(for='dateOfBirth') Date of birth:
+                                input#dateOfBirth.form-control(type='date' aria-describedby='emailHelp')    
+            .modal-footer
+                button.btn.btn-warning.btn-block(type='button' onclick="updateInfo()")
+                    i.fas.fa-download
+                    |  Save changes
+
+//- password modal
+#password_modal.modal.fade(data-backdrop='static' tabindex='-1' role='dialog' aria-labelledby='password_modal' aria-hidden='true')
+    .modal-dialog.modal-sm(role='document')
+        .modal-content
+            .modal-header
+                h5.modal-title
+                    | Update Your Password
+                button.close(type='button' data-dismiss='modal' aria-label='Close')
+                    span(aria-hidden='true') &times;
+            .modal-body
+                .row
+                    .col-lg-12
+                        form.form-change-password
+                            .form-group
+                                label(for='password') Current password:
+                                input#password.form-control(type='password' aria-describedby='emailHelp')
+                            .form-group
+                                label(for='newPassword') New password:
+                                input#newPassword.form-control(type='password' aria-describedby='emailHelp')
+                            .form-group
+                                label(for='newPasswordConfirm') Confirm New Password:
+                                input#newPasswordConfirm.form-control(type='password' aria-describedby='emailHelp')
+            .modal-footer
+                button.btn.btn-warning.btn-block#btn-changePassword(type='button' onclick="changePassword()")
+                    i.fas.fa-user-edit
+                    |  Change Password
+
+//- profile photo modal
+#photo_modal.modal.fade(data-backdrop='static' tabindex='-1' role='dialog' aria-labelledby='photo_modal' aria-hidden='true')
+    .modal-dialog(role='document')
+        .modal-content
+            .modal-header
+                h5.modal-title
+                    | Change your profile photo
+                button.close(type='button' data-dismiss='modal' aria-label='Close')
+                    span(aria-hidden='true') &times;
+            .modal-body
+                .row
+                    .col-lg-12
+                        img#photo_input.rounded.mx-auto.d-block(src=`/img/users/${user.profilePhoto}` alt=`${user.profilePhoto}-photo` width='300px' height="300px" style="object-fit: cover")
+                    .col-lg-12
+                        .form-group.mt-3
+                            label(for='update_photo') Choose new photo:
+                            input#update_photo.form-control-file(type='file' onchange="readImage(this, 'photo_input')")
+            .modal-footer
+                button.btn.btn-danger(type='button' onclick="closeProfilePhotoModal();" data-dismiss="modal")
+                    i.fas.fa-times
+                    |  Cancel
+                button.btn.btn-success(type='button' onclick="updateProfilePhoto()" id="btn-profile-photo")
+                    i.fas.fa-user-edit
+                    |  Update profile photo
+
+//- add photo modal
+#add-photo_modal.modal.fade(tabindex='-1' role='dialog')
+    .modal-dialog.modal-lg(role='document')
+        .modal-content
+            .modal-header
+                h5.modal-title Add New Photo
+                button.close(type='button' data-dismiss='modal' aria-label='Close')
+                    span(aria-hidden='true') &times;
+            .modal-body
+                #add_photo-container.row(style='display: none;')
+                    .col-lg-12
+                        img#new_photo.mx-auto.d-block(src='' alt='' width="600px" height="430px" style="object-fit: cover")
+                        input.form-control.mt-3#photo_description(type='text' placeholder='Add photo description here...')
+                .row
+                    .col-lg-12
+                        .form-group.mt-3
+                            label(for='add_photo') Choose photo
+                            input#add_photo.form-control-file(type='file' onchange='readImage(this, "new_photo"); displayPhoto()')
+            .modal-footer
+                button.btn.btn-danger(type='button' onclick="closePhotoModal();" data-dismiss="modal")
+                    i.fas.fa-times
+                    |  Cancel
+                button.btn.btn-success(type='button' onclick="addNewPhoto()" id="btn-add-new-photo")
+                    i.fas.fa-cloud-upload-alt
+                    |  Upload photo

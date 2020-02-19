@@ -7,8 +7,7 @@ const postSchema = new mongoose.Schema(
       default: 'Photo'
     },
     user: {
-      type: mongoose.Schema.ObjectId,
-      ref: 'User',
+      type: Object,
       required: [true, 'A post must have user referrence!']
     },
     createdAt: {
@@ -26,6 +25,10 @@ const postSchema = new mongoose.Schema(
         userPhoto: String
       }
     ],
+    likedByMe: {
+      type: Boolean,
+      default: false
+    },
     comments: [
       {
         userId: {
@@ -52,6 +55,12 @@ const postSchema = new mongoose.Schema(
     toObject: { virtuals: true }
   }
 );
+
+postSchema.pre(/^find/, function(next) {
+  this.sort('-createdAt');
+
+  next();
+});
 
 const Post = mongoose.model('Post', postSchema);
 

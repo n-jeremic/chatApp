@@ -7,6 +7,7 @@ const router = express.Router();
 router.get('/login', viewController.login);
 router.get('/signup', viewController.signup);
 router.get('/chat', authController.protect, viewController.chat);
-router.get('/profile', authController.protect, viewController.myProfile);
+router.get('/me', authController.protect, viewController.myProfile);
+router.get('/profile/:user_id', authController.protect, viewController.getUser);
 
 module.exports = router;

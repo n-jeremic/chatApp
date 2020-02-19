@@ -102,14 +102,9 @@ exports.myChatWith = catchAsync(async (req, res, next) => {
 
 exports.updateMe = catchAsync(async (req, res, next) => {
   if (req.body.password || req.body.passwordConfirm) {
-    return next(
-      new AppError(
-        'Please use /updateMyPassword route for changing your password!',
-        400
-      )
-    );
+    return next(new AppError('Please use /updateMyPassword route for changing your password!', 400));
   }
-  const filteredBody = filterObj(req.body, 'firstName', 'lastName', 'email');
+  const filteredBody = filterObj(req.body, 'firstName', 'lastName', 'email', 'dateOfBirth');
   if (req.file) filteredBody.profilePhoto = req.file.filename;
 
   const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {

@@ -30,7 +30,7 @@ exports.resizePhoto = catchAsync(async (req, res, next) => {
   req.file.post = `post-${req.user.id}-${Date.now()}.jpeg`;
 
   await sharp(req.file.buffer)
-    // .resize(500, 500)
+    .resize(1000, 800)
     .toFormat('jpeg')
     .jpeg({ quality: 90 })
     .toFile(`public/img/posts/${req.file.post}`);
@@ -40,7 +40,13 @@ exports.resizePhoto = catchAsync(async (req, res, next) => {
 
 exports.createPost = catchAsync(async (req, res, next) => {
   req.body.content = req.file.post;
-  req.body.user = req.user._id;
+
+  req.user.newMessages = undefined;
+  req.user.isLoggedIn = undefined;
+  req.user.changedPasswordAt = undefined;
+  req.user.__v = undefined;
+
+  req.body.user = req.user;
   const post = await Post.create(req.body);
 
   res.status(200).json({
@@ -52,19 +58,22 @@ exports.createPost = catchAsync(async (req, res, next) => {
 });
 
 exports.likePost = catchAsync(async (req, res, next) => {
+  const likeData = {
+    userId: req.user._id,
+    firstName: req.user.firstName,
+    lastName: req.user.lastName,
+    userPhoto: req.user.profilePhoto
+  };
+
   await Post.findByIdAndUpdate(req.params.postId, {
     $push: {
-      likes: {
-        userId: req.user._id,
-        firstName: req.user.firstName,
-        lastName: req.user.lastName,
-        userPhoto: req.user.profilePhoto
-      }
+      likes: likeData
     }
   });
 
   res.status(200).json({
-    status: 'success'
+    status: 'success',
+    data: likeData
   });
 });
 
@@ -73,22 +82,55 @@ exports.makeComment = catchAsync(async (req, res, next) => {
     return next(new AppError('You must have some text in your comment!', 400));
   }
 
+  const commentData = {
+    userId: req.user.id,
+    firstName: req.user.firstName,
+    lastName: req.user.lastName,
+    userPhoto: req.user.profilePhoto,
+    comment: req.body.text
+  };
+
   await Post.findByIdAndUpdate(req.params.postId, {
     $push: {
-      comments: {
-        userId: req.user.id,
-        firstName: req.user.firstName,
-        lastName: req.user.lastName,
-        userPhoto: req.user.profilePhoto,
-        comment: req.body.text
-      }
+      comments: commentData
     }
   });
 
   res.status(200).json({
     status: 'success',
     data: {
-      comment: req.body.text
+      commentData
     }
+  });
+});
+
+exports.getPost = catchAsync(async (req, res, next) => {
+  const post = await Post.findById(req.params.postId).select('-__v');
+
+  if (!post) {
+    return next(new AppError('There is no post with that ID!', 404));
+  }
+
+  for (let i = 0; i < post.likes.length; i++) {
+    if (post.likes[i].userId == req.user.id) {
+      post.likedByMe = true;
+      break;
+    }
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      post
+    }
+  });
+});
+
+exports.deletePost = catchAsync(async (req, res, next) => {
+  await Post.findByIdAndDelete(req.params.postId);
+
+  res.status(204).json({
+    status: 'success',
+    data: null
   });
 });

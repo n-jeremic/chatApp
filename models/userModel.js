@@ -19,6 +19,8 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       validate: [validator.isEmail, 'Please provide a valid email!']
     },
+    dateOfBirth: Date,
+    birthday: String,
     profilePhoto: {
       type: String,
       default: 'default.jpg'
@@ -29,12 +31,6 @@ const userSchema = new mongoose.Schema(
       minlength: 8,
       select: false
     },
-    posts: [
-      {
-        type: mongoose.Schema.ObjectId,
-        ref: 'Post'
-      }
-    ],
     passwordConfirm: {
       type: String,
       required: [true, 'User must confirm a password!'],
@@ -68,6 +64,12 @@ const userSchema = new mongoose.Schema(
 userSchema.virtual('chats', {
   ref: 'Chat',
   foreignField: 'users',
+  localField: '_id'
+});
+
+userSchema.virtual('posts', {
+  ref: 'Post',
+  foreignField: 'user._id',
   localField: '_id'
 });
 

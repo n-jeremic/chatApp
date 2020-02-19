@@ -51,3 +51,113 @@ body {
 .profile-content {
   background-color: #f2f2f2;
 }
+
+#myTabContent {
+  background-color: #fff;
+  border: 1px solid transparent;
+  border-color: #fff #dee2e6 #dee2e6 #dee2e6;
+  border-top-left-radius: 0.25rem;
+  border-top-right-radius: 0.25rem;
+  padding: 20px;
+}
+
+.post-container:hover {
+  cursor: pointer;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.8), 0 6px 20px 0 rgba(0, 0, 0, 0.77);
+}
+
+.post-container {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.comment-userName {
+  color: #212529;
+}
+
+#likes_list {
+  max-height: 300px !important;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+#add_comments {
+  max-height: 626px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* The Modal (background) */
+.modal_posts {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding: 60px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.9); /* Black w/ opacity */
+  overflow-y: hidden;
+}
+
+/* Modal Content (image) */
+.modal_posts-content {
+  margin: auto;
+  display: block;
+  width: 100%;
+  max-width: 800px;
+}
+
+/* Add Animation */
+.modal_posts-content,
+#comments_container {
+  -webkit-animation-name: zoom;
+  -webkit-animation-duration: 0.6s;
+  animation-name: zoom;
+  animation-duration: 0.6s;
+}
+
+@-webkit-keyframes zoom {
+  from {
+    -webkit-transform: scale(0);
+  }
+  to {
+    -webkit-transform: scale(1);
+  }
+}
+
+@keyframes zoom {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+/* The Close Button */
+.close_post {
+  position: absolute;
+  top: 1px;
+  right: 25px;
+  color: #f1f1f1;
+  font-size: 40px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.close_post:hover,
+.close_post:focus {
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* 100% Image Width on Smaller Screens */
+@media only screen and (max-width: 700px) {
+  .modal_posts-content {
+    width: 100%;
+  }
+}

@@ -19,4 +19,7 @@ router.post(
   postController.makeComment
 );
 
+router.get('/:postId', authController.protect, postController.getPost);
+router.delete('/:postId', authController.protect, postController.deletePost);
+
 module.exports = router;

@@ -4,10 +4,7 @@ async function updateInfo() {
   $.each(inputFields, (key, value) => {
     if (value.value.length > 0) {
       if (value.id === 'firstName' || value.id === 'lastName') {
-        const upperCase = value.value.replace(
-          `${value.value[0]}`,
-          `${value.value[0].toUpperCase()}`
-        );
+        const upperCase = value.value.replace(`${value.value[0]}`, `${value.value[0].toUpperCase()}`);
         data[value.id] = upperCase;
       } else {
         data[value.id] = value.value;
@@ -34,6 +31,7 @@ async function updateInfo() {
       }, 1000);
     }
   } catch (err) {
+    Swal.fire('Warning', 'Updating failed! Please try again!', 'error');
     console.log(err);
   }
 }
@@ -56,9 +54,7 @@ async function changePassword() {
     }
   }
 
-  document.getElementById('btn-changePassword').disabled = true;
-  document.getElementById('btn-changePassword').innerHTML =
-    '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>  Changing...';
+  addSpinner('btn-changePassword');
 
   try {
     const res = await axios({
@@ -70,39 +66,60 @@ async function changePassword() {
     if (res.data.status === 'success') {
       clearForm(inputFields);
       Swal.fire('Info', 'Password successfully changed!', 'success');
-      document.getElementById('btn-changePassword').disabled = false;
-      document.getElementById('btn-changePassword').innerHTML =
-        '<i class="fas fa-user-edit"></i> Change Password';
+      removeSpinner('btn-changePassword', '<i class="fas fa-user-edit"></i> Change Password');
       $('#password_modal').modal('hide');
     }
   } catch (err) {
     Swal.fire('Warning', err.response.data.message, 'error');
+    console.log(err);
     clearForm(inputFields);
-    document.getElementById('btn-changePassword').disabled = false;
-    document.getElementById('btn-changePassword').innerHTML =
-      '<i class="fas fa-user-edit"></i> Change Password';
+    removeSpinner('btn-changePassword', '<i class="fas fa-user-edit"></i> Change Password');
   }
 }
 
-function readImage(input) {
+function closePhotoModal() {
+  document.getElementById('add_photo-container').style.display = 'none';
+  document.getElementById('add_photo').value = '';
+  document.getElementById('photo_description').value = '';
+}
+
+function closeProfilePhotoModal() {
+  document.getElementById('update_photo').value = '';
+  const profilePhoto = document.getElementById('user-pr_photo').dataset.user_photo;
+  $('#photo_input').attr('src', `/img/users/${profilePhoto}`);
+}
+
+function displayPhoto() {
+  document.getElementById('add_photo-container').style.display = 'block';
+}
+
+function readImage(input, el_id) {
   let reader = new FileReader();
 
   reader.onload = function(event) {
-    $('#photo_input').attr('src', event.target.result);
+    $(`#${el_id}`).attr('src', event.target.result);
   };
 
   reader.readAsDataURL(input.files[0]);
 }
 
-async function updatePhoto() {
+function addSpinner(btn_id) {
+  document.getElementById(btn_id).innerHTML = '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Updating...';
+  document.getElementById(btn_id).disabled = true;
+}
+
+function removeSpinner(btn_id, btn_content) {
+  document.getElementById(btn_id).innerHTML = btn_content;
+  document.getElementById(btn_id).disabled = false;
+}
+
+async function updateProfilePhoto() {
   const file = $('#update_photo').val();
   if (!file) {
     return Swal.fire('Warning', 'Please choose new photo!', 'error');
   }
-  document.getElementById('btn-photo').innerHTML =
-    '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Updating...';
-  document.getElementById('btn-photo').disabled = true;
 
+  addSpinner('btn-profile-photo');
   const form = new FormData();
   form.append('profilePhoto', document.getElementById('update_photo').files[0]);
 
@@ -115,18 +132,49 @@ async function updatePhoto() {
 
     if (res.data.status === 'success') {
       $('#update_photo').val('');
-      document.getElementById('btn-photo').innerHTML =
-        '<i class="fas fa-user-edit"></i> Update profile photo';
-      document.getElementById('btn-photo').disabled = false;
+      removeSpinner('btn-profile-photo', '<i class="fas fa-user-edit"></i> Update profile photo');
       Swal.fire('Info', 'Photo successfully updated!', 'success');
       window.setTimeout(() => {
         location.reload(true);
       }, 1000);
     }
   } catch (err) {
-    console.log(err.response.data.message);
-    document.getElementById('btn-photo').innerHTML =
-      '<i class="fas fa-user-edit"></i> Update profile photo';
-    document.getElementById('btn-photo').disabled = false;
+    Swal.fire('Warning', 'Photo uploading failed! Please try again!', 'error');
+    console.log(err);
+    removeSpinner('btn-profile-photo', '<i class="fas fa-user-edit"></i> Update profile photo');
+  }
+}
+
+async function addNewPhoto() {
+  const file = $('#add_photo').val();
+  if (!file) {
+    return Swal.fire('Warning', 'Please choose a photo!', 'error');
+  }
+
+  const form = new FormData();
+  form.append('content', document.getElementById('add_photo').files[0]);
+  if (document.getElementById('photo_description').value.length > 0) {
+    form.append('description', document.getElementById('photo_description').value);
+  }
+
+  addSpinner('btn-add-new-photo');
+
+  try {
+    const response = await axios({
+      method: 'POST',
+      url: '/api/posts/addPost',
+      data: form
+    });
+
+    if (response.data.status === 'success') {
+      window.setTimeout(() => {
+        location.reload(true);
+      }, 500);
+      removeSpinner('btn-add-new-photo', '<i class="fas fa-cloud-upload-alt"></i> Upload photo');
+    }
+  } catch (err) {
+    Swal.fire('Warning', 'Photo uploading failed! Please try again!', 'error');
+    console.log(err);
+    removeSpinner('btn-add-new-photo', '<i class="fas fa-cloud-upload-alt"></i> Upload photo');
   }
 }
