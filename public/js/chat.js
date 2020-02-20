@@ -1,5 +1,41 @@
 window.setInterval(getNewMessages, 1000);
+window.setInterval(getOnlineUsers, 10000);
 const currentUser = JSON.parse(document.getElementById('currentUser').dataset.currentUser);
+
+async function getOnlineUsers() {
+  try {
+    const res = await axios({
+      method: 'GET',
+      url: '/api/users/onlineUsers'
+    });
+
+    if (res.data.status === 'success') {
+      displayUsers(res.data.data.sortedUsers);
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+function displayUsers(users) {
+  $('#card-users').empty();
+
+  users.forEach(user => {
+    $('#card-users').append(
+      `<button data-user_id='${user.id}' data-user_photo='${user.profilePhoto}' data-user_name='${user.firstName} ${
+        user.lastName
+      }' class='list-group-item list-group-item-action'><img class='img-fluid rounded mr-2' src='/img/users/${
+        user.profilePhoto
+      }' width='50px;'><span>${user.firstName} ${
+        user.lastName
+      }</span><span class='spinner-border spinner-border-sm ml-2' style="color: lightblue; display: none" role="status" aria-hidden="true" id='spinner-${
+        user.id
+      }'></span><i class='fas fa-user-${user.isLoggedIn === true ? 'check' : 'minus'} float-right mt-3' style='color: ${
+        user.isLoggedIn === true ? 'green' : '#495057'
+      }'></i></button>`
+    );
+  });
+}
 
 async function getChat(user_id, user_name, user_photo, newMessage = 'false') {
   if (document.getElementById(`btnChat-${user_id}`)) {
@@ -23,21 +59,33 @@ async function getChat(user_id, user_name, user_photo, newMessage = 'false') {
 }
 
 document.getElementById('card-users').addEventListener('click', async event => {
-  if (event.target.dataset.user_id) {
-    const { user_id, user_name, user_photo } = event.target.dataset;
+  if (event.target.tagName !== 'DIV') {
+    let check = 0;
+    if (event.target.parentElement.tagName === 'DIV') {
+      var { user_id, user_name, user_photo } = event.target.dataset;
+      check++;
+    } else {
+      var { user_id, user_name, user_photo } = event.target.parentElement.dataset;
+    }
 
     if (document.getElementById(`collapse-${user_id}`)) {
       $(`#collapse-${user_id}`).collapse('show');
       return;
     }
 
-    event.target.innerHTML += ` <span style="color: lightblue" class="spinner-border spinner-border-sm" role="status" aria-hidden="true" id="spinner-${user_id}"></span>`;
-    event.target.disabled = true;
+    if (check > 0) {
+      event.target.disabled = true;
+    } else {
+      event.target.parentElement.disabled = true;
+    }
+
+    document.getElementById(`spinner-${user_id}`).style.display = 'inline-block';
 
     await getChat(user_id, user_name, user_photo);
 
-    document.getElementById(`spinner-${user_id}`).remove();
+    document.getElementById(`spinner-${user_id}`).style.display = 'none';
     event.target.disabled = false;
+    event.target.parentElement.disabled = false;
   }
 });
 
@@ -64,7 +112,7 @@ const openChatButton = (user_id, user_name, user_photo, messages, newMessage = '
     data-toggle="collapse"
     data-target="#collapse-${user_id}"
     aria-expanded="${newMessage == 'false' ? 'true' : 'false'}"
-    aria-controls="collapse-${user_id}">${user_name} <a class="float-right" onclick="closeChat('${user_id}')"><i class="fas fa-times" style="color: #ff704d; display: none" id="closeChat-${user_id}"></i></a></button></p>
+    aria-controls="collapse-${user_id}"><a href="/profile/${user_id}" class="comment-userName">${user_name}</a> <a class="float-right" onclick="closeChat('${user_id}')"><i class="fas fa-times" style="color: #ff704d; display: none" id="closeChat-${user_id}"></i></a></button></p>
     <div class="collapse ${newMessage == 'false' ? 'show' : ''}" id="collapse-${user_id}">
     <div class="card card-body chat-body">
     <div class="chat" id="scroll-${user_id}"><div class="container-fluid" id="chat-${user_id}">${markUpChat}</div></div>

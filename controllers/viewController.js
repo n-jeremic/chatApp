@@ -15,7 +15,7 @@ exports.signup = (req, res, next) => {
 };
 
 exports.chat = catchAsync(async (req, res, next) => {
-  const users = await User.find().populate('chats');
+  const users = await User.find();
   const sortedUsers = [];
   for (let i = 0; i < users.length; i++) {
     if (users[i].id == req.user.id) {

@@ -119,3 +119,26 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     }
   });
 });
+
+exports.getOnlineUsers = catchAsync(async (req, res, next) => {
+  const allUsers = await User.find();
+
+  const sortedUsers = [];
+  for (let i = 0; i < allUsers.length; i++) {
+    if (allUsers[i].id == req.user.id) {
+      continue;
+    }
+    if (allUsers[i].isLoggedIn) {
+      sortedUsers.unshift(allUsers[i]);
+    } else {
+      sortedUsers.push(allUsers[i]);
+    }
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      sortedUsers
+    }
+  });
+});

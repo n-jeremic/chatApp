@@ -3,7 +3,8 @@ extends base
 mixin userList(user)
     button.list-group-item.list-group-item-action(data-user_id=`${user.id}` data-user_photo=`${user.profilePhoto}` data-user_name=`${user.firstName} ${user.lastName}`)
         img.img-fluid.rounded.mr-2(src=`/img/users/${user.profilePhoto}` width='50px;')
-        a.comment-userName(href=`/profile/${user.id}`)=` ${user.firstName} ${user.lastName}`
+        span= `${user.firstName} ${user.lastName}`
+        span.spinner-border.spinner-border-sm.ml-2(style="color: lightblue; display: none" role="status" aria-hidden="true" id=`spinner-${user.id}`)
         - if (user.isLoggedIn)
             i.fas.fa-user-check.float-right.mt-3(style="color: green")
         - if (user.isLoggedIn == false)
