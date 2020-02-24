@@ -12,8 +12,9 @@ const postSchema = new mongoose.Schema(
     },
     createdAt: {
       type: Date,
-      default: Date.now()
+      default: Date.now() + 2000
     },
+    createdAtModified: String,
     likes: [
       {
         userId: {

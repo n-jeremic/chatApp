@@ -6,7 +6,7 @@ mixin userList(user)
         span= `${user.firstName} ${user.lastName}`
         span.spinner-border.spinner-border-sm.ml-2(style="color: lightblue; display: none" role="status" aria-hidden="true" id=`spinner-${user.id}`)
         - if (user.isLoggedIn)
-            i.fas.fa-user-check.float-right.mt-3(style="color: green")
+            i.fas.fa-user-check.float-right.mt-3(style="color: #00e600")
         - if (user.isLoggedIn == false)
             i.fas.fa-user-minus.float-right.mt-3
 
@@ -24,7 +24,9 @@ block content
                     #card-users.list-group
                         each user in users
                             +userList(user)
-            .col-lg-1            
+            .col-lg-1
+    include _post-modals                    
 block scriptFile
     script(src='/js/chat.js') 
-    script(src="/js/functions.js")      
+    script(src="/js/functions.js")
+    script(src="/js/post.js")      

@@ -49,6 +49,12 @@ const userSchema = new mongoose.Schema(
         ref: 'Message'
       }
     ],
+    newNotifications: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: 'Notification'
+      }
+    ],
     isLoggedIn: {
       type: Boolean,
       default: false

@@ -1,16 +1,19 @@
-function openGallery(post_id) {
+function openGallery(photo_path) {
   // Get the modal
   const modal = document.getElementById('modal_photos');
 
   // Get the image and insert it inside the modal - use its "alt" text as a caption
-  const img = document.getElementById(`photo-${post_id}`);
-  const modalImg = document.getElementById('img01');
+  const modalImg = document.getElementById('img--post');
 
-  modal.style.display = 'block';
-  modalImg.src = img.src;
+  // modal.style.display = 'block';
+  modalImg.src = `/img/posts/${photo_path}`;
 
   // Get the <span> element that closes the modal
   const span = document.getElementsByClassName('close_post')[0];
+
+  $('#post--spinner').hide();
+  $('.modal_posts-content').show();
+  $('#comments_container').show();
 
   // When the user clicks on <span> (x), close the modal
   span.onclick = function() {
@@ -19,6 +22,11 @@ function openGallery(post_id) {
 }
 
 async function getPostDetails(post_id) {
+  $('.modal_posts-content').hide();
+  $('#comments_container').hide();
+  $('#modal_photos').show();
+  $('#post--spinner').show();
+
   try {
     const postData = await axios({
       method: 'GET',
@@ -26,12 +34,14 @@ async function getPostDetails(post_id) {
     });
 
     if (postData.data.status === 'success') {
+      $('#modal_gallery-postOwnerPhoto').attr('src', `/img/users/${postData.data.data.post.user.profilePhoto}`);
+      $('#modal_gallery-postOwner').text(`${postData.data.data.post.user.firstName} ${postData.data.data.post.user.lastName}`);
       document.getElementById('post_description').innerText = '';
       if (postData.data.data.post.description) {
         document.getElementById('post_description').innerText = '-  ' + postData.data.data.post.description;
       }
       $('#btn-add_comment').attr('onclick', `sendComment('${post_id}')`);
-      $('#btn-like').attr('onclick', `likePost('${post_id}')`);
+      $('#btn-like').attr('onclick', `likePostModal('${post_id}')`);
 
       if (postData.data.data.post.likedByMe === true) {
         $('#btn-like').removeClass('btn-secondary');
@@ -53,7 +63,7 @@ async function getPostDetails(post_id) {
         $('#num_of_likes').attr('disabled', false);
         $('#num_of_likes').html(`${postData.data.data.post.likes.length} likes`);
         $('#append_likes').empty();
-        postData.data.data.post.likes.forEach(like => addLikesHTML(like));
+        postData.data.data.post.likes.forEach(like => addLikesHTMLModal(like));
       }
 
       if (postData.data.data.post.comments.length === 0) {
@@ -62,7 +72,7 @@ async function getPostDetails(post_id) {
         $('#add_comments').empty();
         postData.data.data.post.comments.forEach(comment => addCommentHTML(comment));
       }
-      openGallery(post_id);
+      openGallery(postData.data.data.post.content);
     }
   } catch (err) {
     document.getElementById('modal_photos').style.display = 'none';
@@ -97,7 +107,7 @@ function addCommentHTML(commentData) {
   $('#add_comments').append(markUp);
 }
 
-function addLikesHTML(likeData) {
+function addLikesHTMLModal(likeData) {
   const markUp = `<button class="list-group-item list-group-item-action" style="padding: 5px !important;"><img class="mr-2" src="/img/users/${likeData.userPhoto}" width="40px"/><a class="comment-userName" href="/profile/${likeData.userId}">${likeData.firstName} ${likeData.lastName}</a></button>`;
 
   $('#append_likes').append(markUp);
@@ -133,7 +143,12 @@ async function sendComment(post_id) {
   }
 }
 
-async function likePost(post_id) {
+async function likePostModal(post_id) {
+  $('#btn-like').removeClass('btn-secondary');
+  $('#btn-like').addClass('btn-primary');
+  $('#btn-like').html("<i class='fas fa-thumbs-up'></i> Liked");
+  $('#btn-like').attr('disabled', true);
+
   try {
     const res = await axios({
       method: 'POST',
@@ -149,14 +164,14 @@ async function likePost(post_id) {
 
       $('#num_of_likes').html(`${likes_number + 1} likes`);
       $('#num_of_likes').attr('disabled', false);
-      addLikesHTML(res.data.data);
-      $('#btn-like').removeClass('btn-secondary');
-      $('#btn-like').addClass('btn-primary');
-      $('#btn-like').html("<i class='fas fa-thumbs-up'></i> Liked");
-      $('#btn-like').attr('disabled', true);
+      addLikesHTMLModal(res.data.data);
     }
   } catch (err) {
     console.log(err);
     Swal.fire('Warning', 'Server error! Please try again.', 'error');
+    $('#btn-like').removeClass('btn-primary');
+    $('#btn-like').addClass('btn-secondary');
+    $('#btn-like').html("<i class='far fa-thumbs-up'></i> Like");
+    $('#btn-like').attr('disabled', false);
   }
 }

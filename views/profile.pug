@@ -19,39 +19,39 @@ block content
                                 .input-group.mb-3
                                     .input-group-prepend
                                         span.input-group-text(style="font-weight: 600") First Name
-                                    input.form-control(type='text' value=`${user.firstName}` disabled='true' aria-label='Username')
+                                    input.form-control(type='text' value=`${user.firstName}` disabled='true' aria-label='Username' style="background-color: #fff")
                                 .input-group.mb-3
                                     .input-group-prepend
                                         span.input-group-text(style="font-weight: 600") Last Name
-                                    input.form-control(type='text' value=`${user.lastName}` disabled='true' aria-label='Username')
+                                    input.form-control(type='text' value=`${user.lastName}` disabled='true' aria-label='Username' style="background-color: #fff")
                                 .input-group.mb-3
                                     .input-group-prepend
                                         span.input-group-text(style="font-weight: 600") Email 
-                                    input.form-control(type='text' value=`${user.email}` disabled='true' aria-label='Username')
+                                    input.form-control(type='text' value=`${user.email}` disabled='true' aria-label='Username' style="background-color: #fff")
                                 - if (user.dateOfBirth)        
                                     .input-group.mb-3
                                         .input-group-prepend
                                             span.input-group-text(style="font-weight: 600") Date of birth
-                                        input.form-control(type='text' disabled='true' aria-label='Username' value=`${user.birthday}`)
+                                        input.form-control(type='text' disabled='true' aria-label='Username' value=`${user.birthday}` style="background-color: #fff")
                         - if (title === "Profile")
                             .col-lg-8.profile-info(style="padding: 0px 100px 0px 100px")
                                 .input-group.mb-3
                                     .input-group-prepend
                                         span.input-group-text(style="font-weight: 600") First Name
-                                    input.form-control(type='text' value=`${user.firstName}` disabled='true' aria-label='Username')
+                                    input.form-control(type='text' value=`${user.firstName}` disabled='true' aria-label='Username' style="background-color: #fff")
                                 .input-group.mb-3
                                     .input-group-prepend
                                         span.input-group-text(style="font-weight: 600") Last Name
-                                    input.form-control(type='text' value=`${user.lastName}` disabled='true' aria-label='Username')
+                                    input.form-control(type='text' value=`${user.lastName}` disabled='true' aria-label='Username' style="background-color: #fff")
                                 .input-group.mb-3
                                     .input-group-prepend
                                         span.input-group-text(style="font-weight: 600") Email 
-                                    input.form-control(type='text' value=`${user.email}` disabled='true' aria-label='Username')
+                                    input.form-control(type='text' value=`${user.email}` disabled='true' aria-label='Username' style="background-color: #fff")
                                 - if (user.dateOfBirth)        
                                     .input-group.mb-3
                                         .input-group-prepend
                                             span.input-group-text(style="font-weight: 600") Date of birth
-                                        input.form-control(type='text' disabled='true' aria-label='Username' value=`${user.birthday}`)                        
+                                        input.form-control(type='text' disabled='true' aria-label='Username' value=`${user.birthday}` style="background-color: #fff")                        
                         - if (title === "My Profile")            
                             .col-lg-3
                                 button.btn.btn-light.btn-sm.float-right.btn-block(style='margin-top: 200px;' data-toggle='modal' data-target='#add-photo_modal')

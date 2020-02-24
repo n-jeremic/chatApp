@@ -1,25 +1,32 @@
-nav.navbar.navbar-expand-lg.navbar-light.bg-light
-        a.navbar-brand(href='#') SoMuchFun
-        button.navbar-toggler(type='button' data-toggle='collapse' data-target='#navbarSupportedContent' aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle navigation')
-            span.navbar-toggler-icon
-        #navbarSupportedContent.collapse.navbar-collapse
-            ul.navbar-nav.mr-auto
-                li.nav-item
-                    a.nav-link(href='/news' class=`${title === "News" ? "active" : ""}`)
-                        | News 
-                        span.sr-only (current)
-                li.nav-item
-                    a.nav-link(href='/chat' class=`${title === "Chat" ? "active" : ""}`) Chat now              
-            .btn-group.ml-5.mr-3
-                button.btn.btn-info.dropdown-toggle(type='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false')= `Logged in as ${userMe.firstName} ${userMe.lastName}`
-                .dropdown-menu.dropdown-menu-right
-                    a.dropdown-item(type='button' href="/me")
-                        i.fas.fa-user.mr-2
-                        | My Profile
-                    a.dropdown-item(type='button')
-                        i.fas.fa-envelope.mr-2
-                        | Messages
-                    .dropdown-divider
-                    a.dropdown-item(type='button' onclick='logout()')
-                        i.fas.fa-sign-out-alt.mr-2
-                        | Log Out
+nav.navbar.navbar-expand-lg.navbar-dark.bg-dark.sticky-top
+    a.navbar-brand(href='#') SoMuchFun.com
+    button.navbar-toggler(type='button' data-toggle='collapse' data-target='#navbarSupportedContent' aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle navigation')
+        span.navbar-toggler-icon
+    #navbarSupportedContent.collapse.navbar-collapse
+        ul.navbar-nav.mr-auto
+            li.nav-item
+                a.nav-link(href='/news' class=`${title === "News Feed" ? "active" : ""}`)
+                    | News 
+                    span.sr-only (current)
+            li.nav-item
+                a.nav-link(href='/chat' class=`${title === "Chat" ? "active" : ""}`) Chat now
+        .dropdown.mr-2
+            a#dropdownMenuLink.dropdown-toggle(href='#' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false')
+                div
+                    span#num_of_notif(style="display: none") 0
+                    i.fas.fa-bell#btn-notifications(style="font-size: 35px; color: rgba(255,255,255,.5)" onclick="regularStyleBtn();")
+            .dropdown-menu.dropdown-menu-right.notifications-drop(aria-labelledby='dropdownMenuLink')
+                h5.mb-3 Your Notifications
+                .list-group#notifications-list
+        .btn-group.ml-4.mr-3
+            button.btn.btn-info.dropdown-toggle(type='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false')
+                span=`Logged in as ${userMe.firstName} ${userMe.lastName}`
+                i.fas.fa-caret-down.ml-2
+            .dropdown-menu.dropdown-menu-right
+                a.dropdown-item(type='button' href="/me")
+                    i.fas.fa-user.mr-2
+                    | My Profile
+                .dropdown-divider
+                a.dropdown-item(type='button' onclick='logout()')
+                    i.fas.fa-sign-out-alt.mr-2
+                    | Log Out

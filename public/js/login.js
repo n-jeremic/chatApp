@@ -1,7 +1,6 @@
 document.querySelector('form').addEventListener('submit', async event => {
   event.preventDefault();
-  document.querySelector('.btn--login').innerHTML =
-    '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Loading..';
+  document.querySelector('.btn--login').innerHTML = '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Loading..';
   document.querySelector('.btn--login').disabled = true;
   const email = document.getElementById('email').value;
   const password = document.getElementById('password').value;
@@ -24,7 +23,7 @@ const login = async (email, password) => {
     });
 
     if (response.data.status === 'success') {
-      location.assign('/chat');
+      location.assign('/news');
     }
   } catch (err) {
     Swal.fire('Warning', err.response.data.message, 'error');

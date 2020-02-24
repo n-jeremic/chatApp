@@ -1,7 +1,6 @@
 document.querySelector('form').addEventListener('submit', async event => {
   event.preventDefault();
-  document.querySelector('.btn--signup').innerHTML =
-    '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Loading..';
+  document.querySelector('.btn--signup').innerHTML = '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Loading..';
   document.querySelector('.btn--signup').disabled = true;
   const firstName = document.getElementById('firstName').value;
   const lastName = document.getElementById('lastName').value;
@@ -15,21 +14,9 @@ document.querySelector('form').addEventListener('submit', async event => {
   document.querySelector('.btn--signup').disabled = false;
 });
 
-const signupUser = async (
-  firstName,
-  lastName,
-  email,
-  password,
-  passwordConfirm
-) => {
-  const userFirstName = firstName.replace(
-    `${firstName[0]}`,
-    `${firstName[0].toUpperCase()}`
-  );
-  const userLastName = lastName.replace(
-    `${lastName[0]}`,
-    `${lastName[0].toUpperCase()}`
-  );
+const signupUser = async (firstName, lastName, email, password, passwordConfirm) => {
+  const userFirstName = firstName.replace(`${firstName[0]}`, `${firstName[0].toUpperCase()}`);
+  const userLastName = lastName.replace(`${lastName[0]}`, `${lastName[0].toUpperCase()}`);
 
   try {
     const response = await axios({
@@ -47,7 +34,7 @@ const signupUser = async (
     if (response.data.status === 'success') {
       Swal.fire('Info', 'You have signed up successfully!', 'success');
       window.setTimeout(() => {
-        location.assign('/chat');
+        location.assign('/news');
       }, 1000);
     }
   } catch (err) {

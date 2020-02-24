@@ -3,6 +3,7 @@
     span.close_post &times;
     .container-fluid
         .row
+            .spinner-border.text-info#post--spinner(style='width: 6rem; height: 6rem; margin: 230px 630px 0px 630px' role='status')
             .col-lg-2
             .col-lg-7.modal_posts-content
                 .row
@@ -10,13 +11,13 @@
                         .card
                             .card-header.mb-2(style='padding: 5px !important;')
                                 h5(style='margin-bottom: 0px !important')
-                                    img.mr-2(src=`/img/users/${user.profilePhoto}` alt='' width='50px' style='border-radius: 50%;')
-                                    span= `${user.firstName} ${user.lastName}`
+                                    img.mr-2#modal_gallery-postOwnerPhoto( alt='' width='50px' style='border-radius: 50%;')
+                                    span#modal_gallery-postOwner
                                     span#post_description.ml-2(style="font-weight: 400; font-size: 16px")
                                     small.mr-2.text-muted.float-right#post_date(style="margin-top: 15px !important")
-                            img#img01.card-img-top(width='780' height='560' style='object-fit: cover;')
+                            img#img--post.card-img-top(width='780' height='560' style='object-fit: cover;')
                             .card-body(style='padding: 5px !important;')
-                                button#num_of_likes.btn.btn-info.btn-sm(style='width: 150px !important;' data-target='#modal_likes' data-toggle='modal')
+                                button#num_of_likes.btn.btn-info.btn-sm(style='width: 150px !important;' data-target='#modal_likes' data-toggle='modal') All Likes
                                 button.btn.btn-secondary.float-right.btn-sm#btn-like(style='width: 150px !important;')
                                     i.far.fa-thumbs-up
                                     |  Like
@@ -29,16 +30,16 @@
                         button.btn.btn-primary.float-right.btn-sm(type='button' data-toggle='modal' data-target='#modal_comment')
                             | Add comment
                     .card-body#add_comments(style='padding: 5px !important')
-                        .row(style='margin: 0px !important')
-                            .col-lg-12.mb-1(style='border: 1px solid rgba(0,0,0,.125); padding: 6px !important; border-radius: 5px;')
-                                .media
-                                    img.mr-2(src='http://placehold.it/500x500' alt='...' width='70px' style='border-radius: 50%;')
-                                    .media-body
-                                        p.mt-0(style='margin-bottom: 4px !important; font-weight: 500;')
-                                            | Media heading
-                                        p(style='font-size: 14px; margin-bottom: 2px !important;')
-                                            | Cras sit amet nibh libero, in gravida nulla. Nulla vel
-                                            | metus scelerisque ante sollicitudin.
+                        //- .row(style='margin: 0px !important')
+                        //-     .col-lg-12.mb-1(style='border: 1px solid rgba(0,0,0,.125); padding: 6px !important; border-radius: 5px;')
+                        //-         .media
+                        //-             img.mr-2(src='http://placehold.it/500x500' alt='...' width='70px' style='border-radius: 50%;')
+                        //-             .media-body
+                        //-                 p.mt-0(style='margin-bottom: 4px !important; font-weight: 500;')
+                        //-                     | Media heading
+                        //-                 p(style='font-size: 14px; margin-bottom: 2px !important;')
+                        //-                     | Cras sit amet nibh libero, in gravida nulla. Nulla vel
+                        //-                     | metus scelerisque ante sollicitudin.
 
 //- modal comment
 #modal_comment.modal.fade(tabindex='-1' role='dialog' aria-hidden='true')

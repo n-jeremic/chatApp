@@ -31,7 +31,7 @@ function displayUsers(users) {
       }</span><span class='spinner-border spinner-border-sm ml-2' style="color: lightblue; display: none" role="status" aria-hidden="true" id='spinner-${
         user.id
       }'></span><i class='fas fa-user-${user.isLoggedIn === true ? 'check' : 'minus'} float-right mt-3' style='color: ${
-        user.isLoggedIn === true ? 'green' : '#495057'
+        user.isLoggedIn === true ? '#00e600' : '#495057'
       }'></i></button>`
     );
   });
@@ -103,7 +103,7 @@ const openChatButton = (user_id, user_name, user_photo, messages, newMessage = '
   }
 
   const markUpButton = `<div class="col-lg-4" id="entireChat-${user_id}"><p><button
-    class="btn btn-${newMessage == 'false' ? 'light' : 'primary'} btn-block btn-lg"
+    class="btn btn-${newMessage == 'false' ? 'outline-primary' : 'primary'} btn-block btn-lg btn--chat"
     type="button"
     id="btnChat-${user_id}"
     onclick="goWhite('${user_id}');"
@@ -112,7 +112,7 @@ const openChatButton = (user_id, user_name, user_photo, messages, newMessage = '
     data-toggle="collapse"
     data-target="#collapse-${user_id}"
     aria-expanded="${newMessage == 'false' ? 'true' : 'false'}"
-    aria-controls="collapse-${user_id}"><a href="/profile/${user_id}" class="comment-userName">${user_name}</a> <a class="float-right" onclick="closeChat('${user_id}')"><i class="fas fa-times" style="color: #ff704d; display: none" id="closeChat-${user_id}"></i></a></button></p>
+    aria-controls="collapse-${user_id}">${user_name} <a class="float-right" onclick="closeChat('${user_id}')"><i class="fas fa-times" style="color: #ff704d; display: none" id="closeChat-${user_id}"></i></a></button></p>
     <div class="collapse ${newMessage == 'false' ? 'show' : ''}" id="collapse-${user_id}">
     <div class="card card-body chat-body">
     <div class="chat" id="scroll-${user_id}"><div class="container-fluid" id="chat-${user_id}">${markUpChat}</div></div>
@@ -121,7 +121,7 @@ const openChatButton = (user_id, user_name, user_photo, messages, newMessage = '
       class="form-control"
       type="text"
     ></input>
-    <button class="btn btn-success btn-sm btn-block mt-1" onclick="sendMessage('${user_id}', this)" id="sendBtn-${user_id}">
+    <button class="btn btn-secondary btn-sm btn-block mt-1" onclick="sendMessage('${user_id}', this)" id="sendBtn-${user_id}">
       Send message
     </button>
     </div>
@@ -176,13 +176,13 @@ const createChatMessage = (user_id, message, user_photo, from) => {
     markUpChat += `<div class="row"><div class="col-lg-12 no-padding"><p class="float-left">
           <a href="/profile/${currentUser.id}"><img
           src="/img/users/${currentUser.profilePhoto}"
-          width="40px"
-          class="img-fluid rounded" /></a><span class="text-message align-middle ml-2" style="background-color: white">${message}</span></p></div></div>`;
+          width="38px"
+          class="img-fluid rounded" /></a><span class="text-message align-top ml-2" style="background-color: white">${message}</span></p></div></div>`;
   } else {
     markUpChat += `<div class="row"><div class="col-lg-12 no-padding"><p class="float-right">
-        <span class="text-message align-middle mr-2" style="background-color: #ffff80">${message}</span><a href="/profile/${user_id}"><img
+        <span class="align-top mr-2 text-message" style="background-color: #007bff; color: #fff">${message}</span><a href="/profile/${user_id}"><img
         src="/img/users/${user_photo}"
-        width="40px"
+        width="38px"
         class="img-fluid rounded" /></a></p></div></div>`;
   }
 
@@ -214,7 +214,7 @@ async function getNewMessages() {
         let markUpChat = createChatMessage(newMsgsArr[i].from.id, newMsgsArr[i].text, newMsgsArr[i].from.profilePhoto, 'notMe');
         $(`#chat-${newMsgsArr[i].from.id}`).append(markUpChat);
         scrollDownChat(newMsgsArr[i].from.id);
-        document.querySelector(`#btnChat-${newMsgsArr[i].from.id}`).classList.remove('btn-light');
+        document.querySelector(`#btnChat-${newMsgsArr[i].from.id}`).classList.remove('btn-outline-primary');
         document.querySelector(`#btnChat-${newMsgsArr[i].from.id}`).classList.add('btn-primary');
       } else {
         sender_id = newMsgsArr[i].from.id;
@@ -236,7 +236,7 @@ function goWhite(user_id) {
   const btn_chat = document.querySelector(`#btnChat-${user_id}`);
   if (btn_chat) {
     btn_chat.classList.remove('btn-primary');
-    btn_chat.classList.add('btn-light');
+    btn_chat.classList.add('btn-outline-primary');
 
     $(`#collapse-${user_id}`).collapse('show');
     scrollDownChat(user_id);

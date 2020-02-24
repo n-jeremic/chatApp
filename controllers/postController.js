@@ -2,6 +2,7 @@ const multer = require('multer');
 const sharp = require('sharp');
 
 const User = require('../models/userModel');
+const Notification = require('../models/notificationModel');
 const Post = require('../models/postModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
@@ -23,9 +24,10 @@ const upload = multer({
 
 exports.uploadPost = upload.single('content');
 
+const createNotification = type => {};
+
 exports.resizePhoto = catchAsync(async (req, res, next) => {
-  if (!req.file)
-    return next(new AppError('There is no content in this post!', 400));
+  if (!req.file) return next(new AppError('There is no content in this post!', 400));
 
   req.file.post = `post-${req.user.id}-${Date.now()}.jpeg`;
 
@@ -65,16 +67,37 @@ exports.likePost = catchAsync(async (req, res, next) => {
     userPhoto: req.user.profilePhoto
   };
 
-  await Post.findByIdAndUpdate(req.params.postId, {
-    $push: {
-      likes: likeData
+  const updatedPost = await Post.findByIdAndUpdate(
+    req.params.postId,
+    {
+      $push: {
+        likes: likeData
+      }
+    },
+    {
+      new: true
     }
-  });
+  );
+
+  if (req.user.id != updatedPost.user._id) {
+    const notificationData = {
+      type: 'like',
+      post: updatedPost._id,
+      from: { userId: req.user.id, firstName: req.user.firstName, lastName: req.user.lastName, userPhoto: req.user.profilePhoto },
+      to: updatedPost.user._id
+    };
+
+    var notification = await Notification.create(notificationData);
+  }
 
   res.status(200).json({
     status: 'success',
     data: likeData
   });
+
+  if (notification) {
+    await User.findByIdAndUpdate(updatedPost.user._id, { $push: { newNotifications: notification._id } });
+  }
 });
 
 exports.makeComment = catchAsync(async (req, res, next) => {
@@ -90,11 +113,26 @@ exports.makeComment = catchAsync(async (req, res, next) => {
     comment: req.body.text
   };
 
-  await Post.findByIdAndUpdate(req.params.postId, {
-    $push: {
-      comments: commentData
-    }
-  });
+  const updatedPost = await Post.findByIdAndUpdate(
+    req.params.postId,
+    {
+      $push: {
+        comments: commentData
+      }
+    },
+    { new: true }
+  );
+
+  if (req.user.id != updatedPost.user._id) {
+    const notificationData = {
+      type: 'comment',
+      post: updatedPost._id,
+      from: { userId: req.user.id, firstName: req.user.firstName, lastName: req.user.lastName, userPhoto: req.user.profilePhoto },
+      to: updatedPost.user._id
+    };
+
+    var notification = await Notification.create(notificationData);
+  }
 
   res.status(200).json({
     status: 'success',
@@ -102,6 +140,10 @@ exports.makeComment = catchAsync(async (req, res, next) => {
       commentData
     }
   });
+
+  if (notification) {
+    await User.findByIdAndUpdate(updatedPost.user._id, { $push: { newNotifications: notification._id } });
+  }
 });
 
 exports.getPost = catchAsync(async (req, res, next) => {

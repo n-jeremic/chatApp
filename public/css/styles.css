@@ -8,7 +8,8 @@
   height: 350px !important;
   margin-bottom: 20px;
   padding: 3px !important;
-  background-color: #e0e0d2;
+  background-color: #cccccc;
+  /* background: url('/img/background/paper-background.jpg'); */
 }
 
 .main-content {
@@ -29,17 +30,80 @@
 
 .text-message {
   background-color: #d9ffb3;
-  border: 1px solid #999966;
-  border-radius: 5px;
-  padding: 4px;
+  border-radius: 15px;
+  padding: 5px 10px 7px 10px;
+  max-width: 255px !important;
+  max-height: 120px !important;
+  display: inline-block;
 }
 
 body {
-  background-color: #9ae59a;
+  background-color: #e9ebee;
 }
 
 .no-padding {
   padding: 0px !important;
+}
+
+.dropdown-profile::after {
+  display: inline-block;
+  margin-left: 0.255em;
+  vertical-align: 0.255em;
+  content: '';
+  border-top: 0.3em solid;
+  border-right: 0.3em solid transparent;
+  border-bottom: 0;
+  border-left: 0.3em solid transparent;
+}
+
+.dropdown-toggle::after {
+  display: none;
+}
+
+.notifications-drop {
+  padding: 10px;
+  width: 450px !important;
+}
+
+.notif-hover:hover {
+  cursor: default;
+}
+
+#num_of_notif {
+  border-radius: 2px;
+  background-color: red;
+  color: white;
+  width: 14px;
+  height: 20px;
+  position: absolute;
+  right: 0;
+  bottom: 24px;
+  z-index: 1;
+  padding: 2px;
+  text-align: center;
+  font-size: 12px;
+}
+
+a:hover {
+  color: #1a75ff;
+}
+
+.btn--chat:hover {
+  background-color: white !important;
+  color: #007bff !important;
+  border-color: #007bff !important;
+}
+
+.btn--chat:active {
+  background-color: white !important;
+  color: #007bff !important;
+  border-color: #007bff !important;
+}
+
+#notifications-list {
+  max-height: 390px !important;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .profile-info {
@@ -71,7 +135,17 @@ body {
 }
 
 .comment-userName {
-  color: #212529;
+  color: #404040;
+}
+
+.btn-outline-primary {
+  background-color: white;
+}
+
+.collapse-comments {
+  max-height: 402px !important;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 #likes_list {
@@ -90,7 +164,7 @@ body {
 .modal_posts {
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
+  z-index: 1030; /* Sit on top */
   padding: 60px; /* Location of the box */
   left: 0;
   top: 0;

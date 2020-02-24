@@ -13,6 +13,10 @@ router.patch('/updateMyPassword', authController.protect, authController.updateM
 router.get('/myChats', authController.protect, userController.getAllChats);
 router.get('/myChatWith/:user_id', authController.protect, userController.myChatWith);
 
+router.get('/myNotifications', authController.protect, userController.getMyNotificatons);
+router.get('/NewNotifications', authController.protect, userController.myNewNotifications);
+router.patch('/seenNotification/:notif_id', authController.protect, userController.markNotifAsSeen);
+
 router.get('/NewMessages', authController.protect, userController.myNewMessages);
 
 router.get('/onlineUsers', authController.protect, userController.getOnlineUsers);

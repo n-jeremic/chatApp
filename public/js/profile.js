@@ -169,7 +169,7 @@ async function addNewPhoto() {
     if (response.data.status === 'success') {
       window.setTimeout(() => {
         location.reload(true);
-      }, 500);
+      }, 200);
       removeSpinner('btn-add-new-photo', '<i class="fas fa-cloud-upload-alt"></i> Upload photo');
     }
   } catch (err) {
