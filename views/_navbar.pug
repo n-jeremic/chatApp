@@ -10,19 +10,33 @@ nav.navbar.navbar-expand-lg.navbar-dark.bg-dark.sticky-top
                     span.sr-only (current)
             li.nav-item
                 a.nav-link(href='/chat' class=`${title === "Chat" ? "active" : ""}`) Chat now
+        .dropdown        
+            form.form-inline(style="margin-right: 230px !important")
+                .input-group
+                    .input-group-prepend
+                        span#addon-wrapping.input-group-text.search-spinner(style="color: #fff; background-color: #17a2b8; border-color: #17a2b8")
+                            i.fas.fa-search
+                    input.form-control.mr-sm-2#search--field(type='text' placeholder='Search for people...' aria-label='Search' style="width: 350px !important" onkeyup="searchUsers(this.value)")
+                .dropdown-menu#dropdown-search(aria-labelledby='dropdownMenuButton' style="width: 392px !important; padding: 0px !important")
+                    p(style="margin: 8px! important; color: #17a2b8")
+                        span#total-results
+                        span.float-right#num_current-results
+                    #search-results.mt-2
+                    nav.mt-4#pagination_content(aria-label='Page navigation example' style="display: none; position: absolute; bottom: 0px; left: 50%; right: 50%")
+                        ul.pagination.justify-content-center.pagination-sm
         .dropdown.mr-2
             a#dropdownMenuLink.dropdown-toggle(href='#' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false')
                 div
                     span#num_of_notif(style="display: none") 0
-                    i.fas.fa-bell#btn-notifications(style="font-size: 35px; color: rgba(255,255,255,.5)" onclick="regularStyleBtn();")
-            .dropdown-menu.dropdown-menu-right.notifications-drop(aria-labelledby='dropdownMenuLink')
+                    i.fas.fa-bell#btn-notifications(style="font-size: 35px; color: rgba(255,255,255,.5)" onclick="regularStyleBtn(); hideSearchDrop();")
+            .dropdown-menu.dropdown-menu-right.notifications-drop.mt-1(aria-labelledby='dropdownMenuLink')
                 h5.mb-3 Your Notifications
                 .list-group#notifications-list
         .btn-group.ml-4.mr-3
-            button.btn.btn-info.dropdown-toggle(type='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false')
+            button.btn.btn-info.dropdown-toggle(type='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false' onclick="hideSearchDrop();")
                 span=`Logged in as ${userMe.firstName} ${userMe.lastName}`
                 i.fas.fa-caret-down.ml-2
-            .dropdown-menu.dropdown-menu-right
+            .dropdown-menu.dropdown-menu-right.mt-1
                 a.dropdown-item(type='button' href="/me")
                     i.fas.fa-user.mr-2
                     | My Profile

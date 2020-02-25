@@ -191,3 +191,26 @@ exports.markNotifAsSeen = catchAsync(async (req, res, next) => {
     status: 'success'
   });
 });
+
+exports.searchAllUsers = catchAsync(async (req, res, next) => {
+  if (!req.query.query) {
+    return next(new AppError('There is no query to search for!', 400));
+  }
+
+  let regex = new RegExp(req.query.query, 'i');
+  const allUsers = await User.find();
+  const results = [];
+  allUsers.forEach(user => {
+    if (regex.test(user.firstName) || regex.test(user.lastName)) {
+      results.push(user);
+    }
+  });
+
+  res.status(200).json({
+    status: 'success',
+    results: results.length,
+    data: {
+      results
+    }
+  });
+});

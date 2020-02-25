@@ -1,6 +1,18 @@
 $(document).ready(getAllNotifications);
 window.setInterval(getNewNotifications, 5000);
 
+document.getElementById('search--field').addEventListener('blur', function(event) {
+  if (event.relatedTarget !== null) {
+    if (event.relatedTarget.classList.contains('page-link')) {
+      $('#search--field').focus();
+      return;
+    }
+  } else {
+    $('#search--field').val('');
+    hideSearchDrop();
+  }
+});
+
 async function logout() {
   try {
     const res = await axios({
@@ -43,9 +55,11 @@ async function getAllNotifications() {
           }
         });
       } else {
-        $('#notifications-list').append(
-          "<div class='row'><div class='col-lg-12'><p class='text-center'>You don't have any notifications yet.</p></div></div>"
-        );
+        if (printedNotIds === undefined) {
+          $('#notifications-list').append(
+            "<div class='row'><div class='col-lg-12'><p class='text-center'>You don't have any notifications yet.</p></div></div>"
+          );
+        }
       }
     }
   } catch (err) {
@@ -123,4 +137,97 @@ async function markNotifAsSeen(notif_id, clicked_el) {
   } catch (err) {
     console.log(err);
   }
+}
+
+async function searchUsers(query) {
+  if (query.length === 0 || query[0] === ' ') {
+    $('#dropdown-search').dropdown('hide');
+    return;
+  }
+
+  $('.search-spinner').html('<i class="fas fa-spinner fa-spin"></i>');
+  $('.notifications-drop').dropdown('hide');
+
+  try {
+    const response = await axios({
+      method: 'GET',
+      url: `/api/users/searchUsers?query=${query}`
+    });
+
+    if (response.data.status === 'success') {
+      $('#total-results').text(`Total of ${response.data.data.results.length} results`);
+      $('.search-spinner').html('<i class="fas fa-search"></i>');
+      if (response.data.data.results.length < 9) {
+        $('#search-results').empty();
+        response.data.data.results.forEach(user => searchResultsHTML(user));
+        $('#dropdown-search').dropdown('show');
+        $('#pagination_content').hide();
+        $('#dropdown-search').css('height', '');
+        $('#num_current-results').text('');
+      } else {
+        paginate(response.data.data.results, 1);
+        $('#dropdown-search').dropdown('show');
+      }
+    }
+  } catch (err) {
+    console.log(err);
+    Swal.fire('Oops!', 'Server error! Please try again.', 'error');
+  }
+}
+
+function searchResultsHTML(user) {
+  const markUp = `<a class="list-group-item list-group-item-action" href="#" onclick="goToProfile('${user._id}')" style="padding: 6px !important; border-radius: 0px !important;"><img class="rounded mr-2" width="40px" src="/img/users/${user.profilePhoto}"/>${user.firstName} ${user.lastName}</a>`;
+
+  $('#search-results').append(markUp);
+}
+
+function paginate(results, page) {
+  $('#dropdown-search').css('height', '536px');
+  const num_of_pages = Math.ceil(results.length / 8);
+  const start_position = (parseInt(page) - 1) * 8;
+  const end_position = start_position + 8;
+
+  $('#search-results').empty();
+  let counter = 0;
+
+  for (let i = start_position; i < end_position; i++) {
+    if (!results[i]) {
+      break;
+    }
+    counter++;
+    searchResultsHTML(results[i]);
+  }
+
+  $('#num_current-results').text(`Showing ${start_position + 1} - ${start_position + counter} results`);
+
+  $('.pagination').empty();
+  $('.pagination').append(
+    `<li class="page-item ${
+      page === 1 ? 'disabled' : ''
+    }"><a class="page-link" href="#" tabindex="-1"aria-disabled="true" onclick='paginate(${JSON.stringify(results)}, ${page - 1})'>Previous</a></li>`
+  );
+
+  for (let i = 1; i <= num_of_pages; i++) {
+    $('.pagination').append(
+      `<li class="page-item ${i == page ? 'active' : ''}"><a class="page-link" href="#" onclick='paginate(${JSON.stringify(
+        results
+      )}, ${i})'>${i}</a></li>`
+    );
+  }
+
+  $('.pagination').append(
+    `<li class="page-item ${
+      page === num_of_pages ? 'disabled' : ''
+    }"><a class="page-link" href="#" tabindex="-1"aria-disabled="true" onclick='paginate(${JSON.stringify(results)}, ${page + 1})'>Next</a></li>`
+  );
+
+  $('#pagination_content').show();
+}
+
+function hideSearchDrop() {
+  $('#dropdown-search').dropdown('hide');
+}
+
+function goToProfile(user_id) {
+  location.href = `/profile/${user_id}`;
 }
