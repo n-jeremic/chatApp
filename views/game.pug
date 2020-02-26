@@ -1,0 +1,22 @@
+extends base
+
+block content
+    include _navbar
+    .container-fluid
+        .row(style='margin-top: 50px;')
+            .col-lg-3
+                .card
+                    .card-header
+                        span(style='font-size: 20px; font-weight: 400;') Available users
+                    .card-body#card-users_game(style='padding: 10px !important;')
+                        ul.list-group
+                            each user in users
+                                li.list-group-item.list-group-item-action(href='#' style='padding: 5px !important')
+                                    a(href=`/profile/${user.id}`)
+                                        img.mr-2(src=`/img/users/${user.profilePhoto}` alt='' width='50px' style='border-radius: 50%;')
+                                    span.align-middle(style="font-size: 18px")= `${user.firstName} ${user.lastName}`
+                                    button.btn.btn-sm.btn-danger.float-right(style='margin-top: 10px;') Invite
+    include _post-modals
+block scriptFile
+    script(src="/js/functions.js")
+    script(src="/js/post.js")  

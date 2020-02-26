@@ -55,6 +55,14 @@ const userSchema = new mongoose.Schema(
         ref: 'Notification'
       }
     ],
+    gameRequest: {
+      userId: mongoose.Schema.ObjectId,
+      gameId: mongoose.Schema.ObjectId,
+      firstName: String,
+      lastName: String,
+      profilePhoto: String,
+      accepted: Boolean
+    },
     isLoggedIn: {
       type: Boolean,
       default: false

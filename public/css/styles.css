@@ -116,6 +116,12 @@ a:hover {
   background-color: #f2f2f2;
 }
 
+#card-users_game {
+  max-height: 560px !important;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
 #myTabContent {
   background-color: #fff;
   border: 1px solid transparent;

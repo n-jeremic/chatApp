@@ -24,8 +24,6 @@ const upload = multer({
 
 exports.uploadPost = upload.single('content');
 
-const createNotification = type => {};
-
 exports.resizePhoto = catchAsync(async (req, res, next) => {
   if (!req.file) return next(new AppError('There is no content in this post!', 400));
 

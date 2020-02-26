@@ -5,6 +5,7 @@ const path = require('path');
 const userRouter = require('./routes/userRoutes');
 const messageRouter = require('./routes/messageRoutes');
 const postRouter = require('./routes/postRoutes');
+const gameRouter = require('./routes/gameRoutes');
 const viewRouter = require('./routes/viewRoutes');
 const errorController = require('./controllers/errorController');
 const AppError = require('./utils/appError');
@@ -20,6 +21,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // ROUTES
+app.use('/api/game', gameRouter);
 app.use('/api/messages', messageRouter);
 app.use('/api/users', userRouter);
 app.use('/api/posts', postRouter);

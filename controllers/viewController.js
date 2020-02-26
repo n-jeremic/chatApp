@@ -113,3 +113,13 @@ exports.getNews = catchAsync(async (req, res, next) => {
     userMe: req.user
   });
 });
+
+exports.pigGame = catchAsync(async (req, res, next) => {
+  const users = await User.find({ isLoggedIn: { $eq: true }, gameRequest: { $eq: undefined }, _id: { $ne: req.user.id } });
+
+  res.status(200).render('game', {
+    title: 'Pig Game',
+    users,
+    userMe: req.user
+  });
+});

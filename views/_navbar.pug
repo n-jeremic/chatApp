@@ -5,13 +5,13 @@ nav.navbar.navbar-expand-lg.navbar-dark.bg-dark.sticky-top
     #navbarSupportedContent.collapse.navbar-collapse
         ul.navbar-nav.mr-auto
             li.nav-item
-                a.nav-link(href='/news' class=`${title === "News Feed" ? "active" : ""}`)
-                    | News 
-                    span.sr-only (current)
+                a.nav-link(href='/news' class=`${title === "News Feed" ? "active" : ""}`) News 
             li.nav-item
                 a.nav-link(href='/chat' class=`${title === "Chat" ? "active" : ""}`) Chat now
+            li.nav-item
+                a.nav-link(href='/game' class=`${title === "Pig Game" ? "active" : ""}`) Pig Game    
         .dropdown        
-            form.form-inline(style="margin-right: 230px !important")
+            .form-inline(style="margin-right: 230px !important")
                 .input-group
                     .input-group-prepend
                         span#addon-wrapping.input-group-text.search-spinner(style="color: #fff; background-color: #17a2b8; border-color: #17a2b8")
