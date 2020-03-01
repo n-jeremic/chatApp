@@ -9,7 +9,9 @@ const sendErorr = (req, res, err) => {
   } else {
     if (err.message.includes('You are not logged in.')) {
       res.redirect('/login');
+      return;
     }
+
     res.status(err.statusCode).render('error', {
       error: err
     });

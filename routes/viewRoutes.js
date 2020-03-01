@@ -15,5 +15,6 @@ router.get('/me', authController.protect, viewController.myProfile);
 router.get('/profile/:user_id', authController.protect, viewController.getUser);
 router.get('/news', authController.protect, viewController.getNews);
 router.get('/game', authController.protect, viewController.pigGame);
+router.get('/playGame/:gameId', authController.protect, viewController.playGame);
 
 module.exports = router;

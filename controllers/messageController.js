@@ -14,10 +14,7 @@ const createChat = async (receiver_id, sender_id) => {
   }
 
   for (let i = 0; i < allChats.length; i++) {
-    if (
-      allChats[i].users.includes(receiver_id) &&
-      allChats[i].users.includes(sender_id)
-    ) {
+    if (allChats[i].users.includes(receiver_id) && allChats[i].users.includes(sender_id)) {
       chat = allChats[i];
       return chat;
     }

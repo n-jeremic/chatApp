@@ -15,9 +15,7 @@ const signToken = user_id => {
 const createSendToken = (user, res) => {
   const token = signToken(user._id);
   const cookieOptions = {
-    expires: new Date(
-      Date.now() + process.env.COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
-    ),
+    expires: new Date(Date.now() + process.env.COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000),
     httpOnly: true
   };
 
@@ -75,22 +73,14 @@ exports.login = catchAsync(async (req, res, next) => {
 
 exports.protect = catchAsync(async (req, res, next) => {
   let token;
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith('Bearer')
-  ) {
+  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
     token = req.headers.authorization.split(' ')[1];
   } else if (req.cookies.jwt) {
     token = req.cookies.jwt;
   }
 
   if (!token) {
-    return next(
-      new AppError(
-        'You are not logged in. Please log in to perform this action!',
-        404
-      )
-    );
+    return next(new AppError('You are not logged in. Please log in to perform this action!', 404));
   }
 
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
@@ -135,12 +125,7 @@ exports.updateMyPassword = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user.id).select('+password');
 
   if (!(await bcrypt.compare(password, user.password))) {
-    return next(
-      new AppError(
-        'Please provide a valid password in order to update it!',
-        400
-      )
-    );
+    return next(new AppError('Please provide a valid password in order to update it!', 400));
   }
 
   user.password = newPassword;

@@ -2,6 +2,7 @@ const multer = require('multer');
 const sharp = require('sharp');
 
 const User = require('../models/userModel');
+const Game = require('../models/gameModel');
 const Notification = require('../models/notificationModel');
 const Chat = require('../models/chatModel');
 const catchAsync = require('../utils/catchAsync');
@@ -213,4 +214,21 @@ exports.searchAllUsers = catchAsync(async (req, res, next) => {
       results
     }
   });
+});
+
+exports.checkMyGameRequest = catchAsync(async (req, res, next) => {
+  const userMe = await User.findById(req.user.id);
+
+  if (!userMe.gameRequest.gameId) {
+    return res.status(200).json({
+      status: 'empty'
+    });
+  } else {
+    return res.status(200).json({
+      status: 'success',
+      data: {
+        request: userMe.gameRequest
+      }
+    });
+  }
 });

@@ -1,5 +1,6 @@
 $(document).ready(getAllNotifications);
 window.setInterval(getNewNotifications, 5000);
+let gameRequestInterval = setInterval(checkMyGameRequest, 2000);
 
 document.getElementById('search--field').addEventListener('blur', function(event) {
   if (event.relatedTarget !== null) {
@@ -230,4 +231,36 @@ function hideSearchDrop() {
 
 function goToProfile(user_id) {
   location.href = `/profile/${user_id}`;
+}
+
+async function checkMyGameRequest() {
+  try {
+    const response = await axios({
+      method: 'GET',
+      url: '/api/users/myGameRequest'
+    });
+
+    if (response.data.status === 'empty') {
+      return;
+    } else if (response.data.status === 'success') {
+      createGameNotif(response.data.data.request);
+      clearInterval(gameRequestInterval);
+    }
+
+    return;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+function createGameNotif(request) {
+  $('#btn-notifications').css('color', 'white');
+  let num_of_not = parseInt($('#num_of_notif').text());
+  $('#num_of_notif').text(`${num_of_not + 1}`);
+  $('#num_of_notif').css('display', 'inline-block');
+  $('.notifications-drop').css('width', '510px');
+
+  const markUp = `<button href="#" class="list-group-item list-group-item-action notif-hover" style="padding: 8px !important; background-color: #e6e6e6; color: black;"><img width="40px" style="border-radius: 50%" src="/img/users/${request.profilePhoto}" class="mr-2"><a style="color: #1a75ff" href="/profile/${request.userId}">${request.firstName} ${request.lastName}</a> sent you a Pig Game request.<a href="/playGame/${request.gameId}" style="color: #1a75ff"> Play now!</a><i class='fas fa-circle float-right mt-3 mr-2' style="font-size: 10px; color: #4d4dff"></i></button>`;
+
+  $('#notifications-list').prepend(markUp);
 }

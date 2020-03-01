@@ -35,8 +35,33 @@ exports.sendGameRequest = catchAsync(async (req, res, next) => {
   }
 
   res.status(200).json({
-    status: 'success'
+    status: 'success',
+    data: {
+      game
+    }
   });
+});
+
+exports.checkGameRequest = catchAsync(async (req, res, next) => {
+  const user = await User.findById(req.params.userId);
+
+  if (!user) {
+    return next(new AppError('User with this ID no longer exists.', 404));
+  }
+
+  if (user.gameRequest.accepted === false) {
+    return res.status(200).json({
+      status: 'pending'
+    });
+  } else {
+    const game = await Game.findById(user.gameRequest.gameId);
+    return res.status(200).json({
+      status: 'accepted',
+      data: {
+        game
+      }
+    });
+  }
 });
 
 exports.updateRoundScore = catchAsync(async (req, res, next) => {

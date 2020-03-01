@@ -17,6 +17,8 @@ router.get('/myNotifications', authController.protect, userController.getMyNotif
 router.get('/NewNotifications', authController.protect, userController.myNewNotifications);
 router.patch('/seenNotification/:notif_id', authController.protect, userController.markNotifAsSeen);
 
+router.get('/myGameRequest', authController.protect, userController.checkMyGameRequest);
+
 router.get('/searchUsers', authController.protect, userController.searchAllUsers);
 
 router.get('/NewMessages', authController.protect, userController.myNewMessages);

@@ -15,7 +15,7 @@ const app = express();
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 
-// GLOBAL MIDDLEWARE STACK (Every request goes through this stack)
+// GLOBAL MIDDLEWARE STACK
 app.use(express.json({ limit: '10kb' }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));

@@ -2,6 +2,7 @@ const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const User = require('../models/userModel');
 const Post = require('../models/postModel');
+const Game = require('../models/gameModel');
 
 exports.login = (req, res, next) => {
   res.status(200).render('login', {
@@ -121,5 +122,16 @@ exports.pigGame = catchAsync(async (req, res, next) => {
     title: 'Pig Game',
     users,
     userMe: req.user
+  });
+});
+
+exports.playGame = catchAsync(async (req, res, next) => {
+  const game = await Game.findById(req.params.gameId);
+  await User.findByIdAndUpdate(req.user.id, { 'gameRequest.accepted': true });
+
+  res.status(200).render('playGame', {
+    title: 'Pig Game',
+    userMe: req.user,
+    game
   });
 });

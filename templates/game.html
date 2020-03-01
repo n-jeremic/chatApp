@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="game_styles.css" />
+    <script src="https://kit.fontawesome.com/d4b741b49f.js" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row" style="margin-top: 50px;">
+        <div class="col-lg-3">
+          <div class="card">
+            <div class="card-header">
+              <span style="font-size: 20px; font-weight: 400;">Available users</span>
+            </div>
+            <div class="card-body" style="padding: 10px !important;">
+              <div class="list-group">
+                <a href="#" class="list-group-item list-group-item-action" style="padding: 5px !important">
+                  <img src="http://placehold.it/50x50" alt="" width="40px" style="border-radius: 50%;" class="mr-2" />
+                  <span>Nikola Jeremic</span>
+                  <button class="btn btn-sm btn-danger float-right mt-1">Send invitation</button>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-7">
+          <div style="width: 100%; height: 616px !important; background-color: grey; padding: 8px;">
+            <div class="row">
+              <div class="col-lg-6" style="border-right: 1px solid white; width: 100%; height: 600px !important; padding: 30px 40px;">
+                <div class="row">
+                  <div class="col-lg-12">
+                    <img src="http://placehold.it/50x50" alt="" style="border-radius: 50%;" width="60px" class="mr-2 mt-2" />
+                    <span style="font-size: 32px; font-weight: 500;" class="align-middle mr-3">Nikola Jeremic</span>
+                    <span style="font-size: 40px; color: green;" class="align-middle"><i class="fas fa-hand-paper"></i></span>
+                  </div>
+                </div>
+                <div class="row mt-4 mb-3">
+                  <div class="col-lg-2"></div>
+                  <div class="col-lg-8">
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1" style="font-weight: 500; font-size: 18px;">SCORE</span>
+                      </div>
+                      <input
+                        type="text"
+                        class="form-control"
+                        style="background-color: whitesmoke !important; text-align: center;  padding: 0px !important; font-size: 18px; font-weight: 500;"
+                        value="50"
+                        aria-label="Username"
+                        aria-describedby="basic-addon1"
+                        disabled
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-12 mt-5 dice-container">
+                    <div class="dice">
+                      <ol class="die-list even-roll" data-roll="1" id="die-1">
+                        <li class="die-item" data-side="1">
+                          <span class="dot"></span>
+                        </li>
+                        <li class="die-item" data-side="2">
+                          <span class="dot"></span>
+                          <span class="dot"></span>
+                        </li>
+                        <li class="die-item" data-side="3">
+                          <span class="dot"></span>
+                          <span class="dot"></span>
+                          <span class="dot"></span>
+                        </li>
+                        <li class="die-item" data-side="4">
+                          <span class="dot"></span>
+                          <span class="dot"></span>
+                          <span class="dot"></span>
+                          <span class="dot"></span>
+                        </li>
+                        <li class="die-item" data-side="5">
+                          <span class="dot"></span>
+                          <span class="dot"></span>
+                          <span class="dot"></span>
+                          <span class="dot"></span>
+                          <span class="dot"></span>
+                        </li>
+                        <li class="die-item" data-side="6">
+                          <span class="dot"></span>
+                          <span class="dot"></span>
+                          <span class="dot"></span>
+                          <span class="dot"></span>
+                          <span class="dot"></span>
+                          <span class="dot"></span>
+                        </li>
+                      </ol>
+                    </div>
+                  </div>
+                  <div class="col-lg-12">
+                    <p class="text-center mt-2" style="font-size: 50px; font-weight: 500;">12</p>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-3"></div>
+                  <div class="col-lg-6">
+                    <button class="btn btn-danger btn-block" id="roll-button"><i class="fas fa-dice-six mr-2"></i>ROLL THE DICE</button>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-3"></div>
+                  <div class="col-lg-6">
+                    <button class="btn btn-danger btn-block mt-3"><i class="fas fa-angle-double-down mr-2"></i>SET ROUND</button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-6" style="width: 100%; height: 600px !important; padding: 30px 40px;">
+                <div class="row">
+                  <div class="col-lg-12">
+                    <img src="http://placehold.it/50x50" alt="" style="border-radius: 50%;" width="60px" class="mr-2 mt-2" />
+                    <span style="font-size: 32px; font-weight: 500;" class="align-middle mr-3">Nikola Jeremic</span>
+                    <span style="font-size: 40px; color: green;" class="align-middle"><i class="fas fa-hand-paper"></i></span>
+                  </div>
+                </div>
+                <div class="row mt-4 mb-3">
+                  <div class="col-lg-2"></div>
+                  <div class="col-lg-8">
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1" style="font-weight: 500; font-size: 18px;">SCORE</span>
+                      </div>
+                      <input
+                        type="text"
+                        class="form-control"
+                        style="background-color: whitesmoke !important; text-align: center;  padding: 0px !important; font-size: 18px; font-weight: 500;"
+                        value="50"
+                        aria-label="Username"
+                        aria-describedby="basic-addon1"
+                        disabled
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+      integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+      crossorigin="anonymous"
+    ></script>
+    <script src="game.js"></script>
+  </body>
+</html>
