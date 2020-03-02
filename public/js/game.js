@@ -1,12 +1,13 @@
+if (location.href.includes('playGame')) {
+  $(document).ready(getGame);
+}
+
 let watchRequestInterval;
 let gameObj;
 const currentUser = JSON.parse(document.getElementById('currentUserData').dataset.currentUser);
 let player1;
 let player2;
 let oppositeScoreInterval;
-
-if (location.href.includes('playGame')) {
-}
 
 async function getGame() {
   const gameId = location.href.split('/')[4];
