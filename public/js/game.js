@@ -114,7 +114,7 @@ function findActivePlayer(gameObj) {
       makeActivePlayerInterface('player2');
       oppositeScoreInterval = setInterval(() => {
         checkOpositePlayer(gameObj);
-      }, 200);
+      }, 1000);
     }
     return;
   } else if (gameObj.awayPlayer._id === currentUser._id) {
@@ -125,7 +125,7 @@ function findActivePlayer(gameObj) {
       makeActivePlayerInterface('player2');
       oppositeScoreInterval = setInterval(() => {
         checkOpositePlayer(gameObj);
-      }, 200);
+      }, 1000);
     }
     return;
   }
@@ -249,7 +249,7 @@ async function checkOpositePlayer(gameObjJS) {
       }
       oppositeScoreInterval = setInterval(() => {
         checkOpositePlayer(gameObj);
-      }, 200);
+      }, 1000);
 
       return;
     }
