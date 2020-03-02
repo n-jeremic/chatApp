@@ -5,6 +5,29 @@ let player1;
 let player2;
 let oppositeScoreInterval;
 
+if (location.href.includes('playGame')) {
+}
+
+async function getGame() {
+  const gameId = location.href.split('/')[4];
+  try {
+    const response = await axios({
+      method: 'GET',
+      url: `/api/game/oppositePlayerScore/${gameId}`
+    });
+
+    if (response.data.status === 'success') {
+      gameObj = response.data.data.game;
+      findMyPlayer(gameObj);
+      findActivePlayer(gameObj);
+      return;
+    }
+  } catch (err) {
+    console.log(err);
+    Swal.fire('Warning', 'Server error! Please try again.', 'error');
+  }
+}
+
 async function sendGameRequest(userId, btn) {
   btn.disabled = true;
   btn.classList.remove('invite--btn');
