@@ -246,19 +246,10 @@ async function checkOpositePlayer(gameObjJS) {
         }
 
         rollOppositeDice(currentScore);
-
-        if (currentScore === 1) {
-          findActivePlayer(gameObj);
-        } else {
-          oppositeScoreInterval = setInterval(() => {
-            checkOpositePlayer(gameObj);
-          }, 500);
-        }
-      } else {
-        oppositeScoreInterval = setInterval(() => {
-          checkOpositePlayer(gameObj);
-        }, 500);
       }
+      oppositeScoreInterval = setInterval(() => {
+        checkOpositePlayer(gameObj);
+      }, 500);
 
       return;
     }
@@ -279,5 +270,8 @@ function rollOppositeDice(score) {
     $('#player2--roundScore').text(player2.roundScore);
     $('#player2--roundScore').css('visibility', 'visible');
     $('#player2--text').text(`${player2.firstName} is on the move...`);
+    if (score === 1) {
+      findActivePlayer(gameObj);
+    }
   }, 3000);
 }
