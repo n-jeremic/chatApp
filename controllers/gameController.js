@@ -169,3 +169,18 @@ exports.updateTotalScore = catchAsync(async (req, res, next) => {
     }
   });
 });
+
+exports.checkOppositeScore = catchAsync(async (req, res, next) => {
+  const game = await Game.findById(req.params.gameId);
+
+  if (!game) {
+    return next(new AppError('There is no game with that ID!', 404));
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      game
+    }
+  });
+});

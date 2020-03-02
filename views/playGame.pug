@@ -6,17 +6,18 @@ block append head
 block content
     include _navbar
     .container-fluid
+        span#currentUserData(data-current-user=`${JSON.stringify(userMe)}`)
         .row(style='margin-top: 50px;')
             .col-lg-2
             .col-lg-7
                 div(style='width: 100%; height: 616px !important; background-color: rgb(168, 161, 161); padding: 8px;')
                     .row
-                        .col-lg-6(style='border-right: 1px solid white; width: 100%; height: 600px !important; padding: 30px 40px;')
+                        .col-lg-6#player1--interface(style='border-right: 1px solid white; width: 100%; height: 600px !important; padding: 30px 40px;')
                             .row
                                 .col-lg-12.text-center
                                     img.mr-2.mt-2(src=`/img/users/${game.awayPlayer.profilePhoto}` alt='' style='border-radius: 50%;' width='60px')
                                     span.align-middle.mr-3(style='font-size: 32px; font-weight: 500;')= `${game.awayPlayer.firstName} ${game.awayPlayer.lastName}`
-                                    span.align-middle(style='font-size: 40px; color: green; display: none')
+                                    span.align-middle#player1--activeHand(style='font-size: 40px; color: green; display: none')
                                         i.fas.fa-hand-paper
                             .row.mt-4.mb-3
                                 .col-lg-2
@@ -24,11 +25,11 @@ block content
                                     .input-group
                                         .input-group-prepend
                                             span#basic-addon1.input-group-text(style='font-weight: 500; font-size: 18px;') SCORE
-                                        input.form-control(type='text' style='background-color: whitesmoke !important; text-align: center;  padding: 0px !important; font-size: 18px; font-weight: 500;' value='0' aria-label='Username' aria-describedby='basic-addon1' disabled='')
+                                        input.form-control#player1--totalScore(type='text' style='background-color: whitesmoke !important; text-align: center;  padding: 0px !important; font-size: 18px; font-weight: 500;' value='0' aria-label='Username' aria-describedby='basic-addon1' disabled='')
                             .row
                                 .col-lg-12.mt-5.dice-container
                                     .dice
-                                        ol#die-1.die-list.even-roll(data-roll='1')
+                                        ol.die-list.even-roll#player1--dice(data-roll='1')
                                             li.die-item(data-side='1')
                                                 span.dot
                                             li.die-item(data-side='2')
@@ -57,25 +58,25 @@ block content
                                                 span.dot
                                                 span.dot
                                 .col-lg-12
-                                    p.text-center.mt-2(style='font-size: 50px; font-weight: 500;') 12
+                                    p.text-center.mt-2#player1--roundScore(style='font-size: 50px; font-weight: 500;') 12
                             .row
                                 .col-lg-3
                                 .col-lg-6
-                                    button#roll-button.btn.btn-danger.btn-block
+                                    button#rollBtn.btn.btn-danger.btn-block(onclick="rollMyDice()")
                                         i.fas.fa-dice-six.mr-2
                                         | ROLL THE DICE
                             .row
                                 .col-lg-3
                                 .col-lg-6
-                                    button.btn.btn-danger.btn-block.mt-3
+                                    button.btn.btn-danger.btn-block.mt-3#setRoundBtn(onclick="setMyRound()")
                                         i.fas.fa-angle-double-down.mr-2
                                         | SET ROUND
-                        .col-lg-6(style='width: 100%; height: 600px !important; padding: 30px 40px;')
+                        .col-lg-6#player2--interface(style='width: 100%; height: 600px !important; padding: 30px 40px;')
                             .row
                                 .col-lg-12.text-center
                                     img.mr-2.mt-2(src=`/img/users/${game.homePlayer.profilePhoto}` alt='' style='border-radius: 50%;' width='60px')
                                     span.align-middle.mr-3(style='font-size: 32px; font-weight: 500;')= `${game.homePlayer.firstName} ${game.homePlayer.lastName}`
-                                    span.align-middle(style='font-size: 40px; color: green;')
+                                    span.align-middle#player2--activeHand(style='font-size: 40px; color: green;')
                                         i.fas.fa-hand-paper
                             .row.mt-4.mb-3
                                 .col-lg-2
@@ -83,7 +84,42 @@ block content
                                     .input-group
                                         .input-group-prepend
                                             span#basic-addon1.input-group-text(style='font-weight: 500; font-size: 18px;') SCORE
-                                        input.form-control(type='text' style='background-color: whitesmoke !important; text-align: center;  padding: 0px !important; font-size: 18px; font-weight: 500;' value='0' aria-label='Username' aria-describedby='basic-addon1' disabled='')
+                                        input.form-control#player2--totalScore(type='text' style='background-color: whitesmoke !important; text-align: center;  padding: 0px !important; font-size: 18px; font-weight: 500;' value='0' aria-label='Username' aria-describedby='basic-addon1' disabled='')
+                            .row
+                                .col-lg-12.mt-5.dice-container
+                                    .dice
+                                        ol.die-list.even-roll#player2--dice(data-roll='1')
+                                            li.die-item(data-side='1')
+                                                span.dot
+                                            li.die-item(data-side='2')
+                                                span.dot
+                                                span.dot
+                                            li.die-item(data-side='3')
+                                                span.dot
+                                                span.dot
+                                                span.dot
+                                            li.die-item(data-side='4')
+                                                span.dot
+                                                span.dot
+                                                span.dot
+                                                span.dot
+                                            li.die-item(data-side='5')
+                                                span.dot
+                                                span.dot
+                                                span.dot
+                                                span.dot
+                                                span.dot
+                                            li.die-item(data-side='6')
+                                                span.dot
+                                                span.dot
+                                                span.dot
+                                                span.dot
+                                                span.dot
+                                                span.dot
+                                .col-lg-12
+                                    p.text-center.mt-4#player2--roundScore(style='font-size: 50px; font-weight: 500; visibility: hidden;') 0 
+                                .col-lg-12
+                                    p.text-center.mt-3#player2--text(style='font-size: 20px; font-weight: 400; visibility: hidden;')                                        
             .col-lg-3                              
         include _post-modals
 block scriptFile

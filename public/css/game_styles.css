@@ -182,3 +182,7 @@ ol {
 [data-side='6'] .dot:nth-of-type(6) {
   grid-area: nine;
 }
+
+.inactivePlayer {
+  opacity: 0.2;
+}

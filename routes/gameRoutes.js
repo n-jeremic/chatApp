@@ -10,4 +10,6 @@ router.get('/checkRequest/:userId', authController.protect, gameController.check
 router.patch('/roundScore/:gameId/:player', authController.protect, gameController.updateRoundScore);
 router.patch('/totalScore/:gameId/:player', authController.protect, gameController.updateTotalScore);
 
+router.get('/oppositePlayerScore/:gameId', authController.protect, gameController.checkOppositeScore);
+
 module.exports = router;
