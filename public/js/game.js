@@ -10,7 +10,7 @@ let player2;
 let oppositeScoreInterval;
 
 async function getGame() {
-  const gameId = location.href.split('/')[4];
+  const gameId = location.href.split('/')[3];
   try {
     const response = await axios({
       method: 'GET',
