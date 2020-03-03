@@ -1,5 +1,5 @@
 if (location.href.includes('playGame')) {
-  $(document).ready(getGame);
+  getGame();
 }
 
 let watchRequestInterval;
@@ -19,6 +19,8 @@ async function getGame() {
 
     if (response.data.status === 'success') {
       gameObj = response.data.data.game;
+      $('#page-spinner').css('display', 'none');
+      initGameHTML(gameObj);
       findMyPlayer(gameObj);
       findActivePlayer(gameObj);
       return;
@@ -77,20 +79,25 @@ async function watchGameRequest(userId, btn) {
 }
 
 function initGameHTML(gameObj) {
+  const myPlayer = returnMyPlayer(gameObj);
+  const oppositePlayer = myPlayer === 'homePlayer' ? 'awayPlayer' : 'homePlayer';
+
   // PLAYER 1 (CURRENT USER)
-  $('#player1--img').attr('src', `/img/users/${gameObj.homePlayer.profilePhoto}`);
-  $('#player1--name').text(`${gameObj.homePlayer.firstName} ${gameObj.homePlayer.lastName}`);
+  $('#player1--img').attr('src', `/img/users/${gameObj[myPlayer].profilePhoto}`);
+  $('#player1--name').text(`${gameObj[myPlayer].firstName} ${gameObj[myPlayer].lastName}`);
   $('#player1--totalScore').val('0');
-  $('#player1--active').css('display', 'inline-block');
 
   // PLAYER 2
-  $('#player2--img').attr('src', `/img/users/${gameObj.awayPlayer.profilePhoto}`);
-  $('#player2--name').text(`${gameObj.awayPlayer.firstName} ${gameObj.awayPlayer.lastName}`);
+  $('#player2--img').attr('src', `/img/users/${gameObj[oppositePlayer].profilePhoto}`);
+  $('#player2--name').text(`${gameObj[oppositePlayer].firstName} ${gameObj[oppositePlayer].lastName}`);
   $('#player2--totalScore').val('0');
 
-  $('#available_users-list').hide();
-  $('#game-container').prepend("<div class='col-lg-2'></div>");
   $('#game-interface').show(1000);
+
+  if (myPlayer === 'homePlayer') {
+    $('#available_users-list').css('display', 'none');
+    $('#game-container').prepend("<div class='col-lg-2'></div>");
+  }
 }
 
 function findMyPlayer(gameObj) {
@@ -115,7 +122,6 @@ function findActivePlayer(gameObj) {
       oppositeScoreInterval = setInterval(() => {
         checkOpositePlayer(gameObj);
       }, 1000);
-      // checkOpositePlayer(gameObj);
     }
     return;
   } else if (gameObj.awayPlayer._id === currentUser._id) {
@@ -127,7 +133,6 @@ function findActivePlayer(gameObj) {
       oppositeScoreInterval = setInterval(() => {
         checkOpositePlayer(gameObj);
       }, 1000);
-      // checkOpositePlayer(gameObj);
     }
     return;
   }
@@ -162,7 +167,7 @@ function makeActivePlayerInterface(player) {
     $('#player1--activeHand').hide();
     $('#rollBtn').hide();
     $('#setRoundBtn').hide();
-    $('#player2--text').text(`${player2.firstName} is on the move...`);
+    $('#player2--text').html(`${player2.firstName} is on the move...`);
     $('#player2--text').css('visibility', 'visible');
     $('#player1--roundScore').css('visibility', 'hidden');
   }
@@ -171,24 +176,34 @@ function makeActivePlayerInterface(player) {
 async function rollMyDice() {
   const randomNumber = getRandomNumber();
   const myPlayerString = returnMyPlayer(gameObj);
+  $('.fa-dice-six').addClass('fa-spin');
+  $('#setRoundBtn').attr('disabled', true);
+  $('#rollBtn').attr('disabled', true);
 
+  // Update score in database
+  await updateRoundScore(myPlayerString, gameObj, randomNumber);
+
+  $('.fa-dice-six').removeClass('fa-spin');
   const dice = document.getElementById('player1--dice');
   toggleClasses(dice);
   dice.dataset.roll = randomNumber;
-  $('#setRoundBtn').attr('disabled', true);
-  $('#rollBtn').attr('disabled', true);
   setTimeout(() => {
     $('#rollBtn').attr('disabled', false);
     $('#setRoundBtn').attr('disabled', false);
     $('#player1--roundScore').css('visibility', 'visible');
     $('#player1--roundScore').text(player1.roundScore);
     if (randomNumber === 1) {
-      findActivePlayer(gameObj);
+      $('#player1--dice .die-item').css('border', '3px solid red');
+      $('#setRoundBtn').attr('disabled', true);
+      $('#rollBtn').attr('disabled', true);
+      setTimeout(() => {
+        findActivePlayer(gameObj);
+        $('#player1--dice .die-item').css('border', '');
+        $('#rollBtn').attr('disabled', false);
+        $('#setRoundBtn').attr('disabled', false);
+      }, 1500);
     }
-  }, 3300);
-
-  // Update score in database
-  await updateRoundScore(myPlayerString, gameObj, randomNumber);
+  }, 3200);
 
   // Update score in JS
   findMyPlayer(gameObj);
@@ -235,7 +250,13 @@ async function checkOpositePlayer(gameObjJS) {
     });
 
     if (response.data.status === 'success') {
-      if (response.data.data.game[oppositePlayer].roundScore !== gameObjJS[oppositePlayer].roundScore) {
+      if (response.data.data.game[oppositePlayer].totalScore !== gameObjJS[oppositePlayer].totalScore) {
+        // Update score in JS
+        gameObj = response.data.data.game;
+        findMyPlayer(gameObj);
+
+        setOppositeRound();
+      } else if (response.data.data.game[oppositePlayer].roundScore !== gameObjJS[oppositePlayer].roundScore) {
         // Update score in JS
         gameObj = response.data.data.game;
         findMyPlayer(gameObj);
@@ -253,13 +274,17 @@ async function checkOpositePlayer(gameObjJS) {
           oppositeScoreInterval = setInterval(() => {
             checkOpositePlayer(gameObj);
           }, 1000);
-          // checkOpositePlayer(gameObj);
         }
+      } else if (response.data.data.game[oppositePlayer].active === false) {
+        // Update score in JS
+        gameObj = response.data.data.game;
+        findMyPlayer(gameObj);
+
+        rollOppositeDice(1);
       } else {
         oppositeScoreInterval = setInterval(() => {
           checkOpositePlayer(gameObj);
         }, 1000);
-        // checkOpositePlayer(gameObj);
       }
 
       return;
@@ -275,14 +300,61 @@ function rollOppositeDice(score) {
   toggleClasses(dice);
   dice.dataset.roll = score;
 
-  $('#player2--text').text(`${player2.firstName} is rolling the dice...`);
+  $('#player2--text').html(`${player2.firstName} is rolling the dice...`);
 
   setTimeout(() => {
     $('#player2--roundScore').text(player2.roundScore);
     $('#player2--roundScore').css('visibility', 'visible');
-    $('#player2--text').text(`${player2.firstName} is on the move...`);
+    $('#player2--text').html(`${player2.firstName} is on the move...`);
     if (score === 1) {
+      $('#player2--dice .die-item').css('border', '3px solid red');
+      $('#player2--text').css('visibility', 'hidden');
+      setTimeout(() => {
+        findActivePlayer(gameObj);
+        $('#player2--dice .die-item').css('border', '');
+      }, 1500);
+    }
+  }, 3200);
+}
+
+async function setMyRound() {
+  const myPlayer = returnMyPlayer(gameObj);
+  const roundScore = player1.roundScore;
+  $('#setRoundBtn').attr('disabled', true);
+  $('#rollBtn').attr('disabled', true);
+
+  try {
+    const response = await axios({
+      method: 'PATCH',
+      url: `/api/game/totalScore/${gameObj._id}/${myPlayer}`,
+      data: {
+        roundScore
+      }
+    });
+
+    if (response.data.status === 'success') {
+      gameObj = response.data.data.game;
+      $('#setRoundBtn').attr('disabled', false);
+      $('#rollBtn').attr('disabled', false);
+      $('#player1--totalScore').val(gameObj[myPlayer].totalScore);
       findActivePlayer(gameObj);
     }
-  }, 3000);
+  } catch (err) {
+    console.log(err);
+    Swal.fire('Warning', 'Server error! Please try again.', 'error');
+  }
+}
+
+function setOppositeRound() {
+  $('#player2--totalScore').val(player2.totalScore);
+  $('#player2--totalScore').css('font-weight', 700);
+  $('#player2--totalScore').css('background-color', '#ffff80');
+  $('#player2--text').html(`${player2.firstName} set the round!`);
+  $('#player2--text').css('font-weight', 600);
+  setTimeout(() => {
+    findActivePlayer(gameObj);
+    $('#player2--totalScore').css('font-weight', 500);
+    $('#player2--text').css('font-weight', 400);
+    $('#player2--totalScore').css('background-color', 'whitesmoke');
+  }, 2500);
 }

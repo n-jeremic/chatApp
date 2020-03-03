@@ -9,14 +9,18 @@ block content
         span#currentUserData(data-current-user=`${JSON.stringify(userMe)}`)
         .row(style='margin-top: 50px;')
             .col-lg-2
-            .col-lg-7
+            .col-lg-7#page-spinner
+                .text-center(style="margin-top: 150px")
+                    .spinner-border.text-info(role='status' style="width: 7rem; height: 7rem;")
+                        span.sr-only Loading...
+            .col-lg-7#game-interface(style="display: none")
                 div(style='width: 100%; height: 616px !important; background-color: rgb(168, 161, 161); padding: 8px;')
                     .row
                         .col-lg-6#player1--interface(style='border-right: 1px solid white; width: 100%; height: 600px !important; padding: 30px 40px;')
                             .row
                                 .col-lg-12.text-center
-                                    img.mr-2.mt-2(src=`/img/users/${game.awayPlayer.profilePhoto}` alt='' style='border-radius: 50%;' width='60px')
-                                    span.align-middle.mr-3(style='font-size: 32px; font-weight: 500;')= `${game.awayPlayer.firstName} ${game.awayPlayer.lastName}`
+                                    img.mr-2.mt-2#player1--img(src=`/img/users/${game.awayPlayer.profilePhoto}` alt='' style='border-radius: 50%;' width='60px')
+                                    span.align-middle.mr-3#player1--name(style='font-size: 32px; font-weight: 500;')= `${game.awayPlayer.firstName} ${game.awayPlayer.lastName}`
                                     span.align-middle#player1--activeHand(style='font-size: 40px; color: green; display: none')
                                         i.fas.fa-hand-paper
                             .row.mt-4.mb-3
@@ -74,8 +78,8 @@ block content
                         .col-lg-6#player2--interface(style='width: 100%; height: 600px !important; padding: 30px 40px;')
                             .row
                                 .col-lg-12.text-center
-                                    img.mr-2.mt-2(src=`/img/users/${game.homePlayer.profilePhoto}` alt='' style='border-radius: 50%;' width='60px')
-                                    span.align-middle.mr-3(style='font-size: 32px; font-weight: 500;')= `${game.homePlayer.firstName} ${game.homePlayer.lastName}`
+                                    img.mr-2.mt-2#player2--img(src=`/img/users/${game.homePlayer.profilePhoto}` alt='' style='border-radius: 50%;' width='60px')
+                                    span.align-middle.mr-3#player2--name(style='font-size: 32px; font-weight: 500;')= `${game.homePlayer.firstName} ${game.homePlayer.lastName}`
                                     span.align-middle#player2--activeHand(style='font-size: 40px; color: green;')
                                         i.fas.fa-hand-paper
                             .row.mt-4.mb-3

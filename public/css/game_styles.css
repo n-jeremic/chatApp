@@ -16,7 +16,7 @@ ol {
   grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
   grid-template-rows: auto;
   justify-items: center;
-  padding: 18px 40px 35px 16px;
+  padding: 18px 50px 35px 16px;
   perspective: 600px;
 }
 
