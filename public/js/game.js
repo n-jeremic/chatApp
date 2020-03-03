@@ -109,25 +109,25 @@ function findActivePlayer(gameObj) {
   if (gameObj.homePlayer._id === currentUser._id) {
     if (gameObj.homePlayer.active === true) {
       makeActivePlayerInterface('player1');
-      // clearInterval(oppositeScoreInterval);
+      clearInterval(oppositeScoreInterval);
     } else {
       makeActivePlayerInterface('player2');
-      // oppositeScoreInterval = setInterval(() => {
-      //   checkOpositePlayer(gameObj);
-      // }, 1000);
-      checkOpositePlayer(gameObj);
+      oppositeScoreInterval = setInterval(() => {
+        checkOpositePlayer(gameObj);
+      }, 1000);
+      // checkOpositePlayer(gameObj);
     }
     return;
   } else if (gameObj.awayPlayer._id === currentUser._id) {
     if (gameObj.awayPlayer.active === true) {
       makeActivePlayerInterface('player1');
-      // clearInterval(oppositeScoreInterval);
+      clearInterval(oppositeScoreInterval);
     } else {
       makeActivePlayerInterface('player2');
-      // oppositeScoreInterval = setInterval(() => {
-      //   checkOpositePlayer(gameObj);
-      // }, 1000);
-      checkOpositePlayer(gameObj);
+      oppositeScoreInterval = setInterval(() => {
+        checkOpositePlayer(gameObj);
+      }, 1000);
+      // checkOpositePlayer(gameObj);
     }
     return;
   }
@@ -226,7 +226,7 @@ async function updateRoundScore(playerString, gameObjJS, currentScore) {
 async function checkOpositePlayer(gameObjJS) {
   let myPlayer = returnMyPlayer(gameObjJS);
   let oppositePlayer = myPlayer === 'homePlayer' ? 'awayPlayer' : 'homePlayer';
-  // clearInterval(oppositeScoreInterval);
+  clearInterval(oppositeScoreInterval);
 
   try {
     const response = await axios({
@@ -250,16 +250,16 @@ async function checkOpositePlayer(gameObjJS) {
         rollOppositeDice(currentScore);
 
         if (currentScore > 1) {
-          // oppositeScoreInterval = setInterval(() => {
-          //   checkOpositePlayer(gameObj);
-          // }, 1000);
-          checkOpositePlayer(gameObj);
+          oppositeScoreInterval = setInterval(() => {
+            checkOpositePlayer(gameObj);
+          }, 1000);
+          // checkOpositePlayer(gameObj);
         }
       } else {
-        // oppositeScoreInterval = setInterval(() => {
-        //   checkOpositePlayer(gameObj);
-        // }, 1000);
-        checkOpositePlayer(gameObj);
+        oppositeScoreInterval = setInterval(() => {
+          checkOpositePlayer(gameObj);
+        }, 1000);
+        // checkOpositePlayer(gameObj);
       }
 
       return;
