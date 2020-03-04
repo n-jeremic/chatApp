@@ -1,6 +1,13 @@
 $(document).ready(getAllNotifications);
 window.setInterval(getNewNotifications, 5000);
-let gameRequestInterval = setInterval(checkMyGameRequest, 2000);
+
+let receivedRequestCounter = 0;
+let receivedRequestInterval;
+let myGameRequest;
+let gameRequestInterval;
+if (location.href.includes('playGame') === false) {
+  gameRequestInterval = setInterval(checkMyGameRequest, 3000);
+}
 
 document.getElementById('search--field').addEventListener('blur', function(event) {
   if (event.relatedTarget !== null) {
@@ -243,7 +250,27 @@ async function checkMyGameRequest() {
     if (response.data.status === 'empty') {
       return;
     } else if (response.data.status === 'success') {
-      createGameNotif(response.data.data.request);
+      if (response.data.data.request.accepted === false) {
+        myGameRequest = response.data.data.request;
+        createGameNotif(response.data.data.request);
+        receivedRequestInterval = setInterval(() => {
+          receivedRequestCounter++;
+          if (receivedRequestCounter > 19) {
+            $('#btn-gameRequest').remove();
+            regularStyleBtn();
+            clearInterval(receivedRequestInterval);
+            Swal.fire(
+              'Warning',
+              `Game request from ${myGameRequest.firstName} ${myGameRequest.lastName} has been canceled since you didn't respond!`,
+              'error'
+            );
+            gameRequestInterval = setInterval(checkMyGameRequest, 3000);
+            receivedRequestCounter = 0;
+            myGameRequest = undefined;
+          }
+        }, 1000);
+      }
+
       clearInterval(gameRequestInterval);
     }
 
@@ -260,7 +287,7 @@ function createGameNotif(request) {
   $('#num_of_notif').css('display', 'inline-block');
   $('.notifications-drop').css('width', '510px');
 
-  const markUp = `<button href="#" class="list-group-item list-group-item-action notif-hover" style="padding: 8px !important; background-color: #e6e6e6; color: black;"><img width="40px" style="border-radius: 50%" src="/img/users/${request.profilePhoto}" class="mr-2"><a style="color: #1a75ff" href="/profile/${request.userId}">${request.firstName} ${request.lastName}</a> sent you a Pig Game request.<a href="/playGame/${request.gameId}" style="color: #1a75ff"> Play now!</a><i class='fas fa-circle float-right mt-3 mr-2' style="font-size: 10px; color: #4d4dff"></i></button>`;
+  const markUp = `<button href="#" id="btn-gameRequest" class="list-group-item list-group-item-action notif-hover" style="padding: 8px !important; background-color: #e6e6e6; color: black;"><img width="40px" style="border-radius: 50%" src="/img/users/${request.profilePhoto}" class="mr-2"><a style="color: #1a75ff" href="/profile/${request.userId}">${request.firstName} ${request.lastName}</a> sent you a Pig Game request.<a href="/playGame/${request.gameId}" style="color: #1a75ff"> Play now!</a><i class='fas fa-circle float-right mt-3 mr-2' style="font-size: 10px; color: #4d4dff"></i></button>`;
 
   $('#notifications-list').prepend(markUp);
 }

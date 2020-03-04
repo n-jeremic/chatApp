@@ -12,4 +12,10 @@ router.patch('/totalScore/:gameId/:player', authController.protect, gameControll
 
 router.get('/oppositePlayerScore/:gameId', authController.protect, gameController.checkOppositeScore);
 
+router.post('/endGame/:gameId', authController.protect, gameController.endGame);
+
+router.post('/cancelRequest', authController.protect, gameController.cancelRequest);
+
+router.get('/availableUsers', authController.protect, gameController.availableUsers);
+
 module.exports = router;

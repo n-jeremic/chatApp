@@ -7,21 +7,43 @@ block content
     include _navbar
     .container-fluid
         span#currentUserData(data-current-user=`${JSON.stringify(userMe)}`)
-        .row(style='margin-top: 50px;')
-            .col-lg-2
+        .row#game-container(style='margin-top: 50px;')
+            .col-lg-2#indentation
+            .col-lg-3#available_users-list(style="display: none")
+                .card
+                    .card-header
+                        span(style='font-size: 20px; font-weight: 400;') Available users
+                    .card-body#card-users_game(style='padding: 10px !important;')
+                        ul.list-group#availableUsers
             .col-lg-7#page-spinner
                 .text-center(style="margin-top: 150px")
                     .spinner-border.text-info(role='status' style="width: 7rem; height: 7rem;")
                         span.sr-only Loading...
-            .col-lg-7#game-interface(style="display: none")
-                div(style='width: 100%; height: 616px !important; background-color: rgb(168, 161, 161); padding: 8px;')
+            .col-lg-7#alert-window(style="display: none")
+                .alert.alert-warning.alert-dismissible.fade.show(role='alert')
+                    strong Attention!
+                    |  If you leave this page your request will be canceled!
+                    button.close(type='button' data-dismiss='alert' aria-label='Close')
+                        span(aria-hidden='true') &times;                          
+            .col-lg-7#game-interface(style="display: none; color: #404040")
+                .winner-interface(style="display: none")
+                    p
+                        img#winner-img(style="display: block; margin-left: auto; margin-right: auto; width: 150px; border-radius: 50%")
+                    p.text-center#winner-text(style="font-weight: 600; font-size: 40px;")
+                    p.text-center
+                        i.fas.fa-trophy(style="color: yellow; font-size: 150px")  
+                    p.text-center
+                        button.btn.btn-success.mt-3(onclick="closeGameInterface()" style="margin-right: auto; margin-left:auto")
+                            i.fas.fa-window-close.mr-1
+                            | Close window                            
+                #playingGame(style='width: 100%; height: 616px !important; background-color: rgb(168, 161, 161); padding: 8px;')
                     .row
                         .col-lg-6#player1--interface(style='border-right: 1px solid white; width: 100%; height: 600px !important; padding: 30px 40px;')
                             .row
                                 .col-lg-12.text-center
-                                    img.mr-2.mt-2#player1--img(src=`/img/users/${game.awayPlayer.profilePhoto}` alt='' style='border-radius: 50%;' width='60px')
-                                    span.align-middle.mr-3#player1--name(style='font-size: 32px; font-weight: 500;')= `${game.awayPlayer.firstName} ${game.awayPlayer.lastName}`
-                                    span.align-middle#player1--activeHand(style='font-size: 40px; color: green; display: none')
+                                    img.mr-2.mt-2#player1--img(src=`` alt='' style='border-radius: 50%;' width='60px')
+                                    span.align-middle.mr-3#player1--name(style='font-size: 32px; font-weight: 500;')
+                                    span.align-middle#player1--activeHand(style='font-size: 40px; color: #00b300; display: none')
                                         i.fas.fa-hand-paper
                             .row.mt-4.mb-3
                                 .col-lg-2
@@ -62,7 +84,7 @@ block content
                                                 span.dot
                                                 span.dot
                                 .col-lg-12
-                                    p.text-center.mt-2#player1--roundScore(style='font-size: 50px; font-weight: 500; visibility: hidden;') 12
+                                    p.text-center.mt-2#player1--roundScore(style='font-size: 50px; font-weight: 500; visibility: hidden') 12
                             .row
                                 .col-lg-3
                                 .col-lg-6
@@ -75,12 +97,12 @@ block content
                                     button.btn.btn-danger.btn-block.mt-3#setRoundBtn(onclick="setMyRound()")
                                         i.fas.fa-angle-double-down.mr-2
                                         | SET ROUND
-                        .col-lg-6#player2--interface(style='width: 100%; height: 600px !important; padding: 30px 40px;')
+                        .col-lg-6#player2--interface(style='border-left: 1px solid white; width: 100%; height: 600px !important; padding: 30px 40px;')
                             .row
                                 .col-lg-12.text-center
-                                    img.mr-2.mt-2#player2--img(src=`/img/users/${game.homePlayer.profilePhoto}` alt='' style='border-radius: 50%;' width='60px')
-                                    span.align-middle.mr-3#player2--name(style='font-size: 32px; font-weight: 500;')= `${game.homePlayer.firstName} ${game.homePlayer.lastName}`
-                                    span.align-middle#player2--activeHand(style='font-size: 40px; color: green;')
+                                    img.mr-2.mt-2#player2--img(src=`` alt='' style='border-radius: 50%;' width='60px')
+                                    span.align-middle.mr-3#player2--name(style='font-size: 32px; font-weight: 500;')
+                                    span.align-middle#player2--activeHand(style='font-size: 40px; color: #00b300;')
                                         i.fas.fa-hand-paper
                             .row.mt-4.mb-3
                                 .col-lg-2
@@ -121,7 +143,7 @@ block content
                                                 span.dot
                                                 span.dot
                                 .col-lg-12
-                                    p.text-center.mt-4#player2--roundScore(style='font-size: 50px; font-weight: 500; visibility: hidden;') 0 
+                                    p.text-center.mt-4#player2--roundScore(style='font-size: 50px; font-weight: 500; visibility: hidden') 0 
                                 .col-lg-12
                                     p.text-center.mt-3#player2--text(style='font-size: 20px; font-weight: 400; visibility: hidden;')                                        
             .col-lg-3                              

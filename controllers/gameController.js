@@ -17,6 +17,19 @@ const createGame = async (req, userId) => {
 };
 
 exports.sendGameRequest = catchAsync(async (req, res, next) => {
+  if (req.user.gameRequest.gameId) {
+    return next(new AppError('You already have a pending request! Check your notifications.', 400));
+  }
+
+  const wantedUser = await User.findById(req.params.userId);
+  if (wantedUser.gameRequest.gameId) {
+    return next(new AppError('This user already has a request. Try another one!', 400));
+  }
+
+  if (req.params.userId === req.user.id) {
+    return next(new AppError('This action is invalid!', 400));
+  }
+
   const game = await createGame(req, req.params.userId);
 
   const gameRequest = {
@@ -28,7 +41,7 @@ exports.sendGameRequest = catchAsync(async (req, res, next) => {
     accepted: false
   };
 
-  const user = await User.findByIdAndUpdate(req.params.userId, { gameRequest });
+  const user = await User.findByIdAndUpdate(req.params.userId, { gameRequest }, { new: true });
 
   if (!user) {
     return next(new AppError('There is no user with that ID!', 404));
@@ -40,6 +53,9 @@ exports.sendGameRequest = catchAsync(async (req, res, next) => {
       game
     }
   });
+
+  // Update current user with the request
+  await User.findByIdAndUpdate(req.user.id, { gameRequest });
 });
 
 exports.checkGameRequest = catchAsync(async (req, res, next) => {
@@ -158,7 +174,7 @@ exports.updateTotalScore = catchAsync(async (req, res, next) => {
     return next(new AppError('There is no game with that ID!', 404));
   }
 
-  if (game[req.params.player].totalScore >= 50) {
+  if (game[req.params.player].totalScore >= 10) {
     game = await Game.findByIdAndUpdate(req.params.gameId, { winner: game[req.params.player] }, { new: true });
   }
 
@@ -181,6 +197,42 @@ exports.checkOppositeScore = catchAsync(async (req, res, next) => {
     status: 'success',
     data: {
       game
+    }
+  });
+});
+
+exports.endGame = catchAsync(async (req, res, next) => {
+  const game = await Game.findById(req.params.gameId);
+
+  await User.findByIdAndUpdate(game.homePlayer._id, { $unset: { gameRequest: '' } });
+  await User.findByIdAndUpdate(game.awayPlayer._id, { $unset: { gameRequest: '' } });
+
+  res.status(200).json({
+    status: 'success'
+  });
+});
+
+exports.cancelRequest = catchAsync(async (req, res, next) => {
+  if (!req.body.game) {
+    return next(new AppError('There is no request in the body!', 400));
+  }
+
+  await Game.findByIdAndDelete(req.body.game._id);
+  await User.findByIdAndUpdate(req.body.game.homePlayer._id, { $unset: { gameRequest: '' } });
+  await User.findByIdAndUpdate(req.body.game.awayPlayer._id, { $unset: { gameRequest: '' } });
+
+  res.status(200).json({
+    status: 'success'
+  });
+});
+
+exports.availableUsers = catchAsync(async (req, res, next) => {
+  const users = await User.find({ isLoggedIn: { $eq: true }, gameRequest: { $eq: undefined }, _id: { $ne: req.user.id } });
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      users
     }
   });
 });

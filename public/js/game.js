@@ -2,12 +2,19 @@ if (location.href.includes('playGame')) {
   getGame();
 }
 
+window.addEventListener('beforeunload', function() {
+  if (gameObj) {
+    cancelGameRequest(gameObj);
+  }
+});
+
 let watchRequestInterval;
 let gameObj;
 const currentUser = JSON.parse(document.getElementById('currentUserData').dataset.currentUser);
 let player1;
 let player2;
 let oppositeScoreInterval;
+let sentRequestCounter = 0;
 
 async function getGame() {
   const gameId = location.href.split('/')[4];
@@ -32,10 +39,11 @@ async function getGame() {
 }
 
 async function sendGameRequest(userId, btn) {
+  btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...';
   btn.disabled = true;
   btn.classList.remove('invite--btn');
-  btn.innerHTML = 'Pending...';
   $('.invite--btn').css('display', 'none');
+
   try {
     const response = await axios({
       method: 'POST',
@@ -43,13 +51,19 @@ async function sendGameRequest(userId, btn) {
     });
 
     if (response.data.status === 'success') {
-      watchRequestInterval = setInterval(() => watchGameRequest(userId, btn), 2000);
+      btn.innerHTML = 'Pending...';
+      gameObj = response.data.data.game;
+      watchRequestInterval = setInterval(() => watchGameRequest(userId, response.data.data.game, btn), 1000);
+
       // Disable incoming game requests
       clearInterval(gameRequestInterval);
+
+      Swal.fire('Request sent!', 'If there is no response after 20 seconds, your request will be canceled.', 'success');
+      $('#alert-window').css('display', 'block');
     }
   } catch (err) {
     console.log(err);
-    Swal.fire('Warning', 'Server error! Please try again.', 'error');
+    Swal.fire('Warning', err.response.data.message, 'error');
     btn.disabled = false;
     btn.classList.add('invite--btn');
     btn.innerHTML = 'Invite';
@@ -57,24 +71,58 @@ async function sendGameRequest(userId, btn) {
   }
 }
 
-async function watchGameRequest(userId, btn) {
+async function watchGameRequest(userId, game, btn) {
+  if (sentRequestCounter < 25) {
+    try {
+      const response = await axios({
+        method: 'GET',
+        url: `/api/game/checkRequest/${userId}`
+      });
+
+      if (response.data.status === 'accepted') {
+        sentRequestCounter = 0;
+        clearInterval(watchRequestInterval);
+        initGameHTML(response.data.data.game);
+        gameObj = response.data.data.game;
+        findMyPlayer(gameObj);
+        findActivePlayer(gameObj);
+      } else {
+        sentRequestCounter++;
+        return;
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  } else {
+    clearInterval(watchRequestInterval);
+    gameRequestInterval = setInterval(checkMyGameRequest, 3000);
+    sentRequestCounter = 0;
+    gameObj = undefined;
+    await cancelGameRequest(game);
+    btn.disabled = false;
+    btn.classList.add('invite--btn');
+    btn.innerHTML = 'Invite';
+    $('.invite--btn').css('display', 'inline-block');
+  }
+}
+
+async function cancelGameRequest(game) {
   try {
     const response = await axios({
-      method: 'GET',
-      url: `/api/game/checkRequest/${userId}`
+      method: 'POST',
+      url: '/api/game/cancelRequest',
+      data: {
+        game
+      }
     });
 
-    if (response.data.status === 'accepted') {
-      clearInterval(watchRequestInterval);
-      initGameHTML(response.data.data.game);
-      gameObj = response.data.data.game;
-      findMyPlayer(gameObj);
-      findActivePlayer(gameObj);
-    } else {
-      return;
+    if (response.data.status === 'success') {
+      Swal.fire('Warning', `${game.awayPlayer.firstName} ${game.awayPlayer.lastName} did not respond! Your request has been canceled.`, 'error');
+      $('#alert-window').css('display', 'none');
     }
   } catch (err) {
     console.log(err);
+    Swal.fire('Warning', 'Server error! Please try again.', 'error');
   }
 }
 
@@ -86,18 +134,25 @@ function initGameHTML(gameObj) {
   $('#player1--img').attr('src', `/img/users/${gameObj[myPlayer].profilePhoto}`);
   $('#player1--name').text(`${gameObj[myPlayer].firstName} ${gameObj[myPlayer].lastName}`);
   $('#player1--totalScore').val('0');
+  $('#player1--totalScore').css('background-color', 'whitesmoke');
+  $('#player1--dice').attr('data-roll', '1');
+  $('#player1--roundScore').css('visibility', 'hidden');
 
   // PLAYER 2
   $('#player2--img').attr('src', `/img/users/${gameObj[oppositePlayer].profilePhoto}`);
   $('#player2--name').text(`${gameObj[oppositePlayer].firstName} ${gameObj[oppositePlayer].lastName}`);
   $('#player2--totalScore').val('0');
+  $('#player2--totalScore').css('background-color', 'whitesmoke');
+  $('#player2--dice').attr('data-roll', '1');
+  $('#player2--roundScore').css('visibility', 'hidden');
+  $('#player2--text').css('visibility', 'hidden');
 
+  $('#playingGame').css('opacity', 1.0);
+  $('.winner-interface').css('display', 'none');
+  $('#alert-window').css('display', 'none');
+  $('#available_users-list').css('display', 'none');
+  $('#indentation').css('display', 'block');
   $('#game-interface').show(1000);
-
-  if (myPlayer === 'homePlayer') {
-    $('#available_users-list').css('display', 'none');
-    $('#game-container').prepend("<div class='col-lg-2'></div>");
-  }
 }
 
 function findMyPlayer(gameObj) {
@@ -250,7 +305,12 @@ async function checkOpositePlayer(gameObjJS) {
     });
 
     if (response.data.status === 'success') {
-      if (response.data.data.game[oppositePlayer].totalScore !== gameObjJS[oppositePlayer].totalScore) {
+      if (response.data.data.game.winner || response.data.data.game[oppositePlayer].totalScore >= 10) {
+        // Update score in JS
+        gameObj = response.data.data.game;
+
+        await endGame();
+      } else if (response.data.data.game[oppositePlayer].totalScore !== gameObjJS[oppositePlayer].totalScore) {
         // Update score in JS
         gameObj = response.data.data.game;
         findMyPlayer(gameObj);
@@ -322,6 +382,13 @@ async function setMyRound() {
   const roundScore = player1.roundScore;
   $('#setRoundBtn').attr('disabled', true);
   $('#rollBtn').attr('disabled', true);
+  const totalScore = roundScore + player1.totalScore;
+
+  if (totalScore >= 10) {
+    $('#player1--totalScore').val(totalScore);
+    $('#player1--totalScore').css('background-color', '#4dff4d');
+    $('#player1--totalScore').css('font-weight', 700);
+  }
 
   try {
     const response = await axios({
@@ -334,10 +401,14 @@ async function setMyRound() {
 
     if (response.data.status === 'success') {
       gameObj = response.data.data.game;
-      $('#setRoundBtn').attr('disabled', false);
-      $('#rollBtn').attr('disabled', false);
-      $('#player1--totalScore').val(gameObj[myPlayer].totalScore);
-      findActivePlayer(gameObj);
+      if (gameObj.winner) {
+        await endGame();
+      } else {
+        $('#player1--totalScore').val(gameObj[myPlayer].totalScore);
+        $('#setRoundBtn').attr('disabled', false);
+        $('#rollBtn').attr('disabled', false);
+        findActivePlayer(gameObj);
+      }
     }
   } catch (err) {
     console.log(err);
@@ -357,4 +428,63 @@ function setOppositeRound() {
     $('#player2--text').css('font-weight', 400);
     $('#player2--totalScore').css('background-color', 'whitesmoke');
   }, 2500);
+}
+
+async function endGame() {
+  try {
+    const response = await axios({
+      method: 'POST',
+      url: `/api/game/endGame/${gameObj._id}`
+    });
+
+    if (response.data.status === 'success') {
+      $('#winner-img').attr('src', `/img/users/${gameObj.winner.profilePhoto}`);
+      $('#winner-text').text(`${gameObj.winner.firstName} ${gameObj.winner.lastName} WON!`);
+      $('#player1--interface').removeClass('inactivePlayer');
+      $('#player2--interface').removeClass('inactivePlayer');
+      $('#player1--activeHand').hide();
+      $('#player2--activeHand').hide();
+      $('#playingGame').css('opacity', 0.2);
+      $('.winner-interface').css('display', 'block');
+      gameRequestInterval = setInterval(checkMyGameRequest, 3000);
+    }
+  } catch (err) {
+    console.log(err);
+    Swal.fire('Warning', 'Server error! Please try again.', 'error');
+  }
+}
+
+async function getAvailableUsers() {
+  try {
+    const response = await axios({
+      method: 'GET',
+      url: '/api/game/availableUsers'
+    });
+
+    if (response.data.status === 'success') {
+      $('#availableUsers').empty();
+      response.data.data.users.forEach(user => appendUserList(user));
+    }
+  } catch (err) {
+    console.log(err);
+    Swal.fire('Warning', 'Server error! Please try again.', 'error');
+  }
+}
+
+function appendUserList(user) {
+  const markUp = `<li href='#' style='padding: 5px !important' class='list-group-item list-group-item-action'><a href='/profile/${user._id}'><img class='mr-2' src='/img/users/${user.profilePhoto}' width='50px' style='border-radius: 50%;'></a><span class='align-middle' style="font-size: 18px">${user.firstName} ${user.lastName}</span><button class=' btn btn-sm btn-danger float-right invite--btn' style='margin-top: 10px;' onclick='sendGameRequest("${user._id}", this)'>Invite</button></li>`;
+
+  $('#availableUsers').append(markUp);
+}
+
+async function closeGameInterface() {
+  $('#game-interface').css('display', 'none');
+  $('#availableUsers').empty();
+  $('#availableUsers').append(
+    '<div class="text-center" style="margin-top: 50px; margin-bottom: 50px;"><div class="spinner-border text-info" role="status" style="width: 4rem; height: 4rem;"></div></div>'
+  );
+  $('#indentation').css('display', 'none');
+  $('#available_users-list').show(1000);
+
+  await getAvailableUsers();
 }

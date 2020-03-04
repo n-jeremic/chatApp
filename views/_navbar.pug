@@ -16,7 +16,7 @@ nav.navbar.navbar-expand-lg.navbar-dark.bg-dark.sticky-top
                     .input-group-prepend
                         span#addon-wrapping.input-group-text.search-spinner(style="color: #fff; background-color: #17a2b8; border-color: #17a2b8")
                             i.fas.fa-search
-                    input.form-control.mr-sm-2#search--field(type='text' placeholder='Search for people...' aria-label='Search' style="width: 350px !important" onkeyup="searchUsers(this.value)")
+                    input.form-control.mr-sm-2#search--field(autocomplete="off" type='text' placeholder='Search for people...' aria-label='Search' style="width: 350px !important" onkeyup="searchUsers(this.value)")
                 .dropdown-menu#dropdown-search(aria-labelledby='dropdownMenuButton' style="width: 392px !important; padding: 0px !important")
                     p(style="margin: 8px! important; color: #17a2b8")
                         span#total-results

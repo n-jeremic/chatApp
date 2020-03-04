@@ -56,7 +56,7 @@ ol {
 
 .dot {
   align-self: center;
-  background-color: #676767;
+  background-color: #dc3545;
   border-radius: 50%;
   box-shadow: inset -0.15rem 0.15rem 0.25rem rgba(0, 0, 0, 0.5);
   display: block;
@@ -185,4 +185,16 @@ ol {
 
 .inactivePlayer {
   opacity: 0.2;
+}
+
+.winner-interface {
+  position: absolute;
+  top: 100px;
+  z-index: 100;
+  left: 29%;
+}
+
+#playingGame {
+  border-radius: 2px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
