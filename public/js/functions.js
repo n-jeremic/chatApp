@@ -264,9 +264,9 @@ async function checkMyGameRequest() {
               `Game request from ${myGameRequest.firstName} ${myGameRequest.lastName} has been canceled since you didn't respond!`,
               'error'
             );
-            gameRequestInterval = setInterval(checkMyGameRequest, 3000);
             receivedRequestCounter = 0;
             myGameRequest = undefined;
+            gameRequestInterval = setInterval(checkMyGameRequest, 3000);
           }
         }, 1000);
       }
