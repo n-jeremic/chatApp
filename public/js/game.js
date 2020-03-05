@@ -1,3 +1,7 @@
+import { get } from 'mongoose';
+
+$(document).ready(getAllGames);
+
 if (location.href.includes('playGame')) {
   getGame();
 }
@@ -15,6 +19,101 @@ let player2;
 let oppositeScoreInterval;
 let oppositePlayerCheck = 0;
 let sentRequestCounter = 0;
+
+async function getAllGames() {
+  try {
+    const response = await axios({
+      method: 'GET',
+      url: '/api/game'
+    });
+
+    if (response.data.status === 'success') {
+      const results = organizeTableData(response.data.data.games);
+      createTable(results);
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+function organizeTableData(gamesArr) {
+  const resultsArr = [];
+
+  for (let i = 0; i < gamesArr.length; i++) {
+    deletePlayerProperties(gamesArr, i);
+    const awayPlayerIndex = resultsArr.findIndex(el => el._id === gamesArr[i].awayPlayer._id);
+    const homePlayerIndex = resultsArr.findIndex(el => el._id === gamesArr[i].homePlayer._id);
+
+    if (gamesArr[i].winner._id === gamesArr[i].homePlayer._id) {
+      if (homePlayerIndex === -1) {
+        gamesArr[i].homePlayer.won = 1;
+        gamesArr[i].homePlayer.lost = 0;
+        resultsArr.push(gamesArr[i].homePlayer);
+      } else {
+        resultsArr[homePlayerIndex].won += 1;
+      }
+
+      if (awayPlayerIndex === -1) {
+        gamesArr[i].awayPlayer.lost = 1;
+        gamesArr[i].awayPlayer.won = 0;
+        resultsArr.push(gamesArr[i].awayPlayer);
+      } else {
+        resultsArr[awayPlayerIndex].lost += 1;
+      }
+    } else {
+      if (awayPlayerIndex === -1) {
+        gamesArr[i].awayPlayer.won = 1;
+        gamesArr[i].awayPlayer.lost = 0;
+        resultsArr.push(gamesArr[i].awayPlayer);
+      } else {
+        resultsArr[awayPlayerIndex].won += 1;
+      }
+
+      if (homePlayerIndex === -1) {
+        gamesArr[i].homePlayer.lost = 1;
+        gamesArr[i].homePlayer.won = 0;
+        resultsArr.push(gamesArr[i].homePlayer);
+      } else {
+        resultsArr[homePlayerIndex].lost += 1;
+      }
+    }
+  }
+
+  for (let i = 0; i < resultsArr.length; i++) {
+    resultsArr[i].difference = resultsArr[i].won - resultsArr[i].lost;
+  }
+
+  resultsArr.sort((a, b) => b.difference - a.difference);
+
+  return resultsArr;
+}
+
+function createTable(array) {
+  $('#table-container').hide();
+  $('#table-container').empty();
+  let rows = '';
+  array.forEach((el, i) => {
+    rows += `<tr><th class="text-center">${i + 1}</th><td class="text-center"><a href="/profile/${el._id}" class="comment-userName">${el.firstName} ${
+      el.lastName
+    }</a></td><td class="text-center">${el.won}</td><td class="text-center">${el.lost}</td></tr>`;
+  });
+  const table = `<table class='table table-bordered'><thead><tr class='bg-danger' style="color: white"><th class="text-center">#</th><th class="text-center">PLAYER NAME</th><th class="text-center">WINS</th><th class="text-center">DEFEATS</th></tr><thead><tbody>${rows}</tbody><tfoot><tr class="table-warning"><td colspan="4" class='text-center'>PIG GAME STANDINGS</td></tr></tfoot></table>`;
+
+  $('#table-container').append(table);
+  $('#table-container').show(1000);
+}
+
+function deletePlayerProperties(gamesArr, i) {
+  delete gamesArr[i].homePlayer.currentScore;
+  delete gamesArr[i].homePlayer.roundScore;
+  delete gamesArr[i].homePlayer.totalScore;
+  delete gamesArr[i].homePlayer.active;
+
+  delete gamesArr[i].awayPlayer.currentScore;
+  delete gamesArr[i].awayPlayer.roundScore;
+  delete gamesArr[i].awayPlayer.totalScore;
+  delete gamesArr[i].awayPlayer.active;
+}
 
 async function getGame() {
   const gameId = location.href.split('/')[4];
@@ -51,14 +150,15 @@ async function sendGameRequest(userId, btn) {
     });
 
     if (response.data.status === 'success') {
+      // Disable incoming game requests
+      clearInterval(gameRequestInterval);
+
       btn.innerHTML = 'Pending...';
       gameObj = response.data.data.game;
       watchRequestInterval = setInterval(() => watchGameRequest(userId, response.data.data.game, btn), 1000);
 
-      // Disable incoming game requests
-      clearInterval(gameRequestInterval);
-
       Swal.fire('Request sent!', 'If there is no response after 20 seconds, your request will be canceled.', 'success');
+      $('#placeholder').css('display', 'none');
       $('#alert-window').css('display', 'block');
     }
   } catch (err) {
@@ -95,7 +195,6 @@ async function watchGameRequest(userId, game, btn) {
     }
   } else {
     clearInterval(watchRequestInterval);
-    gameRequestInterval = setInterval(checkMyGameRequest, 3000);
     sentRequestCounter = 0;
     gameObj = undefined;
     await cancelGameRequest(game);
@@ -103,6 +202,7 @@ async function watchGameRequest(userId, game, btn) {
     btn.classList.add('invite--btn');
     btn.innerHTML = 'Invite';
     $('.invite--btn').css('display', 'inline-block');
+    gameRequestInterval = setInterval(checkMyGameRequest, 3000);
   }
 }
 
@@ -133,7 +233,7 @@ function initGameHTML(gameObj) {
   // PLAYER 1 (CURRENT USER)
   $('#player1--img').attr('src', `/img/users/${gameObj[myPlayer].profilePhoto}`);
   $('#player1--name').text(`${gameObj[myPlayer].firstName} ${gameObj[myPlayer].lastName}`);
-  $('#player1--totalScore').val('0');
+  $('#player1--totalScore').val(`${gameObj[myPlayer].totalScore}`);
   $('#player1--totalScore').css('background-color', 'whitesmoke');
   $('#player1--dice').attr('data-roll', '1');
   $('#player1--roundScore').css('visibility', 'hidden');
@@ -141,7 +241,7 @@ function initGameHTML(gameObj) {
   // PLAYER 2
   $('#player2--img').attr('src', `/img/users/${gameObj[oppositePlayer].profilePhoto}`);
   $('#player2--name').text(`${gameObj[oppositePlayer].firstName} ${gameObj[oppositePlayer].lastName}`);
-  $('#player2--totalScore').val('0');
+  $('#player2--totalScore').val(`${gameObj[oppositePlayer].totalScore}`);
   $('#player2--totalScore').css('background-color', 'whitesmoke');
   $('#player2--dice').attr('data-roll', '1');
   $('#player2--roundScore').css('visibility', 'hidden');
@@ -150,6 +250,7 @@ function initGameHTML(gameObj) {
   $('#playingGame').css('opacity', 1.0);
   $('.winner-interface').css('display', 'none');
   $('#alert-window').css('display', 'none');
+  $('#placeholder').css('display', 'none');
   $('#available_users-list').css('display', 'none');
   $('#indentation').css('display', 'block');
   $('#game-interface').show(1000);
@@ -481,6 +582,7 @@ function appendUserList(user) {
 
 async function closeGameInterface() {
   $('#game-interface').css('display', 'none');
+  $('#placeholder').css('display', 'block');
   $('#availableUsers').empty();
   $('#availableUsers').append(
     '<div class="text-center" style="margin-top: 50px; margin-bottom: 50px;"><div class="spinner-border text-info" role="status" style="width: 4rem; height: 4rem;"></div></div>'
@@ -489,6 +591,7 @@ async function closeGameInterface() {
   $('#available_users-list').show(1000);
 
   await getAvailableUsers();
+  await getAllGames();
 }
 
 async function setWinner() {

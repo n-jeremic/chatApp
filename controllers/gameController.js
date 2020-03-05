@@ -3,6 +3,21 @@ const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 
+exports.getAllGames = catchAsync(async (req, res, next) => {
+  const games = await Game.find();
+
+  if (!games) {
+    return next(new AppError('There is no games yet!', 404));
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      games
+    }
+  });
+});
+
 const createGame = async (req, userId) => {
   const homePlayer = req.user;
   const awayPlayer = await User.findById(userId);
@@ -47,15 +62,15 @@ exports.sendGameRequest = catchAsync(async (req, res, next) => {
     return next(new AppError('There is no user with that ID!', 404));
   }
 
+  // Update current user with the request
+  await User.findByIdAndUpdate(req.user.id, { gameRequest });
+
   res.status(200).json({
     status: 'success',
     data: {
       game
     }
   });
-
-  // Update current user with the request
-  await User.findByIdAndUpdate(req.user.id, { gameRequest });
 });
 
 exports.checkGameRequest = catchAsync(async (req, res, next) => {

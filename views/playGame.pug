@@ -19,7 +19,8 @@ block content
                 .text-center(style="margin-top: 150px")
                     .spinner-border.text-info(role='status' style="width: 7rem; height: 7rem;")
                         span.sr-only Loading...
-            .col-lg-7#alert-window(style="display: none")
+            .col-lg-6#placeholder 
+            .col-lg-6#alert-window(style="display: none")
                 .alert.alert-warning.alert-dismissible.fade.show(role='alert')
                     strong Attention!
                     |  If you leave this page your request will be canceled!
@@ -146,7 +147,7 @@ block content
                                     p.text-center.mt-4#player2--roundScore(style='font-size: 50px; font-weight: 500; visibility: hidden') 0 
                                 .col-lg-12
                                     p.text-center.mt-3#player2--text(style='font-size: 20px; font-weight: 400; visibility: hidden;')                                        
-            .col-lg-3                              
+            .col-lg-3#table-container(style="display: none")                              
         include _post-modals
 block scriptFile
     script(src="/js/functions.js")

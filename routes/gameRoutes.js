@@ -4,6 +4,8 @@ const gameController = require('../controllers/gameController');
 
 const router = express.Router();
 
+router.get('/', authController.protect, gameController.getAllGames);
+
 router.post('/sendRequest/:userId', authController.protect, gameController.sendGameRequest);
 router.get('/checkRequest/:userId', authController.protect, gameController.checkGameRequest);
 

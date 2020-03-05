@@ -127,15 +127,15 @@ exports.pigGame = catchAsync(async (req, res, next) => {
 
 exports.playGame = catchAsync(async (req, res, next) => {
   const game = await Game.findById(req.params.gameId);
+  if (!game) {
+    return next(new AppError('Current user has canceled this request!', 404));
+  }
+
   if (game.winner.firstName) {
     return next(new AppError('This game is finished!', 400));
   }
 
   await User.findByIdAndUpdate(req.user.id, { 'gameRequest.accepted': true });
-
-  if (!game) {
-    return next(new AppError('Current user has canceled this request!', 404));
-  }
 
   res.status(200).render('playGame', {
     title: 'Pig Game',

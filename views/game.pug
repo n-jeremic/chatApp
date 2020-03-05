@@ -21,7 +21,8 @@ block content
                                         img.mr-2(src=`/img/users/${user.profilePhoto}` alt='' width='50px' style='border-radius: 50%;')
                                     span.align-middle(style="font-size: 18px")= `${user.firstName} ${user.lastName}`
                                     button.btn.btn-sm.btn-danger.float-right.invite--btn(style='margin-top: 10px;' onclick=`sendGameRequest('${user._id}', this)`) Invite 
-            .col-lg-7#alert-window(style="display: none")
+            .col-lg-6#placeholder                        
+            .col-lg-6#alert-window(style="display: none")
                 .alert.alert-warning.alert-dismissible.fade.show(role='alert')
                     strong Attention!
                     |  If you leave this page your request will be canceled!
@@ -148,7 +149,7 @@ block content
                                     p.text-center.mt-4#player2--roundScore(style='font-size: 50px; font-weight: 500; visibility: hidden') 0 
                                 .col-lg-12
                                     p.text-center.mt-3#player2--text(style='font-size: 20px; font-weight: 400; visibility: hidden;')             
-            .col-lg-3                                                                
+            .col-lg-3#table-container(style="display: none")                                                                
         include _post-modals
 block scriptFile
     script(src="/js/functions.js")
