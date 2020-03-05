@@ -440,7 +440,7 @@ function setOppositeRound() {
   }, 2500);
 }
 
-async function endGame(disconnected = false) {
+async function endGame() {
   try {
     const response = await axios({
       method: 'POST',
@@ -448,18 +448,7 @@ async function endGame(disconnected = false) {
     });
 
     if (response.data.status === 'success') {
-      if (disconnected === true) {
-        Swal.fire('Warning', `${player2.firstName} ${player2.lastName} has been disconnected`, 'error');
-      }
-      $('#winner-img').attr('src', `/img/users/${gameObj.winner.profilePhoto}`);
-      $('#winner-text').text(`${gameObj.winner.firstName} ${gameObj.winner.lastName} WON!`);
-      $('#player1--interface').removeClass('inactivePlayer');
-      $('#player2--interface').removeClass('inactivePlayer');
-      $('#player1--activeHand').hide();
-      $('#player2--activeHand').hide();
-      $('#playingGame').css('opacity', 0.2);
-      $('.winner-interface').css('display', 'block');
-      gameRequestInterval = setInterval(checkMyGameRequest, 3000);
+      displayWinnerInterface();
     }
   } catch (err) {
     console.log(err);
@@ -513,10 +502,28 @@ async function setWinner() {
     });
 
     if (response.data.status === 'success') {
-      await endGame(true);
+      gameObj = response.data.data.game;
+      displayWinnerInterface(true);
     }
   } catch (err) {
     console.log(err);
     Swal.fire('Warning', 'Server error! Please try again.', 'error');
   }
+}
+
+function displayWinnerInterface(disconnected = false) {
+  if (disconnected === true) {
+    Swal.fire('Warning', `${player2.firstName} ${player2.lastName} has been disconnected!`, 'error');
+  }
+
+  $('#winner-img').attr('src', `/img/users/${gameObj.winner.profilePhoto}`);
+  $('#winner-text').text(`${gameObj.winner.firstName} ${gameObj.winner.lastName} WON!`);
+  $('#player1--interface').removeClass('inactivePlayer');
+  $('#player2--interface').removeClass('inactivePlayer');
+  $('#player1--activeHand').hide();
+  $('#player2--activeHand').hide();
+  $('#playingGame').css('opacity', 0.2);
+  $('.winner-interface').css('display', 'block');
+
+  gameRequestInterval = setInterval(checkMyGameRequest, 3000);
 }

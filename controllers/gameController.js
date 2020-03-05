@@ -243,6 +243,9 @@ exports.setWinner = catchAsync(async (req, res, next) => {
   }
   const game = await Game.findByIdAndUpdate(req.params.gameId, { winner: req.body.winner }, { new: true });
 
+  await User.findByIdAndUpdate(game.homePlayer._id, { $unset: { gameRequest: '' } });
+  await User.findByIdAndUpdate(game.awayPlayer._id, { $unset: { gameRequest: '' } });
+
   res.status(200).json({
     status: 'success',
     data: {
