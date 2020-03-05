@@ -14,6 +14,8 @@ router.get('/oppositePlayerScore/:gameId', authController.protect, gameControlle
 
 router.post('/endGame/:gameId', authController.protect, gameController.endGame);
 
+router.post('/winner/:gameId', authController.protect, gameController.setWinner);
+
 router.post('/cancelRequest', authController.protect, gameController.cancelRequest);
 
 router.get('/availableUsers', authController.protect, gameController.availableUsers);

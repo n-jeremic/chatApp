@@ -47,22 +47,3 @@ exports.createMessage = catchAsync(async (req, res, next) => {
     }
   });
 });
-
-exports.getAllMessages = catchAsync(async (req, res, next) => {
-  const chats = await Chat.find()
-    .populate({
-      path: 'users',
-      select: '-__v'
-    })
-    .populate({
-      path: 'messages',
-      select: '-chatId -__v'
-    });
-
-  res.status(200).json({
-    status: 'success',
-    data: {
-      chats
-    }
-  });
-});

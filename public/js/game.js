@@ -14,6 +14,7 @@ const currentUser = JSON.parse(document.getElementById('currentUserData').datase
 let player1;
 let player2;
 let oppositeScoreInterval;
+let oppositePlayerCheck = 0;
 let sentRequestCounter = 0;
 
 async function getGame() {
@@ -308,18 +309,21 @@ async function checkOpositePlayer(gameObjJS) {
       if (response.data.data.game.winner || response.data.data.game[oppositePlayer].totalScore >= 10) {
         // Update score in JS
         gameObj = response.data.data.game;
+        oppositePlayerCheck = 0;
 
         await endGame();
       } else if (response.data.data.game[oppositePlayer].totalScore !== gameObjJS[oppositePlayer].totalScore) {
         // Update score in JS
         gameObj = response.data.data.game;
         findMyPlayer(gameObj);
+        oppositePlayerCheck = 0;
 
         setOppositeRound();
       } else if (response.data.data.game[oppositePlayer].roundScore !== gameObjJS[oppositePlayer].roundScore) {
         // Update score in JS
         gameObj = response.data.data.game;
         findMyPlayer(gameObj);
+        oppositePlayerCheck = 0;
 
         let currentScore;
         if (response.data.data.game[oppositePlayer].currentScore === 0) {
@@ -339,12 +343,18 @@ async function checkOpositePlayer(gameObjJS) {
         // Update score in JS
         gameObj = response.data.data.game;
         findMyPlayer(gameObj);
+        oppositePlayerCheck = 0;
 
         rollOppositeDice(1);
       } else {
+        oppositePlayerCheck++;
         oppositeScoreInterval = setInterval(() => {
           checkOpositePlayer(gameObj);
         }, 1000);
+      }
+
+      if (oppositePlayerCheck > 30) {
+        await setWinner();
       }
 
       return;
@@ -430,7 +440,7 @@ function setOppositeRound() {
   }, 2500);
 }
 
-async function endGame() {
+async function endGame(disconnected = false) {
   try {
     const response = await axios({
       method: 'POST',
@@ -438,6 +448,9 @@ async function endGame() {
     });
 
     if (response.data.status === 'success') {
+      if (disconnected === true) {
+        Swal.fire('Warning', `${player2.firstName} ${player2.lastName} has been disconnected`, 'error');
+      }
       $('#winner-img').attr('src', `/img/users/${gameObj.winner.profilePhoto}`);
       $('#winner-text').text(`${gameObj.winner.firstName} ${gameObj.winner.lastName} WON!`);
       $('#player1--interface').removeClass('inactivePlayer');
@@ -487,4 +500,23 @@ async function closeGameInterface() {
   $('#available_users-list').show(1000);
 
   await getAvailableUsers();
+}
+
+async function setWinner() {
+  try {
+    const response = await axios({
+      method: 'POST',
+      url: `/api/game/winner/${gameObj._id}`,
+      data: {
+        winner: player1
+      }
+    });
+
+    if (response.data.status === 'success') {
+      await endGame(true);
+    }
+  } catch (err) {
+    console.log(err);
+    Swal.fire('Warning', 'Server error! Please try again.', 'error');
+  }
 }

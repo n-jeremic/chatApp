@@ -236,3 +236,17 @@ exports.availableUsers = catchAsync(async (req, res, next) => {
     }
   });
 });
+
+exports.setWinner = catchAsync(async (req, res, next) => {
+  if (!req.body.winner) {
+    return next(new AppError('There is no data in the body!', 400));
+  }
+  const game = await Game.findByIdAndUpdate(req.params.gameId, { winner: req.body.winner }, { new: true });
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      game
+    }
+  });
+});
