@@ -4,6 +4,7 @@ block content
     include _navbar
     .container.mt-5
         span(data-user_photo=`${user.profilePhoto}` id="user-pr_photo")
+        span#currentUserData(data-current-user=`${JSON.stringify(userMe)}`)
         .col-lg-12
             .card.profile-content(style='width: 100%;')
                 .card-body

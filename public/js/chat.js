@@ -1,6 +1,5 @@
 window.setInterval(getNewMessages, 1000);
 window.setInterval(getOnlineUsers, 10000);
-const currentUser = JSON.parse(document.getElementById('currentUser').dataset.currentUser);
 
 async function getOnlineUsers() {
   try {

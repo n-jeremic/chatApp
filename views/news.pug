@@ -3,6 +3,7 @@ extends base
 block content
     include _navbar
     .container-fluid(style='margin-top: 50px;')
+    span#currentUserData(data-current-user=`${JSON.stringify(userMe)}`)
         .row
             .col-lg-3
             .col-lg-6
@@ -65,18 +66,6 @@ block content
                                                             .col-lg-12
                                                                 p.text-center.text-muted(style="margin: 0px !important; font-size: 18px; font-weight: 600") No comments to show.                
             .col-lg-3
-    //- //- modal likes
-    //- #modal_likes.modal.fade(tabindex='-1' role='dialog' data-backdrop="static")
-    //-     .modal-dialog.modal-sm.modal-dialog-centered(role='document')
-    //-         .modal-content
-    //-             .modal-header(style='padding: 10px !important')
-    //-                 p.modal-title(style="font-weight: 500") People who liked this photo
-    //-                 button.close(type='button' data-dismiss='modal' aria-label='Close')
-    //-                     span(aria-hidden='true') &times;
-    //-             .modal-body#likes_list(style='padding: 0px !important')
-    //-                 .row
-    //-                     .col-lg-12
-    //-                         .list-group#append_likes  
     include _post-modals                              
 block scriptFile
     script(src="/js/news.js")

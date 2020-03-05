@@ -12,7 +12,7 @@ mixin userList(user)
 
 block content
     include _navbar
-    span(data-current-user=`${JSON.stringify(userMe)}` id="currentUser")
+    span#currentUserData(data-current-user=`${JSON.stringify(userMe)}`)
     .container-fluid.main-content
         .row
             .col-lg-9
@@ -27,6 +27,6 @@ block content
             .col-lg-1
     include _post-modals                    
 block scriptFile
-    script(src='/js/chat.js') 
     script(src="/js/functions.js")
+    script(src='/js/chat.js') 
     script(src="/js/post.js")      
