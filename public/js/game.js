@@ -448,6 +448,7 @@ async function endGame() {
     });
 
     if (response.data.status === 'success') {
+      gameObj = response.data.data.game;
       displayWinnerInterface();
     }
   } catch (err) {

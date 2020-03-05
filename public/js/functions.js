@@ -255,7 +255,7 @@ async function checkMyGameRequest() {
         createGameNotif(response.data.data.request);
         receivedRequestInterval = setInterval(() => {
           receivedRequestCounter++;
-          if (receivedRequestCounter > 19) {
+          if (receivedRequestCounter > 25) {
             $('#btn-gameRequest').remove();
             regularStyleBtn();
             clearInterval(receivedRequestInterval);

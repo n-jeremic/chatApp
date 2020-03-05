@@ -208,7 +208,10 @@ exports.endGame = catchAsync(async (req, res, next) => {
   await User.findByIdAndUpdate(game.awayPlayer._id, { $unset: { gameRequest: '' } });
 
   res.status(200).json({
-    status: 'success'
+    status: 'success',
+    data: {
+      game
+    }
   });
 });
 
