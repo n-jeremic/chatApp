@@ -1,5 +1,3 @@
-import { get } from 'mongoose';
-
 $(document).ready(getAllGames);
 
 if (location.href.includes('playGame')) {
