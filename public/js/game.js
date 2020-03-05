@@ -10,7 +10,6 @@ window.addEventListener('beforeunload', function() {
 
 let watchRequestInterval;
 let gameObj;
-const currentUser = JSON.parse(document.getElementById('currentUserData').dataset.currentUser);
 let player1;
 let player2;
 let oppositeScoreInterval;
