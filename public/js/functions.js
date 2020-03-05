@@ -1,6 +1,11 @@
 $(document).ready(getAllNotifications);
 window.setInterval(getNewNotifications, 5000);
 
+let currentUser = document.getElementById('currentUserData');
+if (currentUser) {
+  currentUser = JSON.parse(document.getElementById('currentUserData').dataset.currentUser);
+}
+
 let receivedRequestCounter = 0;
 let receivedRequestInterval;
 let myGameRequest;
@@ -250,7 +255,7 @@ async function checkMyGameRequest() {
     if (response.data.status === 'empty') {
       return;
     } else if (response.data.status === 'success') {
-      if (response.data.data.request.accepted === false) {
+      if (response.data.data.request.accepted === false && response.data.data.request._id !== currentUser._id) {
         myGameRequest = response.data.data.request;
         createGameNotif(response.data.data.request);
         receivedRequestInterval = setInterval(() => {
