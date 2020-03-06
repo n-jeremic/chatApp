@@ -4,7 +4,7 @@ const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 
 exports.getAllGames = catchAsync(async (req, res, next) => {
-  const games = await Game.find();
+  const games = await Game.find({ winner: { $ne: undefined } });
 
   if (!games) {
     return next(new AppError('There is no games yet!', 404));

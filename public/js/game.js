@@ -5,8 +5,8 @@ if (location.href.includes('playGame')) {
 }
 
 window.addEventListener('beforeunload', function() {
-  if (gameObj) {
-    cancelGameRequest(gameObj);
+  if (gameObj && sentRequestCounter > 0) {
+    cancelGameRequest(gameObj, true);
   }
 });
 
@@ -95,7 +95,7 @@ function createTable(array) {
       el.lastName
     }</a></td><td class="text-center">${el.won}</td><td class="text-center">${el.lost}</td></tr>`;
   });
-  const table = `<table class='table table-bordered'><thead><tr class='bg-danger' style="color: white"><th class="text-center">#</th><th class="text-center">PLAYER NAME</th><th class="text-center">WINS</th><th class="text-center">DEFEATS</th></tr><thead><tbody>${rows}</tbody><tfoot><tr class="table-warning"><td colspan="4" class='text-center'>PIG GAME STANDINGS</td></tr></tfoot></table>`;
+  const table = `<table class='table table-bordered table-hover standings-table'><thead><tr class='bg-danger' style="color: white"><th class="text-center">#</th><th class="text-center">PLAYER NAME</th><th class="text-center">WINS</th><th class="text-center">DEFEATS</th></tr><thead><tbody>${rows}</tbody><tfoot><tr class="table-warning"><td colspan="4" class='text-center'>PIG GAME STANDINGS</td></tr></tfoot></table>`;
 
   $('#table-container').append(table);
   $('#table-container').show(1000);
@@ -178,10 +178,10 @@ async function watchGameRequest(userId, game, btn) {
       });
 
       if (response.data.status === 'accepted') {
+        gameObj = response.data.data.game;
         sentRequestCounter = 0;
         clearInterval(watchRequestInterval);
         initGameHTML(response.data.data.game);
-        gameObj = response.data.data.game;
         findMyPlayer(gameObj);
         findActivePlayer(gameObj);
       } else {
@@ -204,7 +204,7 @@ async function watchGameRequest(userId, game, btn) {
   }
 }
 
-async function cancelGameRequest(game) {
+async function cancelGameRequest(game, onunload = false) {
   try {
     const response = await axios({
       method: 'POST',
@@ -215,8 +215,12 @@ async function cancelGameRequest(game) {
     });
 
     if (response.data.status === 'success') {
+      if (onunload === true) {
+        return;
+      }
       Swal.fire('Warning', `${game.awayPlayer.firstName} ${game.awayPlayer.lastName} did not respond! Your request has been canceled.`, 'error');
       $('#alert-window').css('display', 'none');
+      $('#placeholder').css('display', 'block');
     }
   } catch (err) {
     console.log(err);
@@ -309,6 +313,7 @@ function makeActivePlayerInterface(player) {
     $('#player2--interface').addClass('inactivePlayer');
     $('#player1--activeHand').show();
     $('#player2--activeHand').hide();
+    $('#rollBtn').attr('disabled', false);
     $('#rollBtn').show(800);
     $('#setRoundBtn').show(800);
     $('#setRoundBtn').attr('disabled', true);
@@ -410,6 +415,10 @@ async function checkOpositePlayer(gameObjJS) {
         oppositePlayerCheck = 0;
 
         await endGame();
+
+        $('#player2--totalScore').val(response.data.data.game[oppositePlayer].totalScore);
+        $('#player2--totalScore').css('background-color', '#4dff4d');
+        $('#player2--totalScore').css('font-weight', 700);
       } else if (response.data.data.game[oppositePlayer].totalScore !== gameObjJS[oppositePlayer].totalScore) {
         // Update score in JS
         gameObj = response.data.data.game;
@@ -446,13 +455,15 @@ async function checkOpositePlayer(gameObjJS) {
         rollOppositeDice(1);
       } else {
         oppositePlayerCheck++;
+        if (oppositePlayerCheck > 30) {
+          oppositePlayerCheck = 0;
+          await setWinner();
+          return;
+        }
+
         oppositeScoreInterval = setInterval(() => {
           checkOpositePlayer(gameObj);
         }, 1000);
-      }
-
-      if (oppositePlayerCheck > 30) {
-        await setWinner();
       }
 
       return;
@@ -627,4 +638,9 @@ function displayWinnerInterface(disconnected = false) {
   $('.winner-interface').css('display', 'block');
 
   gameRequestInterval = setInterval(checkMyGameRequest, 3000);
+}
+
+function hideAlert() {
+  $('#alert-window').css('display', 'none');
+  $('#placeholder').css('display', 'block');
 }

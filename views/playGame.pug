@@ -24,7 +24,7 @@ block content
                 .alert.alert-warning.alert-dismissible.fade.show(role='alert')
                     strong Attention!
                     |  If you leave this page your request will be canceled!
-                    button.close(type='button' data-dismiss='alert' aria-label='Close')
+                    button.close(type='button' onclick="hideAlert();")
                         span(aria-hidden='true') &times;                          
             .col-lg-7#game-interface(style="display: none; color: #404040")
                 .winner-interface(style="display: none")
