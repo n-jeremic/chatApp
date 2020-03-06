@@ -104,7 +104,7 @@ function readImage(input, el_id) {
 }
 
 function addSpinner(btn_id) {
-  document.getElementById(btn_id).innerHTML = '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Updating...';
+  document.getElementById(btn_id).innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Updating...';
   document.getElementById(btn_id).disabled = true;
 }
 
@@ -176,5 +176,39 @@ async function addNewPhoto() {
     Swal.fire('Warning', 'Photo uploading failed! Please try again!', 'error');
     console.log(err);
     removeSpinner('btn-add-new-photo', '<i class="fas fa-cloud-upload-alt"></i> Upload photo');
+  }
+}
+
+function readCoverPhoto(file) {
+  readImage(file, 'coverPhoto');
+  $('.btn-coverPhoto').show(700);
+}
+
+function cancelCoverPhoto() {
+  $('#coverPhoto').attr('src', `/img/users/${currentUser.coverPhoto}`);
+  $('.btn-coverPhoto').hide();
+  $('#coverPhotoInput').val('');
+}
+
+async function uploadCoverPhoto() {
+  addSpinner('btn-updateCover');
+  const file = document.getElementById('coverPhotoInput').files[0];
+  const formData = new FormData();
+  formData.append('coverPhoto', file);
+
+  try {
+    const response = await axios({
+      method: 'PATCH',
+      url: '/api/users/updateMe',
+      data: formData
+    });
+
+    if (response.data.status === 'success') {
+      $('.btn-coverPhoto').hide();
+      location.reload(true);
+    }
+  } catch (err) {
+    console.log(err);
+    Swal.fire('Warning', 'Photo uploading failed! Please try again!', 'error');
   }
 }

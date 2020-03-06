@@ -6,91 +6,140 @@ block content
         span(data-user_photo=`${user.profilePhoto}` id="user-pr_photo")
         span#currentUserData(data-current-user=`${JSON.stringify(userMe)}`)
         .col-lg-12
-            .card.profile-content(style='width: 100%;')
-                .card-body
-                    h1.card-title.mb-4.align-middle(style="margin-bottom: 0px")= `${title === "My Profile" ? "My Profile" : user.firstName + "'s profile"}`
+            .card.profile-content(style='width: 100%; border-radius: 10px')
+                .card-body(style="padding: 0px !important; border-radius: 10px")
                     .row
+                        .col-lg-12
+                            img(width="100%" height="450px" style="object-fit: cover; border-radius: 10px 10px 0px 0px;" src=`/img/users/${user.coverPhoto}` id="coverPhoto")
+                            button.btn.btn-sm.btn-success.btn-coverPhoto#btn-updateCover(style="position: absolute; top: 10px; right: 125px; display: none" onclick="uploadCoverPhoto()")
+                                i.fas.fa-download.mr-2 
+                                | Save
+                            button.btn.btn-sm.btn-danger.btn-coverPhoto(style="position: absolute; top: 10px; right: 30px; display: none" onclick="cancelCoverPhoto()")
+                                i.fas.fa-ban.mr-1
+                                | Cancel
                         .col-lg-4
-                            img.img-fluid.img-thumbnail(src=`/img/users/${user.profilePhoto}` alt=`${user.firstName}-photo`)
-                            - if (title === "My Profile")
-                                button.btn.btn-link.mt-2.btn-sm(type='button' data-toggle='modal' data-target='#photo_modal')
-                                    | Change Profile Photo
-                        - if (title === "My Profile")            
-                            .col-lg-5.profile-info(style="padding-right: 50px")
-                                .input-group.mb-3
-                                    .input-group-prepend
-                                        span.input-group-text(style="font-weight: 600") First Name
-                                    input.form-control(type='text' value=`${user.firstName}` disabled='true' aria-label='Username' style="background-color: #fff")
-                                .input-group.mb-3
-                                    .input-group-prepend
-                                        span.input-group-text(style="font-weight: 600") Last Name
-                                    input.form-control(type='text' value=`${user.lastName}` disabled='true' aria-label='Username' style="background-color: #fff")
-                                .input-group.mb-3
-                                    .input-group-prepend
-                                        span.input-group-text(style="font-weight: 600") Email 
-                                    input.form-control(type='text' value=`${user.email}` disabled='true' aria-label='Username' style="background-color: #fff")
-                                - if (user.dateOfBirth)        
-                                    .input-group.mb-3
-                                        .input-group-prepend
-                                            span.input-group-text(style="font-weight: 600") Date of birth
-                                        input.form-control(type='text' disabled='true' aria-label='Username' value=`${user.birthday}` style="background-color: #fff")
-                        - if (title === "Profile")
-                            .col-lg-8.profile-info(style="padding: 0px 100px 0px 100px")
-                                .input-group.mb-3
-                                    .input-group-prepend
-                                        span.input-group-text(style="font-weight: 600") First Name
-                                    input.form-control(type='text' value=`${user.firstName}` disabled='true' aria-label='Username' style="background-color: #fff")
-                                .input-group.mb-3
-                                    .input-group-prepend
-                                        span.input-group-text(style="font-weight: 600") Last Name
-                                    input.form-control(type='text' value=`${user.lastName}` disabled='true' aria-label='Username' style="background-color: #fff")
-                                .input-group.mb-3
-                                    .input-group-prepend
-                                        span.input-group-text(style="font-weight: 600") Email 
-                                    input.form-control(type='text' value=`${user.email}` disabled='true' aria-label='Username' style="background-color: #fff")
-                                - if (user.dateOfBirth)        
-                                    .input-group.mb-3
-                                        .input-group-prepend
-                                            span.input-group-text(style="font-weight: 600") Date of birth
-                                        input.form-control(type='text' disabled='true' aria-label='Username' value=`${user.birthday}` style="background-color: #fff")                        
-                        - if (title === "My Profile")            
-                            .col-lg-3
-                                button.btn.btn-light.btn-sm.float-right.btn-block(style='margin-top: 200px;' data-toggle='modal' data-target='#add-photo_modal')
-                                    i.fas.fa-images
-                                    |  Add New Photo
-                                button.btn.btn-light.btn-sm.float-right.btn-block.mt-3(data-toggle='modal' data-target='#password_modal')
-                                    i.fas.fa-key
-                                    |  Update Password
-                                button.btn.btn-light.btn-sm.float-right.mt-3.btn-block(data-toggle='modal' data-target='#info_modal')
-                                    i.fas.fa-users-cog
-                                    |  Update Profile
-                    .row
-                        .col-lg-12.mt-3
-                            ul#myTab.nav.nav-tabs(role='tablist')
-                                li.nav-item
-                                    a#home-tab.nav-link.active(style="color: #007bff" data-toggle='tab' href='#home' role='tab' aria-controls='home' aria-selected='true')= `${title === "My Profile" ? "My photos" : user.firstName + "'s photos"}`
-                            #myTabContent.tab-content
-                                #home.tab-pane.fade.show.active(role='tabpanel' aria-labelledby='home-tab')
+                            img.img-thumbnail(src=`/img/users/${user.profilePhoto}` alt=`${user.firstName}-photo` width="260px" height="260px" style="object-fit: cover; position: absolute; left: 100px; bottom: -140px")
+                    div(style="padding: 20px")                          
+                        - if (title === "My Profile")
+                            .row            
+                                .col-lg-12
                                     .row
-                                        - if (user.posts.length > 0)
-                                            each post in user.posts
-                                                .col-lg-3.mb-4
-                                                    div.post-container(onclick=`getPostDetails('${post.id}')`)
-                                                        img(src=`/img/posts/${post.content}` alt='...' id=`photo-${post.id}`
-                                                        width='230px' height='230px' style='object-fit: cover')
-                                        - if (user.posts.length === 0)
-                                            - if (title === "My Profile")
-                                                .col-lg-12
-                                                    h5.text-center.mt-2(style="font-weight: 400") You don't have any photos yet! 
-                                                        a(data-toggle='modal' data-target='#add-photo_modal' href="#") Click here to add photo. 
-                                            - if (title === "Profile")  
-                                                .col-lg-12
-                                                    h5.text-center.mt-2(style="font-weight: 400")= `${user.firstName} doesn't have any photos yet!`                       
-                                #profile.tab-pane.fade(role='tabpanel' aria-labelledby='profile-tab')       
+                                        .col-lg-4
+                                        .col-lg-5
+                                            h1(style="font-size: 44px; font-wieght: 900; margin: 0px !important")= `${user.firstName} ${user.lastName}`
+                                        .col-lg-3
+                                            button.btn.btn-light.btn-sm.btn-block(data-toggle='modal' data-target='#add-photo_modal')
+                                                i.fas.fa-camera-retro.mr-1
+                                                |  Add New Post
+                                .col-lg-12.mt-2
+                                    .row
+                                        .col-lg-9
+                                        .col-lg-3
+                                            button.btn.btn-light.btn-sm.btn-block(type='button' data-toggle='modal' data-target='#photo_modal' style="margin-top: -20px")
+                                                i.fas.fa-user-alt.mr-1
+                                                |  Change Profile Photo   
+                                .col-lg-12
+                                    .row
+                                        .col-lg-9
+                                        .col-lg-3
+                                            label(for="coverPhotoInput" style="width: 100%; margin-top: 10px")
+                                                a.btn.btn-light.btn-sm.btn-block(type='button')
+                                                    i.fas.fa-images.mr-1
+                                                    |  Change Cover Photo 
+                                            input(type="file" id="coverPhotoInput" style="display: none" onchange="readCoverPhoto(this)")    
+                        - if (title === "Profile")
+                            .row            
+                                .col-lg-12
+                                    .row
+                                        .col-lg-4
+                                        .col-lg-5
+                                            h1(style="font-size: 44px; font-wieght: 900; margin: 0px !important")= `${user.firstName} ${user.lastName}`
+                                        .col-lg-3
+                                .col-lg-12.mt-2
+                                    .row
+                                        .col-lg-9
+                                        .col-lg-3  
+                                .col-lg-12(style="margin-top: 50px")
+                                    .row
+                                        .col-lg-9
+                                        .col-lg-3                                                                       
+                        .row(style="margin-top: 80px")
+                            .col-lg-12
+                                ul#myTab.nav.nav-tabs(role='tablist')
+                                    li.nav-item
+                                        a#home-tab.nav-link.active(data-toggle='tab' href='#home' role='tab' aria-controls='home' aria-selected='true')= `${title === "My Profile" ? "My photos" : user.firstName + "'s photos"}`
+                                    li.nav-item
+                                        a#profile-tab.nav-link(data-toggle='tab' href='#profile' role='tab' aria-controls='profile' aria-selected='false')= `${title === "My Profile" ? "About Me" : "About " + user.firstName}`
+                                #myTabContent.tab-content
+                                    #home.tab-pane.fade.show.active(role='tabpanel' aria-labelledby='home-tab')
+                                        .row
+                                            - if (user.posts.length > 0)
+                                                each post in user.posts
+                                                    .col-lg-3.mb-4
+                                                        div.post-container(onclick=`getPostDetails('${post.id}')`)
+                                                            img(src=`/img/posts/${post.content}` alt='...' id=`photo-${post.id}`
+                                                            width='230px' height='230px' style='object-fit: cover')
+                                            - if (user.posts.length === 0)
+                                                - if (title === "My Profile")
+                                                    .col-lg-12
+                                                        h5.text-center.mt-2(style="font-weight: 400") You don't have any photos yet! 
+                                                            a(data-toggle='modal' data-target='#add-photo_modal' href="#") Click here to add photo. 
+                                                - if (title === "Profile")  
+                                                    .col-lg-12
+                                                        h5.text-center.mt-2(style="font-weight: 400")= `${user.firstName} doesn't have any photos yet!`                       
+                                    #profile.tab-pane.fade(role='tabpanel' aria-labelledby='profile-tab' style="padding: 40px 20px 0px 20px !important")
+                                        - if (title === "My Profile")
+                                            .row            
+                                                .col-lg-5.profile-info
+                                                    .input-group.mb-3
+                                                        .input-group-prepend
+                                                            span.input-group-text(style="font-weight: 600") First Name
+                                                        input.form-control(type='text' value=`${user.firstName}` disabled='true' aria-label='Username' style="background-color: #fff")
+                                                    .input-group.mb-3
+                                                        .input-group-prepend
+                                                            span.input-group-text(style="font-weight: 600") Last Name
+                                                        input.form-control(type='text' value=`${user.lastName}` disabled='true' aria-label='Username' style="background-color: #fff")
+                                                    .input-group.mb-3
+                                                        .input-group-prepend
+                                                            span.input-group-text(style="font-weight: 600") Email 
+                                                        input.form-control(type='text' value=`${user.email}` disabled='true' aria-label='Username' style="background-color: #fff")
+                                                    - if (user.dateOfBirth)        
+                                                        .input-group.mb-3
+                                                            .input-group-prepend
+                                                                span.input-group-text(style="font-weight: 600") Date of birth
+                                                            input.form-control(type='text' disabled='true' aria-label='Username' value=`${user.birthday}` style="background-color: #fff")
+                                            .row
+                                                .col-lg-3
+                                                    button.btn.btn-info.btn-sm.float-right.btn-block.mt-5(data-toggle='modal' data-target='#password_modal')
+                                                        i.fas.fa-key
+                                                        |  Update Password
+                                                    button.btn.btn-info.btn-sm.float-right.mt-3.btn-block(data-toggle='modal' data-target='#info_modal')
+                                                        i.fas.fa-users-cog
+                                                        |  Update Profile                                                            
+                                        - if (title === "Profile")
+                                            .row
+                                                .col-lg-5.profile-info
+                                                    .input-group.mb-3
+                                                        .input-group-prepend
+                                                            span.input-group-text(style="font-weight: 600") First Name
+                                                        input.form-control(type='text' value=`${user.firstName}` disabled='true' aria-label='Username' style="background-color: #fff")
+                                                    .input-group.mb-3
+                                                        .input-group-prepend
+                                                            span.input-group-text(style="font-weight: 600") Last Name
+                                                        input.form-control(type='text' value=`${user.lastName}` disabled='true' aria-label='Username' style="background-color: #fff")
+                                                    .input-group.mb-3
+                                                        .input-group-prepend
+                                                            span.input-group-text(style="font-weight: 600") Email 
+                                                        input.form-control(type='text' value=`${user.email}` disabled='true' aria-label='Username' style="background-color: #fff")
+                                                    - if (user.dateOfBirth)        
+                                                        .input-group.mb-3
+                                                            .input-group-prepend
+                                                                span.input-group-text(style="font-weight: 600") Date of birth
+                                                            input.form-control(type='text' disabled='true' aria-label='Username' value=`${user.birthday}` style="background-color: #fff")        
     include _profile-modals
     include _post-modals                    
 block scriptFile
+    script(src="/js/functions.js")
     - if (title === "My Profile")
         script(src="/js/profile.js")
     script(src="/js/post.js")
-    script(src="/js/functions.js")

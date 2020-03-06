@@ -34,18 +34,31 @@ const upload = multer({
   fileFilter: multerFilter
 });
 
-exports.uploadUserPhoto = upload.single('profilePhoto');
+exports.uploadUserPhoto = upload.fields([
+  { name: 'profilePhoto', maxCount: 1 },
+  { name: 'coverPhoto', maxCount: 1 }
+]);
 
 exports.resizePhoto = catchAsync(async (req, res, next) => {
-  if (!req.file) return next();
+  if (!req.files) return next();
 
-  req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`;
+  if (req.files.profilePhoto) {
+    req.files.profilePhoto[0].filename = `user-${req.user.id}-${Date.now()}.jpeg`;
 
-  await sharp(req.file.buffer)
-    .resize(500, 500)
-    .toFormat('jpeg')
-    .jpeg({ quality: 90 })
-    .toFile(`public/img/users/${req.file.filename}`);
+    await sharp(req.files.profilePhoto[0].buffer)
+      .resize(500, 500)
+      .toFormat('jpeg')
+      .jpeg({ quality: 90 })
+      .toFile(`public/img/users/${req.files.profilePhoto[0].filename}`);
+  } else if (req.files.coverPhoto) {
+    req.files.coverPhoto[0].filename = `userCover-${req.user.id}-${Date.now()}.jpeg`;
+
+    await sharp(req.files.coverPhoto[0].buffer)
+      .resize(1000, 800)
+      .toFormat('jpeg')
+      .jpeg({ quality: 90 })
+      .toFile(`public/img/users/${req.files.coverPhoto[0].filename}`);
+  }
 
   next();
 });
@@ -107,7 +120,8 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     return next(new AppError('Please use /updateMyPassword route for changing your password!', 400));
   }
   const filteredBody = filterObj(req.body, 'firstName', 'lastName', 'email', 'dateOfBirth');
-  if (req.file) filteredBody.profilePhoto = req.file.filename;
+  if (req.files.profilePhoto) filteredBody.profilePhoto = req.files.profilePhoto[0].filename;
+  if (req.files.coverPhoto) filteredBody.coverPhoto = req.files.coverPhoto[0].filename;
 
   const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
     new: true,
