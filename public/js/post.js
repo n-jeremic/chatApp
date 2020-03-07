@@ -21,7 +21,7 @@ function openGallery(photo_path) {
   };
 }
 
-async function getPostDetails(post_id) {
+async function getPostDetails(post_id, deletePostCheck = false) {
   $('.modal_posts-content').hide();
   $('#comments_container').hide();
   $('#modal_photos').show();
@@ -34,6 +34,23 @@ async function getPostDetails(post_id) {
     });
 
     if (postData.data.status === 'success') {
+      if (location.href.includes('me') && deletePostCheck === true) {
+        $('#btn-deletePost').attr('onclick', `deletePost('${post_id}')`);
+
+        $('#img--post').on('mouseover', () => {
+          $('#btn-deletePost').show(600);
+          $('#img--post').css('cursor', 'pointer');
+          $('#btn-deletePost').on('mouseover', () => {
+            $('#btn-deletePost').show();
+          });
+        });
+
+        $('#img--post').on('mouseleave', () => {
+          $('#btn-deletePost').hide();
+          $('#img--post').css('cursor', '');
+        });
+      }
+
       $('#modal_gallery-postOwnerPhoto').attr('src', `/img/users/${postData.data.data.post.user.profilePhoto}`);
       $('#modal_gallery-postOwner').text(`${postData.data.data.post.user.firstName} ${postData.data.data.post.user.lastName}`);
       document.getElementById('post_description').innerText = '';
@@ -174,4 +191,34 @@ async function likePostModal(post_id) {
     $('#btn-like').html("<i class='far fa-thumbs-up'></i> Like");
     $('#btn-like').attr('disabled', false);
   }
+}
+
+function deletePost(post_id) {
+  Swal.fire({
+    title: 'Are you sure?',
+    text: "You won't be able to revert this!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, delete it!'
+  }).then(async result => {
+    if (result.value) {
+      $('#btn-deletePost').attr('disabled', true);
+      $('#btn-deletePost').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Deleting...');
+      try {
+        const response = await axios({
+          method: 'DELETE',
+          url: `/api/posts/${post_id}`
+        });
+
+        if (response.status === 204) {
+          location.reload(true);
+        }
+      } catch (err) {
+        console.log(err);
+        Swal.fire('Warning', 'Server error! Please try again.', 'error');
+      }
+    }
+  });
 }

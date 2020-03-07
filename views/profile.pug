@@ -76,7 +76,7 @@ block content
                                             - if (user.posts.length > 0)
                                                 each post in user.posts
                                                     .col-lg-3.mb-4
-                                                        div.post-container(onclick=`getPostDetails('${post.id}')`)
+                                                        div.post-container(onclick=`getPostDetails('${post.id}', true)`)
                                                             img(src=`/img/posts/${post.content}` alt='...' id=`photo-${post.id}`
                                                             width='230px' height='230px' style='object-fit: cover')
                                             - if (user.posts.length === 0)
@@ -139,7 +139,7 @@ block content
     include _profile-modals
     include _post-modals                    
 block scriptFile
+    script(src="/js/post.js")
     script(src="/js/functions.js")
     - if (title === "My Profile")
         script(src="/js/profile.js")
-    script(src="/js/post.js")
