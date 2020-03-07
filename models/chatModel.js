@@ -5,7 +5,6 @@ const chatSchema = new mongoose.Schema(
     users: [
       {
         type: mongoose.Schema.ObjectId,
-        ref: 'User',
         required: [true, 'A chat must have minimum of 2 users!']
       }
     ]

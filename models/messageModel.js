@@ -22,6 +22,10 @@ const messageSchema = new mongoose.Schema({
   chatId: {
     type: mongoose.Schema.ObjectId,
     required: [true, 'Message must belong to the chat!']
+  },
+  seen: {
+    type: Boolean,
+    default: false
   }
 });
 

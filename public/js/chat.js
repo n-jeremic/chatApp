@@ -50,7 +50,15 @@ async function getChat(user_id, user_name, user_photo, newMessage = 'false') {
     if (response.data.data.chat === null) {
       openChatButton(user_id, user_name, user_photo, null);
     } else {
-      openChatButton(user_id, user_name, user_photo, response.data.data.chat.messages, newMessage);
+      const messages = response.data.data.chat.messages;
+      const arrLength = messages.length;
+      let num_of_newMsgs = 0;
+      for (let i = 0; i < arrLength; i++) {
+        if (messages[i].to._id === currentUser._id && messages[i].seen === false) {
+          num_of_newMsgs++;
+        }
+      }
+      openChatButton(user_id, user_name, user_photo, messages, newMessage, num_of_newMsgs);
     }
   } catch (err) {
     console.log(err);
@@ -88,7 +96,7 @@ document.getElementById('card-users').addEventListener('click', async event => {
   }
 });
 
-const openChatButton = (user_id, user_name, user_photo, messages, newMessage = 'false') => {
+const openChatButton = (user_id, user_name, user_photo, messages, newMessage = 'false', num_of_newMsgs = 0) => {
   let markUpChat = '';
 
   if (messages != null) {
@@ -102,7 +110,7 @@ const openChatButton = (user_id, user_name, user_photo, messages, newMessage = '
   }
 
   const markUpButton = `<div class="col-lg-4" id="entireChat-${user_id}"><p><button
-    class="btn btn-${newMessage == 'false' ? 'outline-primary' : 'primary'} btn-block btn-lg btn--chat"
+    class="btn btn-${newMessage == 'false' ? 'outline-primary' : 'primary alertMsg'} btn-block btn-lg btn--chat"
     type="button"
     id="btnChat-${user_id}"
     onclick="goWhite('${user_id}');"
@@ -111,7 +119,9 @@ const openChatButton = (user_id, user_name, user_photo, messages, newMessage = '
     data-toggle="collapse"
     data-target="#collapse-${user_id}"
     aria-expanded="${newMessage == 'false' ? 'true' : 'false'}"
-    aria-controls="collapse-${user_id}">${user_name} <a class="float-right" onclick="closeChat('${user_id}')"><i class="fas fa-times" style="color: #ff704d; display: none" id="closeChat-${user_id}"></i></a></button></p>
+    aria-controls="collapse-${user_id}">${user_name} <a class="float-right" onclick="closeChat('${user_id}')"><i class="fas fa-times" style="color: #ff704d; visibility: hidden" id="closeChat-${user_id}"></i></a><span id="num_of_newMsgs--chat" style="display: ${
+    newMessage == 'true' ? 'inline-block' : 'none'
+  }">${num_of_newMsgs}</span></button></p>
     <div class="collapse ${newMessage == 'false' ? 'show' : ''}" id="collapse-${user_id}">
     <div class="card card-body chat-body">
     <div class="chat" id="scroll-${user_id}"><div class="container-fluid" id="chat-${user_id}">${markUpChat}</div></div>
@@ -210,11 +220,14 @@ async function getNewMessages() {
       }
 
       if (openedChat) {
+        let newMsgs_count = parseInt(document.getElementById('num_of_newMsgs--chat').textContent);
         let markUpChat = createChatMessage(newMsgsArr[i].from.id, newMsgsArr[i].text, newMsgsArr[i].from.profilePhoto, 'notMe');
         $(`#chat-${newMsgsArr[i].from.id}`).append(markUpChat);
         scrollDownChat(newMsgsArr[i].from.id);
         document.querySelector(`#btnChat-${newMsgsArr[i].from.id}`).classList.remove('btn-outline-primary');
-        document.querySelector(`#btnChat-${newMsgsArr[i].from.id}`).classList.add('btn-primary');
+        document.querySelector(`#btnChat-${newMsgsArr[i].from.id}`).classList.add('btn-primary', 'alertMsg');
+        $('#num_of_newMsgs--chat').text(`${newMsgs_count + 1}`);
+        $('#num_of_newMsgs--chat').css('display', 'inline-block');
       } else {
         sender_id = newMsgsArr[i].from.id;
         const user_name = newMsgsArr[i].from.firstName + ' ' + newMsgsArr[i].from.lastName;
@@ -234,22 +247,41 @@ function scrollDownChat(user_id) {
 function goWhite(user_id) {
   const btn_chat = document.querySelector(`#btnChat-${user_id}`);
   if (btn_chat) {
+    if (btn_chat.classList.contains('alertMsg')) {
+      markMsgsAsSeen(user_id);
+      btn_chat.classList.remove('alertMsg');
+    }
+
     btn_chat.classList.remove('btn-primary');
     btn_chat.classList.add('btn-outline-primary');
 
     $(`#collapse-${user_id}`).collapse('show');
     scrollDownChat(user_id);
+
+    $('#num_of_newMsgs--chat').text('0');
+    $('#num_of_newMsgs--chat').css('display', 'none');
   }
 }
 
 function displayCloseBtn(user_id) {
-  $(`#closeChat-${user_id}`).show();
+  $(`#closeChat-${user_id}`).css('visibility', 'visible');
 }
 
 function hideCloseBtn(user_id) {
-  $(`#closeChat-${user_id}`).hide();
+  $(`#closeChat-${user_id}`).css('visibility', 'hidden');
 }
 
 function closeChat(user_id) {
   $(`#entireChat-${user_id}`).remove();
+}
+
+async function markMsgsAsSeen(sender_id) {
+  try {
+    await axios({
+      method: 'PATCH',
+      url: `/api/messages/msgsSeen/${sender_id}`
+    });
+  } catch (err) {
+    console.log(err);
+  }
 }

@@ -6,4 +6,6 @@ const router = express.Router();
 
 router.post('/:receiver_id', authController.protect, messageController.createMessage);
 
+router.patch('/msgsSeen/:userId', authController.protect, messageController.markMsgsAsSeen);
+
 module.exports = router;

@@ -49,7 +49,8 @@ async function getAllNotifications() {
 
     if (res.data.status === 'success') {
       if (printedNotIds) {
-        for (let i = 0; i < res.data.data.notifications.length; i++) {
+        const notifLength = res.data.data.notifications.length;
+        for (let i = 0; i < notifLength; i++) {
           if (printedNotIds.includes(res.data.data.notifications[i]._id)) {
             res.data.data.notifications.splice(i, 1);
           }

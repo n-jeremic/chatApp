@@ -47,3 +47,11 @@ exports.createMessage = catchAsync(async (req, res, next) => {
     }
   });
 });
+
+exports.markMsgsAsSeen = catchAsync(async (req, res, next) => {
+  await Message.updateMany({ to: req.user._id, from: req.params.userId }, { seen: true });
+
+  res.status(200).json({
+    status: 'success'
+  });
+});

@@ -120,8 +120,11 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     return next(new AppError('Please use /updateMyPassword route for changing your password!', 400));
   }
   const filteredBody = filterObj(req.body, 'firstName', 'lastName', 'email', 'dateOfBirth');
-  if (req.files.profilePhoto) filteredBody.profilePhoto = req.files.profilePhoto[0].filename;
-  if (req.files.coverPhoto) filteredBody.coverPhoto = req.files.coverPhoto[0].filename;
+
+  if (req.files) {
+    if (req.files.profilePhoto) filteredBody.profilePhoto = req.files.profilePhoto[0].filename;
+    if (req.files.coverPhoto) filteredBody.coverPhoto = req.files.coverPhoto[0].filename;
+  }
 
   const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
     new: true,
@@ -174,7 +177,7 @@ exports.myNewNotifications = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user.id).populate({
     path: 'newNotifications',
     select: '-__v',
-    options: { sort: { createdAt: 1 } }
+    options: { sort: 'createdAt' }
   });
 
   if (user.newNotifications.length === 0) {
