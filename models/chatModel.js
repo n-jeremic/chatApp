@@ -5,9 +5,18 @@ const chatSchema = new mongoose.Schema(
     users: [
       {
         type: mongoose.Schema.ObjectId,
+        ref: 'User',
         required: [true, 'A chat must have minimum of 2 users!']
       }
-    ]
+    ],
+    createdAt: {
+      type: Date,
+      default: Date.now()
+    },
+    lastMsgAt: {
+      type: Date,
+      required: [true, 'There must be a time of last message!']
+    }
   },
   {
     toJSON: { virtuals: true },
@@ -25,6 +34,9 @@ chatSchema.virtual('messages', {
 chatSchema.pre(/^find/, function(next) {
   this.populate({
     path: 'messages',
+    select: '-__v'
+  }).populate({
+    path: 'users',
     select: '-__v'
   });
 

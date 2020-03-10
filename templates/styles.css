@@ -4,6 +4,14 @@
   overflow-x: hidden;
 }
 
+.message-inbox {
+  background-color: #d9ffb3;
+  border-radius: 15px;
+  padding: 5px 10px 7px 10px;
+  max-width: 490px !important;
+  display: inline-block;
+}
+
 .chat-body {
   height: 350px !important;
   width: 337px !important;

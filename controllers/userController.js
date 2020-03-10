@@ -63,23 +63,23 @@ exports.resizePhoto = catchAsync(async (req, res, next) => {
   next();
 });
 
-exports.getAllChats = catchAsync(async (req, res, next) => {
-  const me = await User.findById(req.user.id).populate({
-    path: 'chats',
-    select: '-__v'
-  });
+// exports.getAllChats = catchAsync(async (req, res, next) => {
+//   const me = await User.findById(req.user.id).populate({
+//     path: 'chats',
+//     select: '-__v'
+//   });
 
-  if (me.chats.length == 0) {
-    return next(new AppError('There is no chats for this user!', 404));
-  }
+//   if (me.chats.length == 0) {
+//     return next(new AppError('There is no chats for this user!', 404));
+//   }
 
-  res.status(200).json({
-    status: 'success',
-    data: {
-      chats: me.chats
-    }
-  });
-});
+//   res.status(200).json({
+//     status: 'success',
+//     data: {
+//       chats: me.chats
+//     }
+//   });
+// });
 
 exports.myNewMessages = catchAsync(async (req, res, next) => {
   const me = await User.findById(req.user.id).populate('newMessages');

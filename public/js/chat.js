@@ -119,7 +119,7 @@ const openChatButton = (user_id, user_name, user_photo, messages, newMessage = '
     data-toggle="collapse"
     data-target="#collapse-${user_id}"
     aria-expanded="${newMessage == 'false' ? 'true' : 'false'}"
-    aria-controls="collapse-${user_id}">${user_name} <a class="float-right" onclick="closeChat('${user_id}')"><i class="fas fa-times" style="color: #ff704d; visibility: hidden" id="closeChat-${user_id}"></i></a><span id="num_of_newMsgs--chat" style="display: ${
+    aria-controls="collapse-${user_id}">${user_name} <a class="float-right" onclick="closeChat('${user_id}')"><i class="fas fa-times" style="color: #ff704d; visibility: hidden" id="closeChat-${user_id}"></i></a><span class="num_of_newMsgs--chat" id="num_of_newMsgs--${user_id}" style="display: ${
     newMessage == 'true' ? 'inline-block' : 'none'
   }">${num_of_newMsgs}</span></button></p>
     <div class="collapse ${newMessage == 'false' ? 'show' : ''}" id="collapse-${user_id}">
@@ -220,14 +220,14 @@ async function getNewMessages() {
       }
 
       if (openedChat) {
-        let newMsgs_count = parseInt(document.getElementById('num_of_newMsgs--chat').textContent);
+        let newMsgs_count = parseInt(document.getElementById(`num_of_newMsgs--${newMsgsArr[i].from.id}`).textContent);
         let markUpChat = createChatMessage(newMsgsArr[i].from.id, newMsgsArr[i].text, newMsgsArr[i].from.profilePhoto, 'notMe');
         $(`#chat-${newMsgsArr[i].from.id}`).append(markUpChat);
         scrollDownChat(newMsgsArr[i].from.id);
         document.querySelector(`#btnChat-${newMsgsArr[i].from.id}`).classList.remove('btn-outline-primary');
         document.querySelector(`#btnChat-${newMsgsArr[i].from.id}`).classList.add('btn-primary', 'alertMsg');
-        $('#num_of_newMsgs--chat').text(`${newMsgs_count + 1}`);
-        $('#num_of_newMsgs--chat').css('display', 'inline-block');
+        $(`#num_of_newMsgs--${newMsgsArr[i].from.id}`).text(`${newMsgs_count + 1}`);
+        $(`#num_of_newMsgs--${newMsgsArr[i].from.id}`).css('display', 'inline-block');
       } else {
         sender_id = newMsgsArr[i].from.id;
         const user_name = newMsgsArr[i].from.firstName + ' ' + newMsgsArr[i].from.lastName;
@@ -258,8 +258,8 @@ function goWhite(user_id) {
     $(`#collapse-${user_id}`).collapse('show');
     scrollDownChat(user_id);
 
-    $('#num_of_newMsgs--chat').text('0');
-    $('#num_of_newMsgs--chat').css('display', 'none');
+    $(`#num_of_newMsgs--${user_id}`).text('0');
+    $(`#num_of_newMsgs--${user_id}`).css('display', 'none');
   }
 }
 

@@ -10,7 +10,7 @@ router.get('/logOut', authController.protect, authController.logOut);
 router.patch('/updateMe', authController.protect, userController.uploadUserPhoto, userController.resizePhoto, userController.updateMe);
 router.patch('/updateMyPassword', authController.protect, authController.updateMyPassword);
 
-router.get('/myChats', authController.protect, userController.getAllChats);
+// router.get('/myChats', authController.protect, userController.getAllChats);
 router.get('/myChatWith/:user_id', authController.protect, userController.myChatWith);
 
 router.get('/myNotifications', authController.protect, userController.getMyNotificatons);

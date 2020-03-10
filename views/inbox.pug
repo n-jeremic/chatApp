@@ -1,0 +1,44 @@
+extends base
+
+block content
+    include _navbar
+    span#currentUserData(data-current-user=`${JSON.stringify(userMe)}`)
+    span#chats(data-chats=`${JSON.stringify(chats)}`)
+    .container-fluid(style="padding: 40px")
+        .row
+            .col-lg-1
+            .col-lg-5
+                .d-flex.justify-content-center.chat-spinner(style="display: none")
+                    .spinner-border.text-info.chat-spinner(role='status' style="width: 5rem; height: 5rem; margin-top: 100px; margin-bottom: 100px; display: none")            
+                .card#chat-interface(style="display: none")
+                    h4.card-header(style='padding: 8px 20px;')
+                        img.mr-2#otherUser--img(src='http://placehold.it/100x100' width='65px' style='border-radius: 50%;')
+                        span#otherUser--name
+                    .card-body(style='padding: 0px !important;')
+                        #chat-container
+                        .row.align-middle.bg-light(style='padding: 10px; margin-left: 0px !important; margin-right: 0px !important; border-top: 1px solid rgba(0,0,0,.125);')
+                            .col-lg-9
+                                .form-group(style='margin: 0px !important')
+                                    textarea#sendMsg-input.form-control(rows='1')
+                            .col-lg-3
+                                button.btn.btn-block.btn-info#btn--sendMsg Send
+                    .card-footer(style='padding: 8px 20px;')
+                        span.text-muted.align-middle#conversationStart
+                        button.btn.btn-outline-secondary.btn-sm.float-right#btn--deleteChat(type='button')
+                            i.far.fa-trash-alt
+            .col-lg-1
+            .col-lg-5
+                .card.inbox-container
+                    h3.card-header
+                        i.fas.fa-inbox.mr-2
+                        | My inbox
+                        span.float-right.text-muted(style="font-weight: 400")= `${chats.length} conversations`
+                    .card-body(style='padding: 0px !important;')
+                        .list-group#inbox
+                            .d-flex.justify-content-center
+                                .spinner-border.text-info(role='status' style="width: 5rem; height: 5rem; margin-top: 70px; margin-bottom: 70px")
+            include _post-modals
+block scriptFile
+    script(src="/js/functions.js")
+    script(src="/js/post.js")    
+    script(src="/js/inbox.js")

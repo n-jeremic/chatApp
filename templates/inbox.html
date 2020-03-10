@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://kit.fontawesome.com/d4b741b49f.js" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="#">SoMuchFun</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="#">Home feed<span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Chat now</a>
+          </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+          <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" />
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+            Search
+          </button>
+        </form>
+        <div class="btn-group ml-5 mr-3">
+          <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Dropdown
+          </button>
+          <div class="dropdown-menu dropdown-menu-right">
+            <button class="dropdown-item" type="button">Action</button>
+            <button class="dropdown-item" type="button">Another action</button>
+            <button class="dropdown-item" type="button">
+              Something else here
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="container-fluid" style="padding: 40px;">
+      <div class="row">
+        <div class="col-lg-1"></div>
+        <div class="col-lg-5">
+          <div class="card">
+            <h4 class="card-header" style="padding: 8px 20px;">
+              <img src="http://placehold.it/100x100" width="65px" class="mr-1" style="border-radius: 50%;" /> Petar Petrovic
+            </h4>
+            <div class="card-body" style="padding: 0px !important;">
+              <div class="row mt-3" style="padding: 4px;">
+                <div class="col-lg-12">
+                  <img src="http://placehold.it/50x50" class="align-top mr-1" alt="" width="50px" style="border-radius: 50%;" />
+                  <div class="message-inbox mt-1">
+                    Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+                  </div>
+                </div>
+              </div>
+              <div class="row mt-3" style="padding: 4px;">
+                <div class="col-lg-12">
+                  <img src="http://placehold.it/50x50" class="align-top ml-1 float-right" alt="" width="50px" style="border-radius: 50%;" />
+                  <div class="message-inbox mt-1 float-right">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis reprehenderit veniam maiores necessitatibus corporis
+                    blanditiis tenetur sed iste dolor neque, animi nulla dolorem et consectetur non excepturi labore modi. Impedit.
+                  </div>
+                </div>
+              </div>
+              <div class="row mt-3" style="padding: 4px;">
+                <div class="col-lg-12">
+                  <img src="http://placehold.it/50x50" class="align-top ml-1 float-right" alt="" width="50px" style="border-radius: 50%;" />
+                  <div class="message-inbox mt-1 float-right">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis reprehenderit veniam maiores necessitatibus corporis
+                    blanditiis tenetur sed iste dolor neque, animi nulla dolorem et consectetur non excepturi labore modi. Impedit.
+                  </div>
+                </div>
+              </div>
+              <div
+                class="row align-middle mt-1"
+                style="padding: 10px; margin-left: 0px !important; margin-right: 0px !important; border-top: 1px solid rgba(0,0,0,.125); background-color: #cce6ff;"
+              >
+                <div class="col-lg-9">
+                  <div class="form-group" style="margin: 0px !important">
+                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="1"></textarea>
+                  </div>
+                </div>
+                <div class="col-lg-3">
+                  <button class="btn btn-block btn-info">Send</button>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer" style="padding: 8px 20px;">
+              <span class="text-muted align-middle">Conversation started on 02 / 07 / 2020</span>
+              <button type="button" class="btn btn-outline-secondary btn-sm float-right"><i class="far fa-trash-alt"></i></button>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-1"></div>
+        <div class="col-lg-5">
+          <div class="card">
+            <h3 class="card-header"><i class="fas fa-inbox mr-2"></i>My inbox</h3>
+            <div class="card-body" style="padding: 0px !important;">
+              <div class="list-group">
+                <button
+                  type="button"
+                  class="list-group-item list-group-item-action list-group-item-secondary"
+                  style="border-radius: 0px !important; padding: 10px !important;"
+                >
+                  <div class="media">
+                    <img src="http://placehold.it/50x50" width="65px" class="align-self-start mr-3" alt="..." style="border-radius: 50%;" />
+                    <div class="media-body">
+                      <h5 class="mt-0">Petar Petrovic <span class="float-right badge badge-primary text-wrap">2 new messages</span></h5>
+                      <p style="margin-bottom: 0px !important;">
+                        Cras sit amet nibh libero, in gravida nulla.
+                      </p>
+                    </div>
+                  </div>
+                </button>
+                <button type="button" class="list-group-item list-group-item-action" style="border-radius: 0px !important; padding: 10px !important;">
+                  <div class="media">
+                    <img src="http://placehold.it/50x50" width="65px" class="align-self-start mr-3" alt="..." style="border-radius: 50%;" />
+                    <div class="media-body">
+                      <h5 class="mt-0">Petar Petrovic</h5>
+                      <p style="margin-bottom: 0px !important;">
+                        Cras sit amet nibh libero, in gravida nulla.
+                      </p>
+                    </div>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+      integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

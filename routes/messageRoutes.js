@@ -8,4 +8,6 @@ router.post('/:receiver_id', authController.protect, messageController.createMes
 
 router.patch('/msgsSeen/:userId', authController.protect, messageController.markMsgsAsSeen);
 
+router.delete('/:chatId', authController.protect, messageController.deleteChat);
+
 module.exports = router;

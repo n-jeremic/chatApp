@@ -3,6 +3,7 @@ const AppError = require('../utils/appError');
 const User = require('../models/userModel');
 const Post = require('../models/postModel');
 const Game = require('../models/gameModel');
+const Chat = require('../models/chatModel');
 
 exports.login = (req, res, next) => {
   res.status(200).render('login', {
@@ -141,5 +142,19 @@ exports.playGame = catchAsync(async (req, res, next) => {
     title: 'Pig Game',
     userMe: req.user,
     game
+  });
+});
+
+exports.getMyInbox = catchAsync(async (req, res, next) => {
+  const currentUser = await User.findById(req.user._id).populate({
+    path: 'chats',
+    select: '-__v',
+    options: { sort: '-lastMsgAt' }
+  });
+
+  res.status(200).render('inbox', {
+    title: 'My Inbox',
+    userMe: req.user,
+    chats: currentUser.chats
   });
 });

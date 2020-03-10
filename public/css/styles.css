@@ -9,7 +9,6 @@
   margin-bottom: 20px;
   padding: 3px !important;
   background-color: #cccccc;
-  /* background: url('/img/background/paper-background.jpg'); */
 }
 
 .main-content {
@@ -35,6 +34,21 @@
   max-width: 255px !important;
   max-height: 120px !important;
   display: inline-block;
+}
+
+.message-inbox {
+  background-color: #d9ffb3;
+  border-radius: 15px;
+  padding: 5px 10px 7px 10px;
+  max-width: 490px !important;
+  display: inline-block;
+}
+
+#chat-container {
+  max-height: 400px !important;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-image: url('/img/background/chat-background.jpg');
 }
 
 body {
@@ -69,7 +83,7 @@ body {
   cursor: default;
 }
 
-#num_of_notif {
+.notif-navbar {
   border-radius: 2px;
   background-color: red;
   color: white;
@@ -84,7 +98,7 @@ body {
   font-size: 12px;
 }
 
-#num_of_newMsgs--chat {
+.num_of_newMsgs--chat {
   border-radius: 2px;
   background-color: red;
   color: white;
@@ -138,6 +152,12 @@ a:hover {
   overflow-x: hidden;
 }
 
+#inbox {
+  max-height: 620px !important;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
 #myTabContent {
   background-color: #fff;
   border: 1px solid transparent;
@@ -150,6 +170,16 @@ a:hover {
 .post-container:hover {
   cursor: pointer;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.8), 0 6px 20px 0 rgba(0, 0, 0, 0.77);
+}
+
+.inbox-container {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5), 0 6px 20px 0 rgba(0, 0, 0, 0.47);
+  border: 0px !important;
+  border-radius: 0.25rem 0.25rem 0 0;
+}
+
+#chat-interface {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5), 0 6px 20px 0 rgba(0, 0, 0, 0.47);
 }
 
 .post-container {
