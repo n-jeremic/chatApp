@@ -40,7 +40,7 @@ function createInboxItem(userData, newMsgs, lastMsg) {
         <h5 class="mt-0"><a class="comment-userName" href="/profile/${userData._id}">${userData.firstName} ${userData.lastName}</a><span id="badge-${
     userData._id
   }" class="float-right badge badge-primary text-wrap" style="display: ${newMsgs > 0 ? 'inline-block' : 'none'}">${
-    newMsgs > 1 ? newMsgs + ' new messages' : newMsgs + ' new message'
+    newMsgs > 1 ? newMsgs + ' unread messages' : newMsgs + ' unread message'
   }</span></h5>
         <p style="margin-bottom: 0px !important;">
           ${lastMsg}
@@ -133,6 +133,7 @@ function scrollDownChat() {
 }
 
 async function markMsgsAsSeen(sender_id) {
+  localStorage.removeItem('newMessages');
   try {
     await axios({
       method: 'PATCH',

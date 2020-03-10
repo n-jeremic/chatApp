@@ -1,5 +1,24 @@
 window.setInterval(getNewMessages, 1000);
 window.setInterval(getOnlineUsers, 10000);
+$(document).ready(() => {
+  const newMsgsLS = localStorage.getItem('newMessages');
+  if (!newMsgsLS) {
+    return;
+  } else {
+    const newMsgsArr = JSON.parse(newMsgsLS);
+    let sender_id;
+    for (let i = 0; i < newMsgsArr.length; i++) {
+      if (sender_id == newMsgsArr[i].from.id) {
+        continue;
+      }
+      sender_id = newMsgsArr[i].from.id;
+      const user_name = newMsgsArr[i].from.firstName + ' ' + newMsgsArr[i].from.lastName;
+      getChat(newMsgsArr[i].from.id, user_name, newMsgsArr[i].from.profilePhoto, 'true');
+    }
+
+    localStorage.removeItem('newMessages');
+  }
+});
 
 async function getOnlineUsers() {
   try {
@@ -58,6 +77,11 @@ async function getChat(user_id, user_name, user_photo, newMessage = 'false') {
           num_of_newMsgs++;
         }
       }
+
+      if (num_of_newMsgs > 0 && newMessage == 'false') {
+        markMsgsAsSeen(user_id);
+      }
+
       openChatButton(user_id, user_name, user_photo, messages, newMessage, num_of_newMsgs);
     }
   } catch (err) {

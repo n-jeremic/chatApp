@@ -104,6 +104,10 @@ function createNotificationHTML(data, isNew, onload = false) {
 }
 
 async function getNewNotifications() {
+  if (location.href.includes('chat') === false) {
+    getNewMessages();
+  }
+
   try {
     const res = await axios({
       method: 'GET',
@@ -293,4 +297,32 @@ function createGameNotif(request) {
   const markUp = `<button href="#" id="btn-gameRequest" class="list-group-item list-group-item-action notif-hover" style="padding: 8px !important; background-color: #e6e6e6; color: black;"><img width="40px" style="border-radius: 50%" src="/img/users/${request.profilePhoto}" class="mr-2"><a style="color: #1a75ff" href="/profile/${request.userId}">${request.firstName} ${request.lastName}</a> sent you a Pig Game request.<a href="/playGame/${request.gameId}" style="color: #1a75ff"> Play now!</a><i class='fas fa-circle float-right mt-3 mr-2' style="font-size: 10px; color: #4d4dff"></i></button>`;
 
   $('#notifications-list').prepend(markUp);
+}
+
+async function getNewMessages() {
+  try {
+    const response = await axios({
+      method: 'GET',
+      url: '/api/users/newMessages'
+    });
+
+    if (response.data.status === 'success') {
+      const number_newMsgs = parseInt(document.getElementById('num_of_msgs').textContent);
+      $('#num_of_msgs').text(`${number_newMsgs + response.data.data.newMessages.length}`);
+      $('#msgs--navbar').css('color', 'white');
+      $('#num_of_msgs').css('display', 'inline-block');
+      let msgsLocalStorage = localStorage.getItem('newMessages');
+      if (!msgsLocalStorage) {
+        localStorage.setItem('newMessages', JSON.stringify(response.data.data.newMessages));
+      } else {
+        const msgsArr = JSON.parse(msgsLocalStorage);
+        response.data.data.newMessages.forEach(msg => msgsArr.push(msg));
+        localStorage.setItem('newMessages', JSON.stringify(msgsArr));
+      }
+    } else {
+      return;
+    }
+  } catch (err) {
+    console.log(err);
+  }
 }

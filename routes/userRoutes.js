@@ -10,7 +10,6 @@ router.get('/logOut', authController.protect, authController.logOut);
 router.patch('/updateMe', authController.protect, userController.uploadUserPhoto, userController.resizePhoto, userController.updateMe);
 router.patch('/updateMyPassword', authController.protect, authController.updateMyPassword);
 
-// router.get('/myChats', authController.protect, userController.getAllChats);
 router.get('/myChatWith/:user_id', authController.protect, userController.myChatWith);
 
 router.get('/myNotifications', authController.protect, userController.getMyNotificatons);
@@ -21,7 +20,7 @@ router.get('/myGameRequest', authController.protect, userController.checkMyGameR
 
 router.get('/searchUsers', authController.protect, userController.searchAllUsers);
 
-router.get('/NewMessages', authController.protect, userController.myNewMessages);
+router.get('/newMessages', authController.protect, userController.myNewMessages);
 
 router.get('/onlineUsers', authController.protect, userController.getOnlineUsers);
 
