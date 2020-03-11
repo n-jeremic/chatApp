@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const userSchema = new mongoose.Schema(
   {
@@ -70,7 +71,8 @@ const userSchema = new mongoose.Schema(
     isLoggedIn: {
       type: Boolean,
       default: false
-    }
+    },
+    passwordResetToken: String
   },
   {
     toJSON: { virtuals: true },
@@ -90,6 +92,18 @@ userSchema.virtual('posts', {
   foreignField: 'user',
   localField: '_id'
 });
+
+// MODEL METHODS
+userSchema.methods.createPasswordResetToken = async function() {
+  const user_id = this._id;
+  const resetToken = jwt.sign({ user_id }, process.env.JWT_SECRET, {
+    expiresIn: '1h'
+  });
+
+  this.passwordResetToken = await bcrypt.hash(resetToken, 8);
+
+  return resetToken;
+};
 
 // PRE-SAVE DOCUMENT MIDDLEWARE
 userSchema.pre('save', async function(next) {

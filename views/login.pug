@@ -18,10 +18,29 @@ block content
                             br
                             button.btn.btn-block.btn-lg.btn-secondary.mb-3.btn--login(type='submit')
                                 | Log in
-                        span
+                        p(style="margin-bottom: 10px")
                             | Don&apos;t have an account? 
-                            a(href='/signup') Register here
+                            a(href='/signup') Register here!
+                        span
+                            a(href="#" data-toggle="modal" data-target="#resetPassModal")
+                                | Forgot your password?   
                     .card-footer.text-muted
-                        | soMuchFun.com  
+                        | soMuchFun.com 
+    //- modal reset password                    
+    #resetPassModal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='exampleModalLabel' aria-hidden='true')
+        .modal-dialog(role='document')
+            .modal-content
+                .modal-header
+                    h5#exampleModalLabel.modal-title Reset Password
+                    button.close(type='button' data-dismiss='modal' aria-label='Close')
+                        span(aria-hidden='true') &times;
+                .modal-body
+                    label(for="email_resetPass") Type your email here to submit a request:
+                    input#email_resetPass(type="email" placeholder="email@example.com" class="form-control")
+                .modal-footer
+                    button.btn.btn-info(type='button' onclick="resetPassword(this)")
+                        i.fas.fa-paper-plane.mr-1
+                        | Submit
+
 block scriptFile
     script(src="/js/login.js")

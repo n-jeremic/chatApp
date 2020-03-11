@@ -1,10 +1,39 @@
 const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const nodemailer = require('nodemailer');
+const pug = require('pug');
+const htmlToText = require('html-to-text');
 
 const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
+
+const sendEmail = async (user, url) => {
+  // Create transport
+  const transport = nodemailer.createTransport({
+    service: 'SendGrid',
+    auth: {
+      user: process.env.SENDGRID_USERNAME,
+      pass: process.env.SENDGRID_PASSWORD
+    }
+  });
+
+  // Render HTML based on a pug template
+  const html = pug.renderFile(`${__dirname}/../views/email/email.pug`, {
+    firstName: user.firstName,
+    url
+  });
+
+  const mailOptions = {
+    from: '<admin@soMuchFun.com>',
+    to: user.email,
+    html,
+    text: htmlToText.fromString(html)
+  };
+
+  await transport.sendMail(mailOptions);
+};
 
 const signToken = user_id => {
   return jwt.sign({ user_id }, process.env.JWT_SECRET, {
@@ -138,3 +167,31 @@ exports.updateMyPassword = catchAsync(async (req, res, next) => {
     token
   });
 });
+
+exports.forgotPassword = catchAsync(async (req, res, next) => {
+  const user = await User.findOne({ email: req.body.email });
+  if (!user) {
+    return next(new AppError('There is no user with this email adress', 404));
+  }
+
+  const resetToken = await user.createPasswordResetToken();
+  await user.save({ validateBeforeSave: false });
+
+  try {
+    const resetURL = `${req.protocol}://${req.get('host')}/api/users/resetPassword/${resetToken}`;
+
+    await sendEmail(user, resetURL);
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Token sent to email'
+    });
+  } catch (err) {
+    user.passwordResetToken = undefined;
+    await user.save({ validateBeforeSave: false });
+    next(err);
+    // return next(new AppError('There was an error sending the email. Try again later!', 500));
+  }
+});
+
+exports.resetPassword = catchAsync(async (req, res, next) => {});

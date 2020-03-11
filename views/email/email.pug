@@ -1,0 +1,46 @@
+doctype html
+html
+    head
+        meta(name='viewport', content='width=device-width')
+        meta(http-equiv='Content-Type', content='text/html; charset=UTF-8')
+        title Password Reset Token
+
+        include _styles
+    body
+        table.body(role='presentation', border='0', cellpadding='0', cellspacing='0')
+            tbody
+                tr
+                    td
+                    td.container
+                        .content
+                            // START CENTERED WHITE CONTAINER
+                            table.main(role='presentation')
+
+                                // START MAIN AREA
+                                tbody
+                                    tr
+                                        td.wrapper
+                                            table(role='presentation', border='0', cellpadding='0', cellspacing='0')
+                                                tbody
+                                                    tr
+                                                        td
+                                                            // CONTENT
+                                                            p Hi #{firstName},
+                                                            p Forgot your password? Click on the button below to create a new one!
+                                                            table.btn.btn-primary(role='presentation', border='0', cellpadding='0', cellspacing='0')
+                                                                tbody
+                                                                    tr
+                                                                        td(align='left')
+                                                                            table(role='presentation', border='0', cellpadding='0', cellspacing='0')
+                                                                                tbody
+                                                                                    tr
+                                                                                        td
+                                                                                            a(href=`${url}`, target='_blank') Reset password
+                            // START FOOTER
+                            .footer
+                                table(role='presentation', border='0', cellpadding='0', cellspacing='0')
+                                    tbody
+                                        tr
+                                            td.content-block
+                                                span.apple-link  Regards from
+                                                    b soMuchFun.com

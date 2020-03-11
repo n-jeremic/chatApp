@@ -6,22 +6,27 @@ const router = express.Router();
 
 router.post('/signup', authController.signup);
 router.post('/login', authController.login);
-router.get('/logOut', authController.protect, authController.logOut);
-router.patch('/updateMe', authController.protect, userController.uploadUserPhoto, userController.resizePhoto, userController.updateMe);
-router.patch('/updateMyPassword', authController.protect, authController.updateMyPassword);
+router.post('/forgotPassword', authController.forgotPassword);
+router.post('/resetPassword/:token', authController.resetPassword);
 
-router.get('/myChatWith/:user_id', authController.protect, userController.myChatWith);
+router.use(authController.protect);
 
-router.get('/myNotifications', authController.protect, userController.getMyNotificatons);
-router.get('/NewNotifications', authController.protect, userController.myNewNotifications);
-router.patch('/seenNotification/:notif_id', authController.protect, userController.markNotifAsSeen);
+router.get('/logOut', authController.logOut);
+router.patch('/updateMe', userController.uploadUserPhoto, userController.resizePhoto, userController.updateMe);
+router.patch('/updateMyPassword', authController.updateMyPassword);
 
-router.get('/myGameRequest', authController.protect, userController.checkMyGameRequest);
+router.get('/myChatWith/:user_id', userController.myChatWith);
 
-router.get('/searchUsers', authController.protect, userController.searchAllUsers);
+router.get('/myNotifications', userController.getMyNotificatons);
+router.get('/newNotifications', userController.myNewNotifications);
+router.patch('/seenNotification/:notif_id', userController.markNotifAsSeen);
 
-router.get('/newMessages', authController.protect, userController.myNewMessages);
+router.get('/myGameRequest', userController.checkMyGameRequest);
 
-router.get('/onlineUsers', authController.protect, userController.getOnlineUsers);
+router.get('/searchUsers', userController.searchAllUsers);
+
+router.get('/newMessages', userController.myNewMessages);
+
+router.get('/onlineUsers', userController.getOnlineUsers);
 
 module.exports = router;

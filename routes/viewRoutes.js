@@ -10,12 +10,15 @@ router.get('/', (req, res) => {
 
 router.get('/login', viewController.login);
 router.get('/signup', viewController.signup);
-router.get('/chat', authController.protect, viewController.chat);
-router.get('/me', authController.protect, viewController.myProfile);
-router.get('/profile/:user_id', authController.protect, viewController.getUser);
-router.get('/news', authController.protect, viewController.getNews);
-router.get('/game', authController.protect, viewController.pigGame);
-router.get('/playGame/:gameId', authController.protect, viewController.playGame);
-router.get('/inbox', authController.protect, viewController.getMyInbox);
+
+router.use(authController.protect);
+
+router.get('/chat', viewController.chat);
+router.get('/me', viewController.myProfile);
+router.get('/profile/:user_id', viewController.getUser);
+router.get('/news', viewController.getNews);
+router.get('/game', viewController.pigGame);
+router.get('/playGame/:gameId', viewController.playGame);
+router.get('/inbox', viewController.getMyInbox);
 
 module.exports = router;
