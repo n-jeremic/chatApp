@@ -53,12 +53,12 @@ async function resetPassword(clickedBtn) {
       $('#email_resetPass').val('');
       $('#resetPassModal').modal('hide');
       clickedBtn.disabled = false;
-      clickedBtn.innerHTML = "<i class='fas fa-paper-plane mr-1'></i> Submit";
+      clickedBtn.innerHTML = 'Submit';
     }
   } catch (err) {
     console.log(err);
     clickedBtn.disabled = false;
-    clickedBtn.innerHTML = "<i class='fas fa-paper-plane mr-1'></i> Submit";
+    clickedBtn.innerHTML = 'Submit';
     $('#email_resetPass').val('');
     Swal.fire('Warning', err.response.data.message, 'error');
   }
