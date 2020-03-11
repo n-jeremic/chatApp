@@ -1,9 +1,11 @@
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
+const { promisify } = require('util');
 const User = require('../models/userModel');
 const Post = require('../models/postModel');
 const Game = require('../models/gameModel');
 const Chat = require('../models/chatModel');
+const jwt = require('jsonwebtoken');
 
 exports.login = (req, res, next) => {
   res.status(200).render('login', {
@@ -156,5 +158,13 @@ exports.getMyInbox = catchAsync(async (req, res, next) => {
     title: 'My Inbox',
     userMe: req.user,
     chats: currentUser.chats
+  });
+});
+
+exports.resetPassword = catchAsync(async (req, res, next) => {
+  await promisify(jwt.verify)(req.params.token, process.env.JWT_SECRET);
+
+  res.status(200).render('resetPassword', {
+    title: 'Reset password'
   });
 });

@@ -49,6 +49,9 @@ async function resetPassword(clickedBtn) {
     });
 
     if (response.data.status === 'success') {
+      Swal.fire('Info', 'An email with instructions has been sent to you!', 'success');
+      $('#email_resetPass').val('');
+      $('#resetPassModal').modal('hide');
       clickedBtn.disabled = false;
       clickedBtn.innerHTML = "<i class='fas fa-paper-plane mr-1'></i> Submit";
     }
@@ -56,6 +59,7 @@ async function resetPassword(clickedBtn) {
     console.log(err);
     clickedBtn.disabled = false;
     clickedBtn.innerHTML = "<i class='fas fa-paper-plane mr-1'></i> Submit";
+    $('#email_resetPass').val('');
     Swal.fire('Warning', err.response.data.message, 'error');
   }
 }

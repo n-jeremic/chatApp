@@ -28,6 +28,7 @@ const sendEmail = async (user, url) => {
   const mailOptions = {
     from: '<admin@soMuchFun.com>',
     to: user.email,
+    subject: 'RESET PASSWORD',
     html,
     text: htmlToText.fromString(html)
   };
@@ -178,7 +179,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   await user.save({ validateBeforeSave: false });
 
   try {
-    const resetURL = `${req.protocol}://${req.get('host')}/api/users/resetPassword/${resetToken}`;
+    const resetURL = `${req.protocol}://${req.get('host')}/resetPassword/${resetToken}`;
 
     await sendEmail(user, resetURL);
 
@@ -189,9 +190,29 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   } catch (err) {
     user.passwordResetToken = undefined;
     await user.save({ validateBeforeSave: false });
-    next(err);
-    // return next(new AppError('There was an error sending the email. Try again later!', 500));
+    return next(new AppError('There was an error sending the email. Try again later!', 500));
   }
 });
 
-exports.resetPassword = catchAsync(async (req, res, next) => {});
+exports.resetPassword = catchAsync(async (req, res, next) => {
+  if (!req.body.password || req.body.passwordConfirm) {
+    return next(new AppError('Please provide a valid data!', 400));
+  }
+
+  const decoded = await promisify(jwt.verify)(req.params.token, process.env.JWT_SECRET);
+
+  const user = await User.findById(decoded.user_id);
+
+  if (!user) {
+    return next(new AppError('This user does not exist anymore!', 404));
+  }
+
+  user.password = req.body.password;
+  user.passwordConfirm = req.body.passwordConfirm;
+  user.passwordResetToken = undefined;
+  await user.save();
+
+  res.status(200).json({
+    status: 'success'
+  });
+});

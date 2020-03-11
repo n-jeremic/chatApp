@@ -10,6 +10,7 @@ router.get('/', (req, res) => {
 
 router.get('/login', viewController.login);
 router.get('/signup', viewController.signup);
+router.get('/resetPassword/:token', viewController.resetPassword);
 
 router.use(authController.protect);
 
