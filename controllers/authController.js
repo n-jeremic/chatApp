@@ -195,7 +195,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 });
 
 exports.resetPassword = catchAsync(async (req, res, next) => {
-  if (!req.body.password || req.body.passwordConfirm) {
+  if (!req.body.password || !req.body.passwordConfirm) {
     return next(new AppError('Please provide a valid data!', 400));
   }
 
