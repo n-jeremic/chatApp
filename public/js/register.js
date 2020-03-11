@@ -1,7 +1,6 @@
 document.querySelector('form').addEventListener('submit', async event => {
   event.preventDefault();
-  document.querySelector('.btn--signup').innerHTML =
-    '<span class="spinner-border spinner-grow-sm" role="status" aria-hidden="true"></span> Loading..';
+  document.querySelector('.btn--signup').innerHTML = '<span class="spinner-border" role="status" aria-hidden="true"></span> Loading..';
   document.querySelector('.btn--signup').disabled = true;
   const firstName = document.getElementById('firstName').value;
   const lastName = document.getElementById('lastName').value;
