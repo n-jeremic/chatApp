@@ -40,7 +40,7 @@ async function commentPost(post_id) {
       }
 
       comments_container.append(
-        `<div class="collapse_comments"><div class="row mb-2"><div class="col-lg-1 mr-4"><img class="mr-3" src='/img/users/${res.data.data.commentData.userPhoto}' width='70px' style='border-radius: 50%;'></div><div class="col-lg-10"><p style='font-weight: 600; font-size: 17px; margin-bottom: 3px !important;'><a href='/profile/${res.data.data.commentData.userId}' class="comment-userName">${res.data.data.commentData.firstName} ${res.data.data.commentData.lastName}</a></p><p style='font-weight: 400; margin-bottom: 3px !important; font-size: 15px'>${res.data.data.commentData.comment}</p></div></div></div>`
+        `<div class="collapse_comments"><div class="row mb-2"><div class="col-lg-1 mr-4"><img class="mr-3" src='/img/users/${res.data.data.commentData.user.profilePhoto}' width='70px' style='border-radius: 50%;'></div><div class="col-lg-10"><p style='font-weight: 600; font-size: 17px; margin-bottom: 3px !important;'><a href='/profile/${res.data.data.commentData.user._id}' class="comment-userName">${res.data.data.commentData.user.firstName} ${res.data.data.commentData.user.lastName}</a></p><p style='font-weight: 400; margin-bottom: 3px !important; font-size: 15px'>${res.data.data.commentData.comment}</p></div></div></div>`
       );
     }
   } catch (err) {
@@ -50,7 +50,7 @@ async function commentPost(post_id) {
 }
 
 function addLikesHTML(likeData) {
-  const markUp = `<button class="list-group-item list-group-item-action" style="padding: 5px !important;"><img class="mr-2" src="/img/users/${likeData.userPhoto}" width="40px"/><a class="comment-userName" href="/profile/${likeData.userId}">${likeData.firstName} ${likeData.lastName}</a></button>`;
+  const markUp = `<button class="list-group-item list-group-item-action" style="padding: 5px !important;"><img class="mr-2" src="/img/users/${likeData.profilePhoto}" width="40px"/><a class="comment-userName" href="/profile/${likeData._id}">${likeData.firstName} ${likeData.lastName}</a></button>`;
 
   $('#append_likes').append(markUp);
 }

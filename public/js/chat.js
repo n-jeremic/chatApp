@@ -134,7 +134,7 @@ const openChatButton = (user_id, user_name, user_photo, messages, newMessage = '
   }
 
   const markUpButton = `<div class="col-lg-4" id="entireChat-${user_id}"><p><button
-    class="btn btn-${newMessage == 'false' ? 'outline-primary' : 'primary alertMsg'} btn-block btn-lg btn--chat"
+    class="btn btn-${newMessage == 'false' ? 'outline-primary btn--chat' : 'primary alertMsg btn--newMsg'} btn-block btn-lg"
     type="button"
     id="btnChat-${user_id}"
     onclick="goWhite('${user_id}');"
@@ -248,8 +248,8 @@ async function getNewMessages() {
         let markUpChat = createChatMessage(newMsgsArr[i].from.id, newMsgsArr[i].text, newMsgsArr[i].from.profilePhoto, 'notMe');
         $(`#chat-${newMsgsArr[i].from.id}`).append(markUpChat);
         scrollDownChat(newMsgsArr[i].from.id);
-        document.querySelector(`#btnChat-${newMsgsArr[i].from.id}`).classList.remove('btn-outline-primary');
-        document.querySelector(`#btnChat-${newMsgsArr[i].from.id}`).classList.add('btn-primary', 'alertMsg');
+        openedChat.classList.remove('btn-outline-primary', 'btn--chat');
+        openedChat.classList.add('btn-primary', 'alertMsg', 'btn--newMsg');
         $(`#num_of_newMsgs--${newMsgsArr[i].from.id}`).text(`${newMsgs_count + 1}`);
         $(`#num_of_newMsgs--${newMsgsArr[i].from.id}`).css('display', 'inline-block');
       } else {
@@ -276,6 +276,8 @@ function goWhite(user_id) {
       btn_chat.classList.remove('alertMsg');
     }
 
+    btn_chat.classList.remove('btn--newMsg');
+    btn_chat.classList.add('btn--chat');
     btn_chat.classList.remove('btn-primary');
     btn_chat.classList.add('btn-outline-primary');
 

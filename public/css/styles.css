@@ -48,7 +48,7 @@
   max-height: 400px !important;
   overflow-y: auto;
   overflow-x: hidden;
-  background-image: url('/img/background/chat-background.jpg');
+  background-image: url('/img/background/whatsapp-background.jpg');
 }
 
 body {
@@ -120,6 +120,12 @@ a:hover {
   background-color: white !important;
   color: #007bff !important;
   border-color: #007bff !important;
+}
+
+.btn--newMsg:hover {
+  color: #fff;
+  background-color: #007bff;
+  border-color: #007bff;
 }
 
 .btn--chat:active {

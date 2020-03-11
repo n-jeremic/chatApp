@@ -56,10 +56,10 @@ block content
                                                             each comment in post.comments
                                                                 .row.mb-2
                                                                     .col-lg-1.mr-4
-                                                                        img.mr-3(src=`/img/users/${comment.userPhoto}` alt='' width='70px' style='border-radius: 50%;')
+                                                                        img.mr-3(src=`/img/users/${comment.user.profilePhoto}` alt='' width='70px' style='border-radius: 50%;')
                                                                     .col-lg-10
                                                                         p(style='font-weight: 600; font-size: 17px; margin-bottom: 3px !important;')
-                                                                            a(href=`/profile/${comment.userId}` class="comment-userName")= `${comment.firstName} ${comment.lastName}`
+                                                                            a(href=`/profile/${comment.user._id}` class="comment-userName")= `${comment.user.firstName} ${comment.user.lastName}`
                                                                         p(style='font-weight: 400; margin-bottom: 3px !important; font-size: 15px')= `${comment.comment}`
                                                     - if (post.comments.length == 0)
                                                         .row

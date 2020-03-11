@@ -7,23 +7,20 @@ const postSchema = new mongoose.Schema(
       default: 'Photo'
     },
     user: {
-      type: Object,
+      type: mongoose.Schema.ObjectId,
+      ref: 'User',
       required: [true, 'A post must have user referrence!']
     },
     createdAt: {
       type: Date,
-      default: Date.now() + 2000
+      default: Date.now()
     },
     createdAtModified: String,
     likes: [
       {
-        userId: {
-          type: String,
-          required: [true, 'Like must have user ID!']
-        },
-        firstName: String,
-        lastName: String,
-        userPhoto: String
+        type: mongoose.Schema.ObjectId,
+        ref: 'User',
+        required: [true, 'Like must have a user data!']
       }
     ],
     likedByMe: {
@@ -32,13 +29,11 @@ const postSchema = new mongoose.Schema(
     },
     comments: [
       {
-        userId: {
-          type: String,
-          required: [true, 'Comment must have user ID!']
+        user: {
+          type: mongoose.Schema.ObjectId,
+          ref: 'User',
+          required: [true, 'Comment must have a user data!']
         },
-        firstName: String,
-        lastName: String,
-        userPhoto: String,
         comment: {
           type: String,
           required: [true, 'Comment must have some content!']
@@ -59,6 +54,18 @@ const postSchema = new mongoose.Schema(
 
 postSchema.pre(/^find/, function(next) {
   this.sort('-createdAt');
+  this.populate({
+    path: 'likes',
+    select: 'firstName lastName profilePhoto'
+  })
+    .populate({
+      path: 'comments.user',
+      select: 'firstName lastName profilePhoto'
+    })
+    .populate({
+      path: 'user',
+      select: 'firstName lastName profilePhoto'
+    });
 
   next();
 });

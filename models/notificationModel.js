@@ -14,10 +14,9 @@ const notificationSchema = new mongoose.Schema({
     required: [true, 'Notification must have a post attached!']
   },
   from: {
-    userId: String,
-    firstName: String,
-    lastName: String,
-    userPhoto: String
+    type: mongoose.Schema.ObjectId,
+    ref: 'User',
+    required: [true, 'Notification must have an owner!']
   },
   to: {
     type: mongoose.Schema.ObjectId,
@@ -25,12 +24,21 @@ const notificationSchema = new mongoose.Schema({
   },
   createdAt: {
     type: Date,
-    default: Date.now() + 5000
+    default: Date.now()
   },
   seen: {
     type: Boolean,
     default: false
   }
+});
+
+notificationSchema.pre(/^find/, function(next) {
+  this.populate({
+    path: 'from',
+    select: 'firstName lastName profilePhoto'
+  });
+
+  next();
 });
 
 const Notification = mongoose.model('Notification', notificationSchema);

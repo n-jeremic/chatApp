@@ -40,13 +40,7 @@ exports.resizePhoto = catchAsync(async (req, res, next) => {
 
 exports.createPost = catchAsync(async (req, res, next) => {
   req.body.content = req.file.post;
-
-  req.user.newMessages = undefined;
-  req.user.isLoggedIn = undefined;
-  req.user.changedPasswordAt = undefined;
-  req.user.__v = undefined;
-
-  req.body.user = req.user;
+  req.body.user = req.user._id;
   const post = await Post.create(req.body);
 
   res.status(200).json({
@@ -58,18 +52,11 @@ exports.createPost = catchAsync(async (req, res, next) => {
 });
 
 exports.likePost = catchAsync(async (req, res, next) => {
-  const likeData = {
-    userId: req.user._id,
-    firstName: req.user.firstName,
-    lastName: req.user.lastName,
-    userPhoto: req.user.profilePhoto
-  };
-
   const updatedPost = await Post.findByIdAndUpdate(
     req.params.postId,
     {
       $push: {
-        likes: likeData
+        likes: req.user._id
       }
     },
     {
@@ -81,12 +68,19 @@ exports.likePost = catchAsync(async (req, res, next) => {
     const notificationData = {
       type: 'like',
       post: updatedPost._id,
-      from: { userId: req.user.id, firstName: req.user.firstName, lastName: req.user.lastName, userPhoto: req.user.profilePhoto },
+      from: req.user._id,
       to: updatedPost.user._id
     };
 
     var notification = await Notification.create(notificationData);
   }
+
+  const likeData = {
+    _id: req.user.id,
+    profilePhoto: req.user.profilePhoto,
+    firstName: req.user.firstName,
+    lastName: req.user.lastName
+  };
 
   res.status(200).json({
     status: 'success',
@@ -104,10 +98,7 @@ exports.makeComment = catchAsync(async (req, res, next) => {
   }
 
   const commentData = {
-    userId: req.user.id,
-    firstName: req.user.firstName,
-    lastName: req.user.lastName,
-    userPhoto: req.user.profilePhoto,
+    user: req.user._id,
     comment: req.body.text
   };
 
@@ -125,17 +116,27 @@ exports.makeComment = catchAsync(async (req, res, next) => {
     const notificationData = {
       type: 'comment',
       post: updatedPost._id,
-      from: { userId: req.user.id, firstName: req.user.firstName, lastName: req.user.lastName, userPhoto: req.user.profilePhoto },
+      from: req.user._id,
       to: updatedPost.user._id
     };
 
     var notification = await Notification.create(notificationData);
   }
 
+  const commentDataRes = {
+    user: {
+      _id: req.user._id,
+      firstName: req.user.firstName,
+      lastName: req.user.lastName,
+      profilePhoto: req.user.profilePhoto
+    },
+    comment: req.body.text
+  };
+
   res.status(200).json({
     status: 'success',
     data: {
-      commentData
+      commentData: commentDataRes
     }
   });
 
@@ -152,7 +153,7 @@ exports.getPost = catchAsync(async (req, res, next) => {
   }
 
   for (let i = 0; i < post.likes.length; i++) {
-    if (post.likes[i].userId == req.user.id) {
+    if (post.likes[i]._id == req.user.id) {
       post.likedByMe = true;
       break;
     }

@@ -103,7 +103,7 @@ exports.getNews = catchAsync(async (req, res, next) => {
     date = date[1] + ' ' + date[2] + ' ' + date[3];
     post.createdAtModified = date + ' at ' + time;
     post.likes.forEach(like => {
-      if (like.userId === req.user.id) {
+      if (like._id == req.user.id) {
         post.likedByMe = true;
       }
     });

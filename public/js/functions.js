@@ -40,7 +40,7 @@ async function logout() {
 
 async function getAllNotifications() {
   try {
-    const printedNotIds = await getNewNotifications();
+    const printedNotIds = await getNewNotifications(true);
 
     const res = await axios({
       method: 'GET',
@@ -89,8 +89,8 @@ function createNotificationHTML(data, isNew, onload = false) {
   const markUp = `<button href="#" class="list-group-item list-group-item-action notif-hover" style="padding: 8px !important; ${
     isNew === true ? 'background-color: #e6e6e6;' : ''
   } color: black;"><img width="40px" style="border-radius: 50%" src="/img/users/${
-    data.from.userPhoto
-  }" class="mr-2"><a style="color: #1a75ff" href="/profile/${data.from.userId}">${data.from.firstName} ${data.from.lastName}</a>${
+    data.from.profilePhoto
+  }" class="mr-2"><a style="color: #1a75ff" href="/profile/${data.from._id}">${data.from.firstName} ${data.from.lastName}</a>${
     data.type === 'like' ? ' liked your ' : ' commented on your '
   }<a href="#" style="color: #1a75ff" onclick="getPostDetails('${data.post}'); markNotifAsSeen('${data._id}', this);">photo.</a>${
     isNew === true ? `<i class='fas fa-circle float-right mt-3 mr-2' id='circle-${data._id}' style="font-size: 10px; color: #4d4dff"></i>` : ''
@@ -103,7 +103,7 @@ function createNotificationHTML(data, isNew, onload = false) {
   }
 }
 
-async function getNewNotifications() {
+async function getNewNotifications(onload = false) {
   if (location.href.includes('chat') === false) {
     getNewMessages();
   }
@@ -115,9 +115,18 @@ async function getNewNotifications() {
     });
 
     if (res.data.status === 'success') {
+      if (
+        $('#notifications-list')
+          .text()
+          .includes("You don't have any notifications yet.")
+      ) {
+        $('#notifications-list').empty();
+      }
       res.data.data.notifications.forEach(el => createNotificationHTML(el, true));
-      const newNotIds = res.data.data.notifications.map(el => el._id);
-      return newNotIds;
+      if (onload === true) {
+        const newNotIds = res.data.data.notifications.map(el => el._id);
+        return newNotIds;
+      }
     }
   } catch (err) {
     console.log(err);

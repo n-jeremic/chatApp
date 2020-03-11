@@ -103,7 +103,7 @@ function addCommentHTML(commentData) {
       <div class="col-lg-12 mb-1" style="border: 1px solid rgba(0,0,0,.125); padding: 6px !important; border-radius: 5px;">
         <div class="media">
           <img
-            src="/img/users/${commentData.userPhoto}"
+            src="/img/users/${commentData.user.profilePhoto}"
             class="mr-2"
             alt="..."
             width="70px"
@@ -111,7 +111,7 @@ function addCommentHTML(commentData) {
           />
           <div class="media-body">
             <p class="mt-0" style="margin-bottom: 4px !important; font-weight: 500;">
-              <a class="comment-userName" href="/profile/${commentData.userId}">${commentData.firstName} ${commentData.lastName}</a>
+              <a class="comment-userName" href="/profile/${commentData.user._id}">${commentData.user.firstName} ${commentData.user.lastName}</a>
             </p>
             <p style="font-size: 14px; margin-bottom: 2px !important;">
             ${commentData.comment}
@@ -125,7 +125,7 @@ function addCommentHTML(commentData) {
 }
 
 function addLikesHTMLModal(likeData) {
-  const markUp = `<button class="list-group-item list-group-item-action" style="padding: 5px !important;"><img class="mr-2" src="/img/users/${likeData.userPhoto}" width="40px"/><a class="comment-userName" href="/profile/${likeData.userId}">${likeData.firstName} ${likeData.lastName}</a></button>`;
+  const markUp = `<button class="list-group-item list-group-item-action" style="padding: 5px !important;"><img class="mr-2" src="/img/users/${likeData.profilePhoto}" width="40px"/><a class="comment-userName" href="/profile/${likeData._id}">${likeData.firstName} ${likeData.lastName}</a></button>`;
 
   $('#append_likes').append(markUp);
 }

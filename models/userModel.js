@@ -87,7 +87,7 @@ userSchema.virtual('chats', {
 
 userSchema.virtual('posts', {
   ref: 'Post',
-  foreignField: 'user._id',
+  foreignField: 'user',
   localField: '_id'
 });
 
