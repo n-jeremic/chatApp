@@ -212,3 +212,23 @@ async function uploadCoverPhoto() {
     Swal.fire('Warning', 'Photo uploading failed! Please try again!', 'error');
   }
 }
+
+mapboxgl.accessToken = 'pk.eyJ1IjoidGhlamVyYSIsImEiOiJjazYweTd1aDAwYzIyM29ueTl0bnRjcDZpIn0.K9m3iot3krOL3Q7DBcd9Pg';
+var map = new mapboxgl.Map({
+  container: 'map',
+  style: 'mapbox://styles/mapbox/light-v10'
+});
+
+// Add geolocate control to the map.
+map.addControl(
+  new mapboxgl.GeolocateControl({
+    positionOptions: {
+      enableHighAccuracy: true
+    },
+    trackUserLocation: true
+  })
+);
+
+map.on('MapTouchEvent', () => {
+  console.log('hello');
+});

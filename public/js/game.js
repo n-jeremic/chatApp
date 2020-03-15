@@ -16,6 +16,8 @@ let player1;
 let player2;
 let oppositeScoreInterval;
 let oppositePlayerCheck = 0;
+let myPlayerCheck = 0;
+let myPlayerCheckInterval;
 let sentRequestCounter = 0;
 
 async function getAllGames() {
@@ -275,22 +277,46 @@ function findActivePlayer(gameObj) {
     if (gameObj.homePlayer.active === true) {
       makeActivePlayerInterface('player1');
       clearInterval(oppositeScoreInterval);
+      myPlayerCheck = 0;
+      myPlayerCheckInterval = setInterval(() => {
+        myPlayerCheck++;
+        if (myPlayerCheckInterval > 30) {
+          Swal.fire('Warning', 'You have been disconnected!', 'error');
+          gameObj.winner = player2;
+          displayWinnerInterface();
+          clearInterval(myPlayerCheckInterval);
+        }
+      }, 1000);
     } else {
       makeActivePlayerInterface('player2');
       oppositeScoreInterval = setInterval(() => {
         checkOpositePlayer(gameObj);
       }, 1000);
+      clearInterval(myPlayerCheckInterval);
+      myPlayerCheck = 0;
     }
     return;
   } else if (gameObj.awayPlayer._id === currentUser._id) {
     if (gameObj.awayPlayer.active === true) {
       makeActivePlayerInterface('player1');
       clearInterval(oppositeScoreInterval);
+      myPlayerCheck = 0;
+      myPlayerCheckInterval = setInterval(() => {
+        myPlayerCheck++;
+        if (myPlayerCheckInterval > 30) {
+          Swal.fire('Warning', 'You have been disconnected!', 'error');
+          gameObj.winner = player2;
+          displayWinnerInterface();
+          clearInterval(myPlayerCheckInterval);
+        }
+      }, 1000);
     } else {
       makeActivePlayerInterface('player2');
       oppositeScoreInterval = setInterval(() => {
         checkOpositePlayer(gameObj);
       }, 1000);
+      clearInterval(myPlayerCheckInterval);
+      myPlayerCheck = 0;
     }
     return;
   }
@@ -338,6 +364,7 @@ async function rollMyDice() {
   $('.fa-dice-six').addClass('fa-spin');
   $('#setRoundBtn').attr('disabled', true);
   $('#rollBtn').attr('disabled', true);
+  myPlayerCheck = 0;
 
   // Update score in database
   await updateRoundScore(myPlayerString, gameObj, randomNumber);
@@ -502,6 +529,7 @@ async function setMyRound() {
   $('#setRoundBtn').attr('disabled', true);
   $('#rollBtn').attr('disabled', true);
   const totalScore = roundScore + player1.totalScore;
+  myPlayerCheck = 0;
 
   if (totalScore >= 10) {
     $('#player1--totalScore').val(totalScore);

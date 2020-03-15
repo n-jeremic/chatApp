@@ -44,6 +44,14 @@
   display: inline-block;
 }
 
+.message-inbox:hover {
+  cursor: default !important;
+}
+
+.text-message:hover {
+  cursor: default !important;
+}
+
 #chat-container {
   max-height: 400px !important;
   overflow-y: auto;

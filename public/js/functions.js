@@ -49,10 +49,10 @@ async function getAllNotifications() {
 
     if (res.data.status === 'success') {
       if (printedNotIds) {
-        const notifLength = res.data.data.notifications.length;
-        for (let i = 0; i < notifLength; i++) {
-          if (printedNotIds.includes(res.data.data.notifications[i]._id)) {
-            res.data.data.notifications.splice(i, 1);
+        for (let i = 0; i < printedNotIds.length; i++) {
+          const index = res.data.data.notifications.findIndex(el => el._id === printedNotIds[i]);
+          if (index !== -1) {
+            res.data.data.notifications.splice(index, 1);
           }
         }
       }
@@ -106,6 +106,10 @@ function createNotificationHTML(data, isNew, onload = false) {
 async function getNewNotifications(onload = false) {
   if (location.href.includes('chat') === false) {
     getNewMessages();
+  }
+
+  if (location.href.includes('chat') === false && onload === true) {
+    getUnreadMsgs();
   }
 
   try {
@@ -334,4 +338,39 @@ async function getNewMessages() {
   } catch (err) {
     console.log(err);
   }
+}
+
+async function getUnreadMsgs() {
+  console.log('hi');
+  try {
+    const response = await axios({
+      method: 'GET',
+      url: '/api/users/myMessages'
+    });
+
+    if (response.data.status === 'success') {
+      const unreadMsgs = returnUnreadMsgs(response.data.data.chats);
+      if (unreadMsgs.length > 0) {
+        const number_newMsgs = parseInt(document.getElementById('num_of_msgs').textContent);
+        $('#num_of_msgs').text(`${number_newMsgs + unreadMsgs.length}`);
+        $('#msgs--navbar').css('color', 'white');
+        $('#num_of_msgs').css('display', 'inline-block');
+      }
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+function returnUnreadMsgs(chatsArr) {
+  const unreadMsgs = [];
+  chatsArr.forEach(chat => {
+    chat.messages.forEach(msg => {
+      if (msg.to._id === currentUser._id && msg.seen === false) {
+        unreadMsgs.push(msg);
+      }
+    });
+  });
+
+  return unreadMsgs;
 }

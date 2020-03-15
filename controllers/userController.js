@@ -231,3 +231,17 @@ exports.checkMyGameRequest = catchAsync(async (req, res, next) => {
     });
   }
 });
+
+exports.getMyMessages = catchAsync(async (req, res, next) => {
+  const userMe = await User.findById(req.user._id).populate({
+    path: 'chats',
+    select: '-__v'
+  });
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      chats: userMe.chats
+    }
+  });
+});

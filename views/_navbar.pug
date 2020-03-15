@@ -11,7 +11,7 @@ nav.navbar.navbar-expand-lg.navbar-dark.bg-dark.sticky-top
             li.nav-item
                 a.nav-link(href='/game' class=`${title === "Pig Game" ? "active" : ""}`) Pig Game    
         .dropdown        
-            .form-inline(style="margin-right: 170px !important")
+            .form-inline(style=`margin-right: ${title === "Chat" ? '215px' : '170px'} !important`)
                 .input-group
                     .input-group-prepend
                         span#addon-wrapping.input-group-text.search-spinner(style="color: #fff; background-color: #17a2b8; border-color: #17a2b8")
@@ -24,10 +24,11 @@ nav.navbar.navbar-expand-lg.navbar-dark.bg-dark.sticky-top
                     #search-results.mt-2
                     nav.mt-4#pagination_content(aria-label='Page navigation example' style="display: none; position: absolute; bottom: 0px; left: 50%; right: 50%")
                         ul.pagination.justify-content-center.pagination-sm
-        div.mr-4(style="position: relative")                
-            span#num_of_msgs.notif-navbar(style="display: none") 0
-            a(href="/inbox")
-                i.fas.fa-envelope#msgs--navbar(style="font-size: 36px; color: rgba(255,255,255,.5)")                        
+        - if (title !== "Chat")                 
+            div.mr-4(style="position: relative")                
+                span#num_of_msgs.notif-navbar(style="display: none") 0
+                a(href="/inbox")
+                    i.fas.fa-envelope#msgs--navbar(style="font-size: 36px; color: rgba(255,255,255,.5)")                        
         .dropdown.mr-2
             a#dropdownMenuLink.dropdown-toggle(href='#' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false')
                 div

@@ -1,5 +1,9 @@
 extends base
 
+block append head
+    script(src='https://api.mapbox.com/mapbox-gl-js/v1.8.0/mapbox-gl.js')
+    link(href='https://api.mapbox.com/mapbox-gl-js/v1.8.0/mapbox-gl.css' rel='stylesheet')
+
 block content
     include _navbar
     .container.mt-5
@@ -87,7 +91,7 @@ block content
                                                 - if (title === "Profile")  
                                                     .col-lg-12
                                                         h5.text-center.mt-2(style="font-weight: 400")= `${user.firstName} doesn't have any photos yet!`                       
-                                    #profile.tab-pane.fade(role='tabpanel' aria-labelledby='profile-tab' style="padding: 40px 20px 0px 20px !important")
+                                    #profile.tab-pane.fade(role='tabpanel' aria-labelledby='profile-tab' style="padding: 20px 20px 0px 20px !important")
                                         - if (title === "My Profile")
                                             .row            
                                                 .col-lg-5.profile-info
@@ -108,14 +112,23 @@ block content
                                                             .input-group-prepend
                                                                 span.input-group-text(style="font-weight: 600") Date of birth
                                                             input.form-control(type='text' disabled='true' aria-label='Username' value=`${user.birthday}` style="background-color: #fff")
-                                            .row
-                                                .col-lg-3
-                                                    button.btn.btn-info.btn-sm.float-right.btn-block.mt-5(data-toggle='modal' data-target='#password_modal')
-                                                        i.fas.fa-key
-                                                        |  Update Password
-                                                    button.btn.btn-info.btn-sm.float-right.mt-3.btn-block(data-toggle='modal' data-target='#info_modal')
-                                                        i.fas.fa-users-cog
-                                                        |  Update Profile                                                            
+                                                    .row(style="position: absolute; bottom: 0")
+                                                        .col-lg-8
+                                                            button.btn.btn-info.btn-sm.float-right.btn-block(data-toggle='modal' data-target='#password_modal')
+                                                                i.fas.fa-key
+                                                                |  Update Password
+                                                            button.btn.btn-info.btn-sm.float-right.mt-3.btn-block(data-toggle='modal' data-target='#info_modal')
+                                                                i.fas.fa-users-cog
+                                                                |  Update Profile                
+                                                .col-lg-1
+                                                .col-lg-6
+                                                    .card.text-center(style="width: 407px")
+                                                        .card-header(style="padding: 8px !important")
+                                                            | My location
+                                                        .card-body(style="padding: 3px !important")
+                                                            #map(style='width: 400px; height: 300px')
+                                                        .card-footer.text-muted(style="padding: 8px !important")
+                                                            | Click on the map to change your location        
                                         - if (title === "Profile")
                                             .row
                                                 .col-lg-5.profile-info
@@ -135,7 +148,13 @@ block content
                                                         .input-group.mb-3
                                                             .input-group-prepend
                                                                 span.input-group-text(style="font-weight: 600") Date of birth
-                                                            input.form-control(type='text' disabled='true' aria-label='Username' value=`${user.birthday}` style="background-color: #fff")        
+                                                            input.form-control(type='text' disabled='true' aria-label='Username' value=`${user.birthday}` style="background-color: #fff") 
+                                                .col-lg-1
+                                                .col-lg-6
+                                                    .card.text-center(style="width: 407px")
+                                                        .card-header(style="padding: 8px !important")= `${user.firstName}'s location`
+                                                        .card-body(style="padding: 3px !important")
+                                                            #map(style='width: 400px; height: 300px')
     include _profile-modals
     include _post-modals                    
 block scriptFile

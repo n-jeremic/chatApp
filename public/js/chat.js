@@ -126,9 +126,9 @@ const openChatButton = (user_id, user_name, user_photo, messages, newMessage = '
   if (messages != null) {
     messages.forEach(msg => {
       if (msg.to.id != user_id) {
-        markUpChat += createChatMessage(user_id, msg.text, user_photo, 'notMe');
+        markUpChat += createChatMessage(user_id, msg.text, user_photo, 'notMe', msg.createdAt);
       } else {
-        markUpChat += createChatMessage(null, msg.text, null, 'me');
+        markUpChat += createChatMessage(null, msg.text, null, 'me', msg.createdAt);
       }
     });
   }
@@ -161,6 +161,7 @@ const openChatButton = (user_id, user_name, user_photo, messages, newMessage = '
     </div></div></div>`;
 
   $('#chats-interface').append(markUpButton);
+  $('[data-toggle="tooltip"]').tooltip();
   scrollDownChat(user_id);
 
   const sendMsgBtn = document.getElementById(`sendBtn-${user_id}`);
@@ -189,8 +190,9 @@ const sendMessage = async (receiver_id, el) => {
 
       if (response.data.status === 'success') {
         document.getElementById(`msgTo-${receiver_id}`).value = '';
-        let message = createChatMessage(null, response.data.data.message.text, null, 'me');
+        let message = createChatMessage(null, response.data.data.message.text, null, 'me', response.data.data.message.createdAt);
         $(`#chat-${receiver_id}`).append(message);
+        $('[data-toggle="tooltip"]').tooltip();
         scrollDownChat(receiver_id);
       }
       el.innerHTML = 'Send message';
@@ -203,17 +205,21 @@ const sendMessage = async (receiver_id, el) => {
   }
 };
 
-const createChatMessage = (user_id, message, user_photo, from) => {
+const createChatMessage = (user_id, message, user_photo, from, textTime) => {
+  const timeArr = textTime.split('T');
+  const time = timeArr[1].split(':');
+  const createdAt = `${timeArr[0]} at ${time[0]}:${time[1]}`;
+
   let markUpChat = '';
   if (from === 'me') {
     markUpChat += `<div class="row"><div class="col-lg-12 no-padding"><p class="float-left">
           <a href="/profile/${currentUser.id}"><img
           src="/img/users/${currentUser.profilePhoto}"
           width="38px"
-          class="img-fluid rounded" /></a><span class="text-message align-top ml-2" style="background-color: white">${message}</span></p></div></div>`;
+          class="img-fluid rounded" /></a><span class="text-message align-top ml-2" style="background-color: white" data-toggle="tooltip" data-placement="top" title="${createdAt}">${message}</span></p></div></div>`;
   } else {
     markUpChat += `<div class="row"><div class="col-lg-12 no-padding"><p class="float-right">
-        <span class="align-top mr-2 text-message" style="background-color: #007bff; color: #fff">${message}</span><a href="/profile/${user_id}"><img
+        <span class="align-top mr-2 text-message" style="background-color: #007bff; color: #fff" data-toggle="tooltip" data-placement="top" title="${createdAt}">${message}</span><a href="/profile/${user_id}"><img
         src="/img/users/${user_photo}"
         width="38px"
         class="img-fluid rounded" /></a></p></div></div>`;
@@ -245,8 +251,15 @@ async function getNewMessages() {
 
       if (openedChat) {
         let newMsgs_count = parseInt(document.getElementById(`num_of_newMsgs--${newMsgsArr[i].from.id}`).textContent);
-        let markUpChat = createChatMessage(newMsgsArr[i].from.id, newMsgsArr[i].text, newMsgsArr[i].from.profilePhoto, 'notMe');
+        let markUpChat = createChatMessage(
+          newMsgsArr[i].from.id,
+          newMsgsArr[i].text,
+          newMsgsArr[i].from.profilePhoto,
+          'notMe',
+          newMsgsArr[i].createdAt
+        );
         $(`#chat-${newMsgsArr[i].from.id}`).append(markUpChat);
+        $('[data-toggle="tooltip"]').tooltip();
         scrollDownChat(newMsgsArr[i].from.id);
         openedChat.classList.remove('btn-outline-primary', 'btn--chat');
         openedChat.classList.add('btn-primary', 'alertMsg', 'btn--newMsg');

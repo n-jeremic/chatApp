@@ -1,7 +1,6 @@
 document.querySelector('form').addEventListener('submit', async event => {
   event.preventDefault();
-  document.querySelector('.btn--resetPass').innerHTML =
-    '<span class="spinner-border spinner-grow-sm" role="status" aria-hidden="true"></span> Loading..';
+  document.querySelector('.btn--resetPass').innerHTML = '<span class="spinner-border" role="status" aria-hidden="true"></span> Loading..';
   document.querySelector('.btn--resetPass').disabled = true;
   const password = document.getElementById('password').value;
   const passwordConfirm = document.getElementById('passwordConfirm').value;

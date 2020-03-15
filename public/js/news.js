@@ -77,3 +77,13 @@ async function getLikes(post_id) {
     $('#modal_likes').modal('hide');
   }
 }
+
+mapboxgl.accessToken = 'pk.eyJ1IjoidGhlamVyYSIsImEiOiJjazYweTd1aDAwYzIyM29ueTl0bnRjcDZpIn0.K9m3iot3krOL3Q7DBcd9Pg';
+var map = new mapboxgl.Map({
+  container: 'map',
+  style: 'mapbox://styles/mapbox/light-v10'
+});
+
+function displayMap(clicked_btn) {
+  $('#map-row').show();
+}

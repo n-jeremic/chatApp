@@ -1,4 +1,5 @@
 $(document).ready(displayInbox);
+$(document).ready(() => localStorage.removeItem('newMessages'));
 
 function displayInbox() {
   const chats = JSON.parse(document.getElementById('chats').dataset.chats);
@@ -52,13 +53,17 @@ function createInboxItem(userData, newMsgs, lastMsg) {
   $('#inbox').append(markUp);
 }
 
-function createChatMsgHTML(text, from, userData) {
+function createChatMsgHTML(text, from, textTime, userData) {
+  const timeArr = textTime.split('T');
+  const time = timeArr[1].split(':');
+  const createdAt = `${timeArr[0]} at ${time[0]}:${time[1]}`;
+
   let markUp;
   if (from === 'me') {
     markUp = `<div class="row mt-2" style="padding: 4px;">
       <div class="col-lg-12">
         <img src="/img/users/${userData.profilePhoto}" class="align-top mr-1" alt="" width="50px" style="border-radius: 50%;" />
-        <div class="message-inbox mt-1" style="background-color: white">
+        <div class="message-inbox mt-1" style="background-color: white" data-toggle="tooltip" data-placement="top" title="${createdAt}">
           ${text}
         </div>
       </div>
@@ -67,7 +72,7 @@ function createChatMsgHTML(text, from, userData) {
     markUp = `<div class="row mt-2" style="padding: 4px;">
       <div class="col-lg-12">
         <img src="/img/users/${userData.profilePhoto}" class="align-top ml-1 float-right" alt="" width="50px" style="border-radius: 50%;" />
-        <div class="message-inbox mt-1 float-right" style="background-color: #007bff; color: #fff">
+        <div class="message-inbox mt-1 float-right" style="background-color: #007bff; color: #fff" data-toggle="tooltip" data-placement="top" title="${createdAt}">
           ${text}
         </div>
       </div>
@@ -75,6 +80,7 @@ function createChatMsgHTML(text, from, userData) {
   }
 
   $('#chat-container').append(markUp);
+  $('[data-toggle="tooltip"]').tooltip();
 }
 
 async function getChat(clickedBtn, userId) {
@@ -89,8 +95,22 @@ async function getChat(clickedBtn, userId) {
 
     if (response.data.status === 'success') {
       clickedBtn.classList.remove('list-group-item-secondary');
-      $(`#badge-${userId}`).remove();
-      markMsgsAsSeen(userId);
+      const number = parseInt(
+        $(`#badge-${userId}`)
+          .text()
+          .split(' ')[0]
+      );
+      if (number > 0) {
+        const number_newMsgs = parseInt(document.getElementById('num_of_msgs').textContent);
+        const new_num = number_newMsgs - number;
+        $('#num_of_msgs').text(`${new_num}`);
+        if (new_num === 0) {
+          $('#msgs--navbar').css('color', 'rgba(255,255,255,.5)');
+          $('#num_of_msgs').css('display', 'none');
+        }
+        $(`#badge-${userId}`).remove();
+        markMsgsAsSeen(userId);
+      }
       $('.chat-spinner').css('display', 'none');
       displayChat(response.data.data.chat);
     }
@@ -117,9 +137,9 @@ function displayChat(chatData) {
   $('#chat-container').empty();
   chatData.messages.forEach(msg => {
     if (msg.from._id === currentUser._id) {
-      createChatMsgHTML(msg.text, 'me', msg.from);
+      createChatMsgHTML(msg.text, 'me', msg.createdAt, msg.from);
     } else {
-      createChatMsgHTML(msg.text, 'notMe', msg.from);
+      createChatMsgHTML(msg.text, 'notMe', msg.createdAt, msg.from);
     }
   });
 
@@ -133,7 +153,6 @@ function scrollDownChat() {
 }
 
 async function markMsgsAsSeen(sender_id) {
-  localStorage.removeItem('newMessages');
   try {
     await axios({
       method: 'PATCH',
@@ -161,7 +180,7 @@ async function sendMessage(receiver_id, el) {
 
       if (response.data.status === 'success') {
         $('#sendMsg-input').val('');
-        createChatMsgHTML(response.data.data.message.text, 'me', currentUser);
+        createChatMsgHTML(response.data.data.message.text, 'me', response.data.data.message.createdAt, currentUser);
         scrollDownChat();
       }
       el.innerHTML = 'Send';

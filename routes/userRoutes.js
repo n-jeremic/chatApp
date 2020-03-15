@@ -16,6 +16,7 @@ router.patch('/updateMe', userController.uploadUserPhoto, userController.resizeP
 router.patch('/updateMyPassword', authController.updateMyPassword);
 
 router.get('/myChatWith/:user_id', userController.myChatWith);
+router.get('/myMessages', userController.getMyMessages);
 
 router.get('/myNotifications', userController.getMyNotificatons);
 router.get('/newNotifications', userController.myNewNotifications);
