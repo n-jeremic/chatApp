@@ -60,6 +60,7 @@ const userSchema = new mongoose.Schema(
         ref: 'Notification'
       }
     ],
+    location: Object,
     gameRequest: {
       userId: mongoose.Schema.ObjectId,
       gameId: mongoose.Schema.ObjectId,

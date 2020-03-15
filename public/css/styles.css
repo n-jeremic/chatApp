@@ -48,6 +48,14 @@
   cursor: default !important;
 }
 
+.mapboxgl-popup {
+  max-width: 200px;
+}
+
+.mapboxgl-popup-content {
+  padding: 12px !important;
+}
+
 .text-message:hover {
   cursor: default !important;
 }

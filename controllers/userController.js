@@ -101,7 +101,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   if (req.body.password || req.body.passwordConfirm) {
     return next(new AppError('Please use /updateMyPassword route for changing your password!', 400));
   }
-  const filteredBody = filterObj(req.body, 'firstName', 'lastName', 'email', 'dateOfBirth');
+  const filteredBody = filterObj(req.body, 'firstName', 'lastName', 'email', 'dateOfBirth', 'location');
 
   if (req.files) {
     if (req.files.profilePhoto) filteredBody.profilePhoto = req.files.profilePhoto[0].filename;
@@ -242,6 +242,17 @@ exports.getMyMessages = catchAsync(async (req, res, next) => {
     status: 'success',
     data: {
       chats: userMe.chats
+    }
+  });
+});
+
+exports.getUsersLocations = catchAsync(async (req, res, next) => {
+  const users = await User.find({ location: { $ne: undefined } });
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      users
     }
   });
 });

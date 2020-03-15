@@ -30,4 +30,6 @@ router.get('/newMessages', userController.myNewMessages);
 
 router.get('/onlineUsers', userController.getOnlineUsers);
 
+router.get('/usersLocations', userController.getUsersLocations);
+
 module.exports = router;

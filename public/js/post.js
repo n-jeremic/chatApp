@@ -34,7 +34,7 @@ async function getPostDetails(post_id, deletePostCheck = false) {
     });
 
     if (postData.data.status === 'success') {
-      if (location.href.includes('me') && deletePostCheck === true) {
+      if (location.href.includes('/me') && deletePostCheck === true) {
         $('#btn-deletePost').attr('onclick', `deletePost('${post_id}')`);
 
         $('#img--post').on('mouseover', () => {

@@ -1,3 +1,6 @@
+let marker;
+$(document).ready(getMyLocation);
+
 async function updateInfo() {
   const inputFields = $('.form-update-info input');
   const data = {};
@@ -213,22 +216,59 @@ async function uploadCoverPhoto() {
   }
 }
 
-mapboxgl.accessToken = 'pk.eyJ1IjoidGhlamVyYSIsImEiOiJjazYweTd1aDAwYzIyM29ueTl0bnRjcDZpIn0.K9m3iot3krOL3Q7DBcd9Pg';
-var map = new mapboxgl.Map({
-  container: 'map',
-  style: 'mapbox://styles/mapbox/light-v10'
-});
+function addMarker(lngLatObj, map, onload = false) {
+  marker = new mapboxgl.Marker().setLngLat(lngLatObj);
+  marker.addTo(map);
+  if (onload === false) {
+    updateMyLocation(lngLatObj);
+  }
+}
 
-// Add geolocate control to the map.
-map.addControl(
-  new mapboxgl.GeolocateControl({
-    positionOptions: {
-      enableHighAccuracy: true
-    },
-    trackUserLocation: true
-  })
-);
+async function updateMyLocation(lngLatObj) {
+  try {
+    const response = await axios({
+      method: 'PATCH',
+      url: '/api/users/updateMe',
+      data: {
+        location: lngLatObj
+      }
+    });
 
-map.on('MapTouchEvent', () => {
-  console.log('hello');
-});
+    if (response.data.status === 'success') {
+      Swal.fire('Success', 'Your location is successfully changed!', 'success');
+    }
+  } catch (err) {
+    console.log(err);
+    Swal.fire('Warning', 'Something went wrong. Please try again!', 'error');
+  }
+}
+
+function getMyLocation() {
+  mapboxgl.accessToken = 'pk.eyJ1IjoidGhlamVyYSIsImEiOiJjazYweTd1aDAwYzIyM29ueTl0bnRjcDZpIn0.K9m3iot3krOL3Q7DBcd9Pg';
+
+  if (currentUser.location) {
+    var map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/light-v10',
+      zoom: 5,
+      center: [currentUser.location.lng, currentUser.location.lat]
+    });
+
+    addMarker(currentUser.location, map, true);
+  } else {
+    var map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/light-v10'
+    });
+  }
+
+  map.addControl(new mapboxgl.NavigationControl());
+
+  map.on('click', function(e) {
+    if (marker) {
+      marker.remove();
+    }
+
+    addMarker(e.lngLat, map);
+  });
+}

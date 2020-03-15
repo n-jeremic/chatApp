@@ -1,3 +1,5 @@
+$(document).ready(getUsersLocations);
+
 async function likePost(post_id, btn) {
   btn.disabled = true;
   btn.innerHTML = '<i class="fas fa-thumbs-up"></i> Liked';
@@ -84,6 +86,39 @@ var map = new mapboxgl.Map({
   style: 'mapbox://styles/mapbox/light-v10'
 });
 
+map.addControl(new mapboxgl.NavigationControl());
+
+function hideMap(clicked_btn) {
+  $('#map-row').hide(400);
+  clicked_btn.innerHTML = "<i class='fas fa-map-marked-alt mr-2'></i> Show map";
+  clicked_btn.setAttribute('onclick', 'displayMap(this)');
+}
+
 function displayMap(clicked_btn) {
-  $('#map-row').show();
+  $('#map-row').show(400);
+  clicked_btn.innerHTML = "<i class='fas fa-map-marked-alt mr-2'></i> Hide map";
+  clicked_btn.setAttribute('onclick', 'hideMap(this)');
+}
+
+async function getUsersLocations() {
+  try {
+    const response = await axios({
+      method: 'GET',
+      url: '/api/users/usersLocations'
+    });
+
+    if (response.data.status === 'success') {
+      response.data.data.users.forEach(user => addMarker(user));
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+function addMarker(userData) {
+  const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(
+    `<div class="row"><div class="col-lg-12"><img src='/img/users/${userData.profilePhoto}' width='50px' style="border-radius: 50%; margin-right: 5px"><a href="/profile/${userData._id}" class="comment-userName" style="font-size: 18px">${userData.firstName} ${userData.lastName}</a></div></div>`
+  );
+  let marker = new mapboxgl.Marker().setLngLat(userData.location);
+  marker.setPopup(popup).addTo(map);
 }

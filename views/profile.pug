@@ -8,10 +8,12 @@ block content
     include _navbar
     .container.mt-5
         span(data-user_photo=`${user.profilePhoto}` id="user-pr_photo")
+        - if (user.location && title === "Profile")
+            span(data-user_location=`${JSON.stringify(user.location)}` id="user-location")
         span#currentUserData(data-current-user=`${JSON.stringify(userMe)}`)
         .col-lg-12
-            .card.profile-content(style='width: 100%; border-radius: 10px')
-                .card-body(style="padding: 0px !important; border-radius: 10px")
+            .card.profile-content(style='width: 100%; border-radius: 10px 10px 0 0')
+                .card-body(style="padding: 0px !important; border-radius: 10px 10px 0 0")
                     .row
                         .col-lg-12
                             img(width="100%" height="450px" style="object-fit: cover; border-radius: 10px 10px 0px 0px;" src=`/img/users/${user.coverPhoto}` id="coverPhoto")
@@ -150,11 +152,12 @@ block content
                                                                 span.input-group-text(style="font-weight: 600") Date of birth
                                                             input.form-control(type='text' disabled='true' aria-label='Username' value=`${user.birthday}` style="background-color: #fff") 
                                                 .col-lg-1
-                                                .col-lg-6
-                                                    .card.text-center(style="width: 407px")
-                                                        .card-header(style="padding: 8px !important")= `${user.firstName}'s location`
-                                                        .card-body(style="padding: 3px !important")
-                                                            #map(style='width: 400px; height: 300px')
+                                                - if (user.location)
+                                                    .col-lg-6
+                                                        .card.text-center(style="width: 407px")
+                                                            .card-header(style="padding: 8px !important")= `${user.firstName}'s location`
+                                                            .card-body(style="padding: 3px !important")
+                                                                #map(style='width: 400px; height: 300px')
     include _profile-modals
     include _post-modals                    
 block scriptFile
@@ -162,3 +165,5 @@ block scriptFile
     script(src="/js/functions.js")
     - if (title === "My Profile")
         script(src="/js/profile.js")
+    - if (title === "Profile")
+        script(src="/js/map.js")    

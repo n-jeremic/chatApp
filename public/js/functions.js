@@ -341,7 +341,6 @@ async function getNewMessages() {
 }
 
 async function getUnreadMsgs() {
-  console.log('hi');
   try {
     const response = await axios({
       method: 'GET',

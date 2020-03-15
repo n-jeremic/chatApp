@@ -280,7 +280,7 @@ function findActivePlayer(gameObj) {
       myPlayerCheck = 0;
       myPlayerCheckInterval = setInterval(() => {
         myPlayerCheck++;
-        if (myPlayerCheckInterval > 30) {
+        if (myPlayerCheckInterval > 60) {
           Swal.fire('Warning', 'You have been disconnected!', 'error');
           gameObj.winner = player2;
           displayWinnerInterface();
@@ -482,7 +482,7 @@ async function checkOpositePlayer(gameObjJS) {
         rollOppositeDice(1);
       } else {
         oppositePlayerCheck++;
-        if (oppositePlayerCheck > 30) {
+        if (oppositePlayerCheck > 50) {
           oppositePlayerCheck = 0;
           await setWinner();
           return;
