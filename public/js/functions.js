@@ -275,7 +275,7 @@ async function checkMyGameRequest() {
         createGameNotif(response.data.data.request);
         receivedRequestInterval = setInterval(() => {
           receivedRequestCounter++;
-          if (receivedRequestCounter > 26) {
+          if (receivedRequestCounter > 23) {
             $('#btn-gameRequest').remove();
             regularStyleBtn();
             Swal.fire(

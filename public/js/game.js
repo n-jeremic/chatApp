@@ -279,22 +279,22 @@ function findActivePlayer(gameObjJS) {
       clearInterval(oppositeScoreInterval);
       myPlayerCheck = 0;
       myPlayerCheckInterval = setInterval(() => {
-        myPlayerCheck++;
-        if (myPlayerCheck > 60) {
+        myPlayerCheck += 10;
+        if (myPlayerCheck > 59) {
           Swal.fire('Warning', 'You have been disconnected!', 'error');
           gameObj.winner = player2;
           displayWinnerInterface();
           myPlayerCheck = 0;
           clearInterval(myPlayerCheckInterval);
         }
-      }, 1000);
+      }, 10000);
     } else {
       makeActivePlayerInterface('player2');
       oppositeScoreInterval = setInterval(() => {
         checkOpositePlayer(gameObjJS);
       }, 1000);
-      clearInterval(myPlayerCheckInterval);
       myPlayerCheck = 0;
+      clearInterval(myPlayerCheckInterval);
     }
     return;
   } else if (gameObjJS.awayPlayer._id === currentUser._id) {
@@ -303,22 +303,22 @@ function findActivePlayer(gameObjJS) {
       clearInterval(oppositeScoreInterval);
       myPlayerCheck = 0;
       myPlayerCheckInterval = setInterval(() => {
-        myPlayerCheck++;
-        if (myPlayerCheck > 60) {
+        myPlayerCheck += 10;
+        if (myPlayerCheck > 59) {
           Swal.fire('Warning', 'You have been disconnected!', 'error');
           gameObj.winner = player2;
           displayWinnerInterface();
           myPlayerCheck = 0;
           clearInterval(myPlayerCheckInterval);
         }
-      }, 1000);
+      }, 10000);
     } else {
       makeActivePlayerInterface('player2');
       oppositeScoreInterval = setInterval(() => {
         checkOpositePlayer(gameObjJS);
       }, 1000);
-      clearInterval(myPlayerCheckInterval);
       myPlayerCheck = 0;
+      clearInterval(myPlayerCheckInterval);
     }
     return;
   }
@@ -668,6 +668,8 @@ function displayWinnerInterface(disconnected = false) {
   $('.winner-interface').css('display', 'block');
 
   gameRequestInterval = setInterval(checkMyGameRequest, 3000);
+  myPlayerCheck = 0;
+  clearInterval(myPlayerCheckInterval);
 }
 
 function hideAlert() {
