@@ -272,9 +272,9 @@ function findMyPlayer(gameObj) {
   }
 }
 
-function findActivePlayer(gameObj) {
-  if (gameObj.homePlayer._id === currentUser._id) {
-    if (gameObj.homePlayer.active === true) {
+function findActivePlayer(gameObjJS) {
+  if (gameObjJS.homePlayer._id === currentUser._id) {
+    if (gameObjJS.homePlayer.active === true) {
       makeActivePlayerInterface('player1');
       clearInterval(oppositeScoreInterval);
       myPlayerCheck = 0;
@@ -291,14 +291,14 @@ function findActivePlayer(gameObj) {
     } else {
       makeActivePlayerInterface('player2');
       oppositeScoreInterval = setInterval(() => {
-        checkOpositePlayer(gameObj);
+        checkOpositePlayer(gameObjJS);
       }, 1000);
       clearInterval(myPlayerCheckInterval);
       myPlayerCheck = 0;
     }
     return;
-  } else if (gameObj.awayPlayer._id === currentUser._id) {
-    if (gameObj.awayPlayer.active === true) {
+  } else if (gameObjJS.awayPlayer._id === currentUser._id) {
+    if (gameObjJS.awayPlayer.active === true) {
       makeActivePlayerInterface('player1');
       clearInterval(oppositeScoreInterval);
       myPlayerCheck = 0;
@@ -315,7 +315,7 @@ function findActivePlayer(gameObj) {
     } else {
       makeActivePlayerInterface('player2');
       oppositeScoreInterval = setInterval(() => {
-        checkOpositePlayer(gameObj);
+        checkOpositePlayer(gameObjJS);
       }, 1000);
       clearInterval(myPlayerCheckInterval);
       myPlayerCheck = 0;
