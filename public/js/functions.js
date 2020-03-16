@@ -278,7 +278,6 @@ async function checkMyGameRequest() {
           if (receivedRequestCounter > 26) {
             $('#btn-gameRequest').remove();
             regularStyleBtn();
-            clearInterval(receivedRequestInterval);
             Swal.fire(
               'Warning',
               `Game request from ${myGameRequest.firstName} ${myGameRequest.lastName} has been canceled since you didn't respond!`,
@@ -287,6 +286,7 @@ async function checkMyGameRequest() {
             receivedRequestCounter = 0;
             myGameRequest = undefined;
             gameRequestInterval = setInterval(checkMyGameRequest, 3000);
+            clearInterval(receivedRequestInterval);
           }
         }, 1000);
       }
