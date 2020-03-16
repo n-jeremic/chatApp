@@ -284,6 +284,7 @@ function findActivePlayer(gameObj) {
           Swal.fire('Warning', 'You have been disconnected!', 'error');
           gameObj.winner = player2;
           displayWinnerInterface();
+          myPlayerCheck = 0;
           clearInterval(myPlayerCheckInterval);
         }
       }, 1000);
@@ -303,10 +304,11 @@ function findActivePlayer(gameObj) {
       myPlayerCheck = 0;
       myPlayerCheckInterval = setInterval(() => {
         myPlayerCheck++;
-        if (myPlayerCheck > 30) {
+        if (myPlayerCheck > 60) {
           Swal.fire('Warning', 'You have been disconnected!', 'error');
           gameObj.winner = player2;
           displayWinnerInterface();
+          myPlayerCheck = 0;
           clearInterval(myPlayerCheckInterval);
         }
       }, 1000);
