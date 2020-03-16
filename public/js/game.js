@@ -172,7 +172,7 @@ async function sendGameRequest(userId, btn) {
 }
 
 async function watchGameRequest(userId, game, btn) {
-  if (sentRequestCounter < 25) {
+  if (sentRequestCounter < 20) {
     try {
       const response = await axios({
         method: 'GET',
@@ -576,7 +576,7 @@ function setOppositeRound() {
     $('#player2--totalScore').css('font-weight', 500);
     $('#player2--text').css('font-weight', 400);
     $('#player2--totalScore').css('background-color', 'whitesmoke');
-  }, 2500);
+  }, 1500);
 }
 
 async function endGame() {
