@@ -284,8 +284,6 @@ function findActivePlayer(gameObjJS) {
           Swal.fire('Warning', 'You have been disconnected!', 'error');
           gameObj.winner = player2;
           displayWinnerInterface();
-          myPlayerCheck = 0;
-          clearInterval(myPlayerCheckInterval);
         }
       }, 10000);
     } else {
@@ -308,8 +306,6 @@ function findActivePlayer(gameObjJS) {
           Swal.fire('Warning', 'You have been disconnected!', 'error');
           gameObj.winner = player2;
           displayWinnerInterface();
-          myPlayerCheck = 0;
-          clearInterval(myPlayerCheckInterval);
         }
       }, 10000);
     } else {
