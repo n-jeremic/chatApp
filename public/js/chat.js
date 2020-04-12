@@ -24,7 +24,7 @@ async function getOnlineUsers() {
   try {
     const res = await axios({
       method: 'GET',
-      url: '/api/users/onlineUsers'
+      url: '/api/users/onlineUsers',
     });
 
     if (res.data.status === 'success') {
@@ -38,7 +38,7 @@ async function getOnlineUsers() {
 function displayUsers(users) {
   $('#card-users').empty();
 
-  users.forEach(user => {
+  users.forEach((user) => {
     $('#card-users').append(
       `<button data-user_id='${user.id}' data-user_photo='${user.profilePhoto}' data-user_name='${user.firstName} ${
         user.lastName
@@ -63,7 +63,7 @@ async function getChat(user_id, user_name, user_photo, newMessage = 'false') {
   try {
     const response = await axios({
       method: 'GET',
-      url: `/api/users/myChatWith/${user_id}`
+      url: `/api/users/myChatWith/${user_id}`,
     });
 
     if (response.data.data.chat === null) {
@@ -89,7 +89,7 @@ async function getChat(user_id, user_name, user_photo, newMessage = 'false') {
   }
 }
 
-document.getElementById('card-users').addEventListener('click', async event => {
+document.getElementById('card-users').addEventListener('click', async (event) => {
   if (event.target.tagName !== 'DIV') {
     let check = 0;
     if (event.target.parentElement.tagName === 'DIV') {
@@ -124,7 +124,7 @@ const openChatButton = (user_id, user_name, user_photo, messages, newMessage = '
   let markUpChat = '';
 
   if (messages != null) {
-    messages.forEach(msg => {
+    messages.forEach((msg) => {
       if (msg.to.id != user_id) {
         markUpChat += createChatMessage(user_id, msg.text, user_photo, 'notMe', msg.createdAt);
       } else {
@@ -165,7 +165,7 @@ const openChatButton = (user_id, user_name, user_photo, messages, newMessage = '
   scrollDownChat(user_id);
 
   const sendMsgBtn = document.getElementById(`sendBtn-${user_id}`);
-  document.getElementById(`msgTo-${user_id}`).addEventListener('keyup', event => {
+  document.getElementById(`msgTo-${user_id}`).addEventListener('keyup', (event) => {
     goWhite(user_id);
     if (event.keyCode === 13) {
       sendMessage(user_id, sendMsgBtn);
@@ -184,8 +184,8 @@ const sendMessage = async (receiver_id, el) => {
         method: 'POST',
         url: `/api/messages/${receiver_id}`,
         data: {
-          text
-        }
+          text,
+        },
       });
 
       if (response.data.status === 'success') {
@@ -232,7 +232,7 @@ async function getNewMessages() {
   try {
     const response = await axios({
       method: 'GET',
-      url: '/api/users/newMessages'
+      url: '/api/users/newMessages',
     });
 
     if (response.data.status === 'empty') {
@@ -318,7 +318,7 @@ async function markMsgsAsSeen(sender_id) {
   try {
     await axios({
       method: 'PATCH',
-      url: `/api/messages/msgsSeen/${sender_id}`
+      url: `/api/messages/msgsSeen/${sender_id}`,
     });
   } catch (err) {
     console.log(err);
