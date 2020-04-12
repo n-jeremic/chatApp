@@ -2,6 +2,7 @@ $(document).ready(getAllNotifications);
 window.setInterval(getNewNotifications, 5000);
 
 const currentUser = JSON.parse(document.getElementById('currentUserData').dataset.currentUser);
+let firstRun = true;
 
 let receivedRequestCounter = 0;
 let receivedRequestInterval;
@@ -11,7 +12,7 @@ if (location.href.includes('playGame') === false) {
   gameRequestInterval = setInterval(checkMyGameRequest, 3000);
 }
 
-document.getElementById('search--field').addEventListener('blur', function(event) {
+document.getElementById('search--field').addEventListener('blur', function (event) {
   if (event.relatedTarget !== null) {
     if (event.relatedTarget.classList.contains('page-link')) {
       $('#search--field').focus();
@@ -27,7 +28,7 @@ async function logout() {
   try {
     const res = await axios({
       method: 'GET',
-      url: '/api/users/logOut'
+      url: '/api/users/logOut',
     });
 
     if (res.data.status === 'success') {
@@ -44,13 +45,13 @@ async function getAllNotifications() {
 
     const res = await axios({
       method: 'GET',
-      url: '/api/users/myNotifications'
+      url: '/api/users/myNotifications',
     });
 
     if (res.data.status === 'success') {
       if (printedNotIds) {
         for (let i = 0; i < printedNotIds.length; i++) {
-          const index = res.data.data.notifications.findIndex(el => el._id === printedNotIds[i]);
+          const index = res.data.data.notifications.findIndex((el) => el._id === printedNotIds[i]);
           if (index !== -1) {
             res.data.data.notifications.splice(index, 1);
           }
@@ -58,7 +59,7 @@ async function getAllNotifications() {
       }
 
       if (res.data.data.notifications.length > 0) {
-        res.data.data.notifications.forEach(notification => {
+        res.data.data.notifications.forEach((notification) => {
           if (notification.seen === false) {
             createNotificationHTML(notification, true, true);
           } else {
@@ -105,30 +106,27 @@ function createNotificationHTML(data, isNew, onload = false) {
 
 async function getNewNotifications(onload = false) {
   if (location.href.includes('chat') === false) {
-    getNewMessages();
-  }
-
-  if (location.href.includes('chat') === false && onload === true) {
-    getUnreadMsgs();
+    if (onload) {
+      getUnreadMsgs();
+      getNewMessages();
+    } else {
+      getNewMessages();
+    }
   }
 
   try {
     const res = await axios({
       method: 'GET',
-      url: '/api/users/newNotifications'
+      url: '/api/users/newNotifications',
     });
 
     if (res.data.status === 'success') {
-      if (
-        $('#notifications-list')
-          .text()
-          .includes("You don't have any notifications yet.")
-      ) {
+      if ($('#notifications-list').text().includes("You don't have any notifications yet.")) {
         $('#notifications-list').empty();
       }
-      res.data.data.notifications.forEach(el => createNotificationHTML(el, true));
+      res.data.data.notifications.forEach((el) => createNotificationHTML(el, true));
       if (onload === true) {
-        const newNotIds = res.data.data.notifications.map(el => el._id);
+        const newNotIds = res.data.data.notifications.map((el) => el._id);
         return newNotIds;
       }
     }
@@ -156,7 +154,7 @@ async function markNotifAsSeen(notif_id, clicked_el) {
   try {
     const response = await axios({
       method: 'PATCH',
-      url: `/api/users/seenNotification/${notif_id}`
+      url: `/api/users/seenNotification/${notif_id}`,
     });
 
     if (response.data.status === 'success') {
@@ -179,7 +177,7 @@ async function searchUsers(query) {
   try {
     const response = await axios({
       method: 'GET',
-      url: `/api/users/searchUsers?query=${query}`
+      url: `/api/users/searchUsers?query=${query}`,
     });
 
     if (response.data.status === 'success') {
@@ -187,7 +185,7 @@ async function searchUsers(query) {
       $('.search-spinner').html('<i class="fas fa-search"></i>');
       if (response.data.data.results.length < 9) {
         $('#search-results').empty();
-        response.data.data.results.forEach(user => searchResultsHTML(user));
+        response.data.data.results.forEach((user) => searchResultsHTML(user));
         $('#dropdown-search').dropdown('show');
         $('#pagination_content').hide();
         $('#dropdown-search').css('height', '');
@@ -264,7 +262,7 @@ async function checkMyGameRequest() {
   try {
     const response = await axios({
       method: 'GET',
-      url: '/api/users/myGameRequest'
+      url: '/api/users/myGameRequest',
     });
 
     if (response.data.status === 'empty') {
@@ -316,24 +314,28 @@ async function getNewMessages() {
   try {
     const response = await axios({
       method: 'GET',
-      url: '/api/users/newMessages'
+      url: '/api/users/newMessages',
     });
 
-    if (response.data.status === 'success') {
-      const number_newMsgs = parseInt(document.getElementById('num_of_msgs').textContent);
-      $('#num_of_msgs').text(`${number_newMsgs + response.data.data.newMessages.length}`);
-      $('#msgs--navbar').css('color', 'white');
-      $('#num_of_msgs').css('display', 'inline-block');
-      let msgsLocalStorage = localStorage.getItem('newMessages');
-      if (!msgsLocalStorage) {
-        localStorage.setItem('newMessages', JSON.stringify(response.data.data.newMessages));
+    if (!firstRun) {
+      if (response.data.status === 'success') {
+        const number_newMsgs = parseInt(document.getElementById('num_of_msgs').textContent);
+        $('#num_of_msgs').text(`${number_newMsgs + response.data.data.newMessages.length}`);
+        $('#msgs--navbar').css('color', 'white');
+        $('#num_of_msgs').css('display', 'inline-block');
+        let msgsLocalStorage = localStorage.getItem('newMessages');
+        if (!msgsLocalStorage) {
+          localStorage.setItem('newMessages', JSON.stringify(response.data.data.newMessages));
+        } else {
+          const msgsArr = JSON.parse(msgsLocalStorage);
+          response.data.data.newMessages.forEach((msg) => msgsArr.push(msg));
+          localStorage.setItem('newMessages', JSON.stringify(msgsArr));
+        }
       } else {
-        const msgsArr = JSON.parse(msgsLocalStorage);
-        response.data.data.newMessages.forEach(msg => msgsArr.push(msg));
-        localStorage.setItem('newMessages', JSON.stringify(msgsArr));
+        return;
       }
     } else {
-      return;
+      firstRun = false;
     }
   } catch (err) {
     console.log(err);
@@ -344,7 +346,7 @@ async function getUnreadMsgs() {
   try {
     const response = await axios({
       method: 'GET',
-      url: '/api/users/myMessages'
+      url: '/api/users/myMessages',
     });
 
     if (response.data.status === 'success') {
@@ -363,8 +365,8 @@ async function getUnreadMsgs() {
 
 function returnUnreadMsgs(chatsArr) {
   const unreadMsgs = [];
-  chatsArr.forEach(chat => {
-    chat.messages.forEach(msg => {
+  chatsArr.forEach((chat) => {
+    chat.messages.forEach((msg) => {
       if (msg.to._id === currentUser._id && msg.seen === false) {
         unreadMsgs.push(msg);
       }
