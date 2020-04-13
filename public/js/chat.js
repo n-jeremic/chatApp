@@ -146,7 +146,7 @@ const openChatButton = (user_id, user_name, user_photo, messages, newMessage = '
     aria-controls="collapse-${user_id}">${user_name} <a class="float-right" onclick="closeChat('${user_id}')"><i class="fas fa-times" style="color: #ff704d; visibility: hidden" id="closeChat-${user_id}"></i></a><span class="num_of_newMsgs--chat" id="num_of_newMsgs--${user_id}" style="display: ${
     newMessage == 'true' ? 'inline-block' : 'none'
   }">${num_of_newMsgs}</span></button></p>
-    <div class="collapse ${newMessage == 'false' ? 'show' : ''}" id="collapse-${user_id}">
+    <div class="collapse ${newMessage == 'false' ? 'show' : ''} shadow" id="collapse-${user_id}">
     <div class="card card-body chat-body">
     <div class="chat" id="scroll-${user_id}"><div class="container-fluid" id="chat-${user_id}">${markUpChat}</div></div>
     <div class="form-group type-message-form">
