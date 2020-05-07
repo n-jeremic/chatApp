@@ -271,6 +271,8 @@ async function getNewMessages() {
         await getChat(newMsgsArr[i].from.id, user_name, newMsgsArr[i].from.profilePhoto, 'true');
       }
     }
+
+    return;
   } catch (err) {
     console.log(err);
   }
