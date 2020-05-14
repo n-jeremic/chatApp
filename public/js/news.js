@@ -6,7 +6,7 @@ async function likePost(post_id, btn) {
   try {
     await axios({
       method: 'POST',
-      url: `/api/posts/like/${post_id}`
+      url: `/api/posts/like/${post_id}`,
     });
 
     const num_likes = parseInt(document.getElementById(`btn-num_likes-${post_id}`).innerText.split(' ')[0]);
@@ -27,8 +27,8 @@ async function commentPost(post_id) {
       method: 'POST',
       url: `/api/posts/comment/${post_id}`,
       data: {
-        text: comment
-      }
+        text: comment,
+      },
     });
 
     if (res.data.status === 'success') {
@@ -42,7 +42,7 @@ async function commentPost(post_id) {
       }
 
       comments_container.append(
-        `<div class="collapse_comments"><div class="row mb-2"><div class="col-lg-1 mr-4"><img class="mr-3" src='/img/users/${res.data.data.commentData.user.profilePhoto}' width='70px' style='border-radius: 50%;'></div><div class="col-lg-10"><p style='font-weight: 600; font-size: 17px; margin-bottom: 3px !important;'><a href='/profile/${res.data.data.commentData.user._id}' class="comment-userName">${res.data.data.commentData.user.firstName} ${res.data.data.commentData.user.lastName}</a></p><p style='font-weight: 400; margin-bottom: 3px !important; font-size: 15px'>${res.data.data.commentData.comment}</p></div></div></div>`
+        `<div class="row mb-2" style="margin-left: 0px !important; margin-right: 0px !important; padding: 5px; border: 1px solid rgba(0,0,0,.125); border-radius: 5px"><div class="col-lg-1 mr-2" style="padding: 5px !important"><img class="mr-3" src='/img/users/${res.data.data.commentData.user.profilePhoto}' width='70px' style='border-radius: 50%;'></div><div class="col-lg-10"><p style='font-weight: 600; font-size: 17px; margin-bottom: 3px !important;'><a href='/profile/${res.data.data.commentData.user._id}' class="comment-userName">${res.data.data.commentData.user.firstName} ${res.data.data.commentData.user.lastName}</a></p><p style='font-weight: 400; margin-bottom: 3px !important; font-size: 15px'>${res.data.data.commentData.comment}</p></div></div>`
       );
     }
   } catch (err) {
@@ -66,12 +66,12 @@ async function getLikes(post_id) {
   try {
     const res = await axios({
       method: 'GET',
-      url: `/api/posts/${post_id}`
+      url: `/api/posts/${post_id}`,
     });
 
     if (res.data.status === 'success') {
       $('#append_likes').empty();
-      res.data.data.post.likes.forEach(like => addLikesHTML(like));
+      res.data.data.post.likes.forEach((like) => addLikesHTML(like));
     }
   } catch (err) {
     console.log(err);
@@ -83,7 +83,7 @@ async function getLikes(post_id) {
 mapboxgl.accessToken = 'pk.eyJ1IjoidGhlamVyYSIsImEiOiJjazYweTd1aDAwYzIyM29ueTl0bnRjcDZpIn0.K9m3iot3krOL3Q7DBcd9Pg';
 var map = new mapboxgl.Map({
   container: 'map',
-  style: 'mapbox://styles/mapbox/light-v10'
+  style: 'mapbox://styles/mapbox/light-v10',
 });
 
 map.addControl(new mapboxgl.NavigationControl());
@@ -104,11 +104,11 @@ async function getUsersLocations() {
   try {
     const response = await axios({
       method: 'GET',
-      url: '/api/users/usersLocations'
+      url: '/api/users/usersLocations',
     });
 
     if (response.data.status === 'success') {
-      response.data.data.users.forEach(user => addMarker(user));
+      response.data.data.users.forEach((user) => addMarker(user));
     }
   } catch (err) {
     console.log(err);

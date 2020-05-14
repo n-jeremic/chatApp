@@ -65,9 +65,8 @@ block content
                                                         .col-lg-12
                                                             button.btn.btn-primary.btn-sm.float-right(onclick=`commentPost('${post.id}')`) Add comment
                                             .collapse.mt-3(id=`collapse_comments-${post.id}`)
-                                                .card.card-body(style='padding: 5px !important;' id=`comments_list-${post.id}`)
+                                                .card.card-body.collapse-comments(style='padding: 5px !important;' id=`comments_list-${post.id}`)
                                                     - if (post.comments.length > 0)
-                                                        .collapse-comments
                                                             each comment in post.comments
                                                                 .row.mb-2(style="margin-left: 0px !important; margin-right: 0px !important; padding: 5px; border: 1px solid rgba(0,0,0,.125); border-radius: 5px")
                                                                     .col-lg-1.mr-2(style="padding: 5px !important")
