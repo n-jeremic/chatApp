@@ -24,7 +24,7 @@
                                 label(for='dateOfBirth') Date of birth:
                                 input#dateOfBirth.form-control(type='date' aria-describedby='emailHelp')    
             .modal-footer
-                button.btn.btn-info.btn-block(type='button' onclick="updateInfo()")
+                button.btn.btn-sm.btn-info.btn-block(type='button' onclick="updateInfo()")
                     i.fas.fa-download
                     |  Save changes
 
@@ -51,7 +51,7 @@
                                 label(for='newPasswordConfirm') Confirm New Password:
                                 input#newPasswordConfirm.form-control(type='password' aria-describedby='emailHelp')
             .modal-footer
-                button.btn.btn-info.btn-block#btn-changePassword(type='button' onclick="changePassword()")
+                button.btn.btn-sm.btn-info.btn-block#btn-changePassword(type='button' onclick="changePassword()")
                     i.fas.fa-user-edit
                     |  Change Password
 
@@ -73,10 +73,10 @@
                             label(for='update_photo') Choose new photo:
                             input#update_photo.form-control-file(type='file' onchange="readImage(this, 'photo_input')")
             .modal-footer
-                button.btn.btn-secondary(type='button' onclick="closeProfilePhotoModal();" data-dismiss="modal")
+                button.btn.btn-sm.btn-secondary(type='button' onclick="closeProfilePhotoModal();" data-dismiss="modal")
                     i.fas.fa-times
                     |  Cancel
-                button.btn.btn-info(type='button' onclick="updateProfilePhoto()" id="btn-profile-photo")
+                button.btn.btn-sm.btn-info(type='button' onclick="updateProfilePhoto()" id="btn-profile-photo")
                     i.fas.fa-user-edit
                     |  Update profile photo
 
@@ -99,9 +99,9 @@
                             label(for='add_photo') Choose photo
                             input#add_photo.form-control-file(type='file' onchange='readImage(this, "new_photo"); displayPhoto()')
             .modal-footer
-                button.btn.btn-secondary(type='button' onclick="closePhotoModal();" data-dismiss="modal")
+                button.btn.btn-sm.btn-secondary(type='button' onclick="closePhotoModal();" data-dismiss="modal")
                     i.fas.fa-times
                     |  Cancel
-                button.btn.btn-info(type='button' onclick="addNewPhoto()" id="btn-add-new-photo")
+                button.btn.btn-sm.btn-info(type='button' onclick="addNewPhoto()" id="btn-add-new-photo")
                     i.fas.fa-cloud-upload-alt
                     |  Upload photo
