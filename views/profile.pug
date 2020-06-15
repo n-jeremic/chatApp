@@ -97,20 +97,20 @@ block content
                                         - if (title === "My Profile")
                                             .row            
                                                 .col-lg-5.profile-info
-                                                    .input-group.mb-3
+                                                    .input-group.mb-3.shadow-sm
                                                         .input-group-prepend
                                                             span.input-group-text(style="font-weight: 600") First Name
                                                         input.form-control(type='text' value=`${user.firstName}` disabled='true' aria-label='Username' style="background-color: #fff")
-                                                    .input-group.mb-3
+                                                    .input-group.mb-3.shadow-sm
                                                         .input-group-prepend
                                                             span.input-group-text(style="font-weight: 600") Last Name
                                                         input.form-control(type='text' value=`${user.lastName}` disabled='true' aria-label='Username' style="background-color: #fff")
-                                                    .input-group.mb-3
+                                                    .input-group.mb-3.shadow-sm
                                                         .input-group-prepend
                                                             span.input-group-text(style="font-weight: 600") Email 
                                                         input.form-control(type='text' value=`${user.email}` disabled='true' aria-label='Username' style="background-color: #fff")
                                                     - if (user.dateOfBirth)        
-                                                        .input-group.mb-3
+                                                        .input-group.mb-3.shadow-sm
                                                             .input-group-prepend
                                                                 span.input-group-text(style="font-weight: 600") Date of birth
                                                             input.form-control(type='text' disabled='true' aria-label='Username' value=`${user.birthday}` style="background-color: #fff")
@@ -124,7 +124,7 @@ block content
                                                                 |  Update Profile                
                                                 .col-lg-1
                                                 .col-lg-6
-                                                    .card.text-center(style="width: 407px")
+                                                    .card.text-center(style="width: 407px").shadow-sm
                                                         .card-header(style="padding: 8px !important")
                                                             | My location
                                                         .card-body(style="padding: 3px !important")
@@ -134,27 +134,27 @@ block content
                                         - if (title === "Profile")
                                             .row
                                                 .col-lg-5.profile-info
-                                                    .input-group.mb-3
+                                                    .input-group.mb-3.shadow-sm
                                                         .input-group-prepend
                                                             span.input-group-text(style="font-weight: 600") First Name
                                                         input.form-control(type='text' value=`${user.firstName}` disabled='true' aria-label='Username' style="background-color: #fff")
-                                                    .input-group.mb-3
+                                                    .input-group.mb-3.shadow-sm
                                                         .input-group-prepend
                                                             span.input-group-text(style="font-weight: 600") Last Name
                                                         input.form-control(type='text' value=`${user.lastName}` disabled='true' aria-label='Username' style="background-color: #fff")
-                                                    .input-group.mb-3
+                                                    .input-group.mb-3.shadow-sm
                                                         .input-group-prepend
                                                             span.input-group-text(style="font-weight: 600") Email 
                                                         input.form-control(type='text' value=`${user.email}` disabled='true' aria-label='Username' style="background-color: #fff")
                                                     - if (user.dateOfBirth)        
-                                                        .input-group.mb-3
+                                                        .input-group.mb-3.shadow-sm
                                                             .input-group-prepend
                                                                 span.input-group-text(style="font-weight: 600") Date of birth
                                                             input.form-control(type='text' disabled='true' aria-label='Username' value=`${user.birthday}` style="background-color: #fff") 
                                                 .col-lg-1
                                                 - if (user.location)
                                                     .col-lg-6
-                                                        .card.text-center(style="width: 407px")
+                                                        .card.text-center(style="width: 407px").shadow-sm
                                                             .card-header(style="padding: 8px !important")= `${user.firstName}'s location`
                                                             .card-body(style="padding: 3px !important")
                                                                 #map(style='width: 400px; height: 300px')
