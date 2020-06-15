@@ -12,11 +12,11 @@ block content
             span(data-user_location=`${JSON.stringify(user.location)}` id="user-location")
         span#currentUserData(data-current-user=`${JSON.stringify(userMe)}`)
         .col-lg-12
-            .card.profile-content(style='width: 100%; border-radius: 10px 10px 0 0')
-                .card-body(style="padding: 0px !important; border-radius: 10px 10px 0 0")
+            .card.profile-content(style='width: 100%; border-radius: 5px 5px 0 0')
+                .card-body(style="padding: 0px !important; border-radius: 5px 5px 0 0")
                     .row
                         .col-lg-12
-                            img(width="100%" height="450px" style="object-fit: cover; border-radius: 10px 10px 0px 0px;" src=`/img/users/${user.coverPhoto}` id="coverPhoto")
+                            img(width="100%" height="450px" style="object-fit: cover; border-radius: 5px 5px 0px 0px;" src=`/img/users/${user.coverPhoto}` id="coverPhoto")
                             button.btn.btn-sm.btn-info.btn-coverPhoto#btn-updateCover(style="position: absolute; top: 10px; right: 125px; display: none" onclick="uploadCoverPhoto()")
                                 i.fas.fa-download.mr-2 
                                 | Save
@@ -34,14 +34,14 @@ block content
                                         .col-lg-5
                                             h1(style="font-size: 44px; font-wieght: 900; margin: 0px !important")= `${user.firstName} ${user.lastName}`
                                         .col-lg-3
-                                            button.btn.btn-light.btn-sm.btn-block(data-toggle='modal' data-target='#add-photo_modal')
+                                            button.shadow-sm.btn.btn-light.btn-sm.btn-block(data-toggle='modal' data-target='#add-photo_modal')
                                                 i.fas.fa-camera-retro.mr-1
                                                 |  Add New Post
                                 .col-lg-12.mt-2
                                     .row
                                         .col-lg-9
                                         .col-lg-3
-                                            button.btn.btn-light.btn-sm.btn-block(type='button' data-toggle='modal' data-target='#photo_modal' style="margin-top: -20px")
+                                            button.shadow-sm.btn.btn-light.btn-sm.btn-block(type='button' data-toggle='modal' data-target='#photo_modal' style="margin-top: -20px")
                                                 i.fas.fa-user-alt.mr-1
                                                 |  Change Profile Photo   
                                 .col-lg-12
@@ -49,7 +49,7 @@ block content
                                         .col-lg-9
                                         .col-lg-3
                                             label(for="coverPhotoInput" style="width: 100%; margin-top: 10px")
-                                                a.btn.btn-light.btn-sm.btn-block(type='button')
+                                                a.btn.shadow-sm.btn-light.btn-sm.btn-block(type='button')
                                                     i.fas.fa-images.mr-1
                                                     |  Change Cover Photo 
                                             input(type="file" id="coverPhotoInput" style="display: none" onchange="readCoverPhoto(this)")    

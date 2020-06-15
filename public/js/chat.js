@@ -53,6 +53,8 @@ function displayUsers(users) {
       }'></i></button>`
     );
   });
+
+  return;
 }
 
 async function getChat(user_id, user_name, user_photo, newMessage = 'false') {

@@ -16,7 +16,7 @@ function openGallery(photo_path) {
   $('#comments_container').show();
 
   // When the user clicks on <span> (x), close the modal
-  span.onclick = function() {
+  span.onclick = function () {
     modal.style.display = 'none';
   };
 }
@@ -30,7 +30,7 @@ async function getPostDetails(post_id, deletePostCheck = false) {
   try {
     const postData = await axios({
       method: 'GET',
-      url: `/api/posts/${post_id}`
+      url: `/api/posts/${post_id}`,
     });
 
     if (postData.data.status === 'success') {
@@ -38,7 +38,7 @@ async function getPostDetails(post_id, deletePostCheck = false) {
         $('#btn-deletePost').attr('onclick', `deletePost('${post_id}')`);
 
         $('#img--post').on('mouseover', () => {
-          $('#btn-deletePost').show(600);
+          $('#btn-deletePost').show();
           $('#img--post').css('cursor', 'pointer');
           $('#btn-deletePost').on('mouseover', () => {
             $('#btn-deletePost').show();
@@ -80,14 +80,14 @@ async function getPostDetails(post_id, deletePostCheck = false) {
         $('#num_of_likes').attr('disabled', false);
         $('#num_of_likes').html(`${postData.data.data.post.likes.length} likes`);
         $('#append_likes').empty();
-        postData.data.data.post.likes.forEach(like => addLikesHTMLModal(like));
+        postData.data.data.post.likes.forEach((like) => addLikesHTMLModal(like));
       }
 
       if (postData.data.data.post.comments.length === 0) {
         $('#add_comments').html("<div class='row'><div class='col-lg-12'><p class='text-center mt-3'>No comments to show.</p></div></div>");
       } else {
         $('#add_comments').empty();
-        postData.data.data.post.comments.forEach(comment => addCommentHTML(comment));
+        postData.data.data.post.comments.forEach((comment) => addCommentHTML(comment));
       }
       openGallery(postData.data.data.post.content);
     }
@@ -140,8 +140,8 @@ async function sendComment(post_id) {
       method: 'POST',
       url: `/api/posts/comment/${post_id}`,
       data: {
-        text
-      }
+        text,
+      },
     });
 
     if (res.data.status === 'success') {
@@ -169,15 +169,11 @@ async function likePostModal(post_id) {
   try {
     const res = await axios({
       method: 'POST',
-      url: `/api/posts/like/${post_id}`
+      url: `/api/posts/like/${post_id}`,
     });
 
     if (res.data.status === 'success') {
-      let likes_number = parseInt(
-        $('#num_of_likes')
-          .text()
-          .split(' ')[0]
-      );
+      let likes_number = parseInt($('#num_of_likes').text().split(' ')[0]);
 
       $('#num_of_likes').html(`${likes_number + 1} likes`);
       $('#num_of_likes').attr('disabled', false);
@@ -201,15 +197,15 @@ function deletePost(post_id) {
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
     cancelButtonColor: '#d33',
-    confirmButtonText: 'Yes, delete it!'
-  }).then(async result => {
+    confirmButtonText: 'Yes, delete it!',
+  }).then(async (result) => {
     if (result.value) {
       $('#btn-deletePost').attr('disabled', true);
       $('#btn-deletePost').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Deleting...');
       try {
         const response = await axios({
           method: 'DELETE',
-          url: `/api/posts/${post_id}`
+          url: `/api/posts/${post_id}`,
         });
 
         if (response.status === 204) {
