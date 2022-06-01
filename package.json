@@ -24,7 +24,7 @@
     "nodemailer": "^6.4.5",
     "path": "^0.12.7",
     "pug": "^2.0.4",
-    "sharp": "^0.24.1",
+    "sharp": "^0.30.5",
     "validator": "^12.2.0"
   },
   "engines": {
